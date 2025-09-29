@@ -1,1 +1,0 @@
-Uso de java como lenguaje de programación y de spring boot como framework para el backend. 

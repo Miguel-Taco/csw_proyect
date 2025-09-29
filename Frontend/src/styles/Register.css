@@ -1,0 +1,88 @@
+.register-body{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    font-family: sans-serif
+}
+
+.register-main-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+
+    background-color: var(--color-neutral);
+    border: 3px solid var(--color-secondary);
+    border-radius: 40px;
+    width: 30%;
+    height: 90vh;
+    box-sizing: border-box;
+}
+
+.register-input-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 70%;
+    gap: 2%;
+}
+
+.register-input-container-area{
+    width: 80%;
+}
+
+
+.register-input-container-area input{
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 40%;
+}
+
+.register-input-container-area h3{
+    font-family: 'Times New Roman', Times, serif;
+    margin: 0;
+}
+
+.register-button{
+    width: 80%;
+    height: 6%;
+}
+
+.register-input-password {
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  padding: 0 10px;
+  background-color: white;
+  height: 50%;
+}
+
+.register-input-password input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  height: 90%;
+}
+
+.register-input-password i {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.main-container-label{
+    height: 8%;
+}
+
+.ir-login-button{
+    margin-top: 5%;
+    height: 10%;
+}

@@ -1,7 +1,23 @@
+import { useState } from "react";
 import "../styles/SeccionesPage.css"
 import SeccionCard from "../componentes/SeccionCard";
 
 function SeccionesPage(){
+    const [secciones, setSecciones] = useState([
+        { id: 1, nombre: "CALIDAD DE SOFTWARE - G1" },
+    ]);
+    
+    const handleAgregarSeccion = () => {
+        const nombre = prompt("Ingrese el nombre de la nueva sección:");
+        if (nombre && nombre.trim() !== "") {
+        const nuevaSeccion = {
+            id: Date.now(), 
+            nombre: nombre
+        };
+        setSecciones([...secciones, nuevaSeccion]);
+        }
+    };
+
     return(
         <div className="seccionesPage-body">
             <div className="main-seccionesPage-container row">
@@ -16,19 +32,12 @@ function SeccionesPage(){
                             <option value="2026">2026</option>
                             <option value="2027">2027</option>
                         </select>
-                        <button className="button-seccionesPage">Agregar nueva seccion</button>
+                        <button className="button-seccionesPage" onClick={handleAgregarSeccion}>Agregar nueva seccion</button>
                     </div>
                     <div className="secciones-container row">
-                        <SeccionCard nombre="CALIDAD DE SOFTWARE - G1"/>
-                        <SeccionCard nombre="CALIDAD DE SOFTWARE - G2"/>
-                        <SeccionCard nombre="CALIDAD DE SOFTWARE - G3"/>
-                        <SeccionCard nombre="BASE DE DATOS II - G1"/>
-                        <SeccionCard nombre="BASE DE DATOS II - G2"/>
-                        <SeccionCard nombre="BASE DE DATOS II - G3"/>
-                        <SeccionCard nombre="BASE DE DATOS II - G4"/>
-                        <SeccionCard nombre="DISEÑO DE SOFTWARE - G1"/>
-                        <SeccionCard nombre="DISEÑO DE SOFTWARE - G2"/>
-                        <SeccionCard nombre="DISEÑO DE SOFTWARE - G3"/>
+                        {secciones.map((sec) => (
+                        <SeccionCard key={sec.id} nombre={sec.nombre} />
+                        ))}
                     </div>
                 </div>
                 

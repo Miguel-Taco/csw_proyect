@@ -1,0 +1,44 @@
+.btn {
+    appearance: none;
+    border: 0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #e5e7eb; /*--------------*/
+    color: #111827;   /*----------------*/
+    transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.btn-primary {
+    background: #2563eb; /*----------------*/
+    color: #fff;  /*----------------*/
+}
+
+.form-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.field { display: grid; gap: 6px; }
+
+.field span { font-size: 13px; color: #374151; }
+
+.field input {
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    outline: none;
+}
+
+.field input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.18);
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 8px;
+}

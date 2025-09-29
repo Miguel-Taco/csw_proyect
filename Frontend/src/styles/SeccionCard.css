@@ -4,14 +4,14 @@
     align-items: center;
     height: 100px;
     width: 300px;
-    background-color: var(--color-primary);
+    background-color: rgb(148, 154, 109);
     border: 1px solid var(--color-secondary);;
     border-top-left-radius: 35px;
     font-family: Inter,'Courier New', Courier, monospace;
     font-size: 1.2rem;
     font-weight: 600;
     text-align: center;
-    color: #fffffff9;
+    color: #f3f3f3f9;
     box-sizing: border-box;
     padding: 0 10px;
     cursor: pointer;
