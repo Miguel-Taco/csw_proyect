@@ -14,8 +14,9 @@ import com.unmsm.scorely.repository.InvitacionRepository;
 import com.unmsm.scorely.repository.SeccionRepository;
 import com.unmsm.scorely.services.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -139,16 +140,47 @@ public class InvitacionServiceImpl implements InvitacionService {
         return mapearAResponse(invitacion);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<InvitacionResponse> obtenerInvitacionesPendientes(String correo) {
+        log.info("Obteniendo invitaciones pendientes para correo: {}", correo);
+
+        List<Invitacion> invitaciones = invitacionRepository
+                .findPendingInvitationsByCorreo(correo);
+
+        log.info("Se encontraron {} invitaciones pendientes", invitaciones.size());
+
+        // Mapear a DTOs
+        return invitaciones.stream()
+                .map(this::mapearAResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Integer buscarAlumnoPorIdPersona(Integer idPersona) {
+        log.info("Buscando idAlumno para idPersona: {}", idPersona);
+
+        return alumnoRepository.findIdAlumnoByIdPersona(idPersona)
+                .orElseThrow(() -> new RuntimeException(
+                        "No se encontró un alumno asociado a la persona con ID: " + idPersona
+                ));
+    }
+
     private InvitacionResponse mapearAResponse(Invitacion invitacion) {
+        var personaProfesor = invitacion.getSeccion()
+                .getProfesor()
+                .getPersona();
+
         String nombreProfesor = String.format("%s %s",
-                invitacion.getSeccion().getProfesor().getPersona(),
-                "");
+                personaProfesor.getNombres(),
+                personaProfesor.getApellidoP());
 
         return InvitacionResponse.builder()
                 .idInvitacion(invitacion.getIdInvitaciones())
                 .correo(invitacion.getCorreo())
                 .nombreCurso(invitacion.getSeccion().getNombreCurso())
-                .nombreProfesor(nombreProfesor)
+                .nombreProfesor(nombreProfesor.trim()) // <- Por si acaso hay espacio extra
                 .estado(invitacion.getEstado().name())
                 .token(invitacion.getToken())
                 .fechaCreacion(invitacion.getFechaCreacion())

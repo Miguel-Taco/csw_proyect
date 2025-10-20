@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import "../styles/InvitacionModal.css"; // Reutilizamos el mismo CSS
+import "../styles/Modal.css"; // Reutilizamos el mismo CSS
 
 export default function CrearSeccionModal({ open, onClose, onCrear, anioActual }) {
   const dialogRef = useRef(null);

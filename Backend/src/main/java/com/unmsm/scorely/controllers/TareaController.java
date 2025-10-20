@@ -32,26 +32,20 @@ public class TareaController {
     }
 
     // 🔹 Crear nueva tarea
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> crearTarea(@RequestBody CrearTareaRequest request) {
-        Map<String, Object> response = new HashMap<>();
+    @PostMapping("/api/tareas")
+    public ResponseEntity<?> crearTarea(@RequestBody CrearTareaRequest req) {
         try {
-            Tarea nuevaTarea = tareaService.crearTarea(request);
-            if (nuevaTarea != null) {
-                response.put("success", true);
-                response.put("message", "Tarea creada exitosamente");
-                response.put("tarea", nuevaTarea);
-                return ResponseEntity.status(HttpStatus.CREATED).body(response);
-            } else {
-                response.put("success", false);
-                response.put("message", "No se pudo crear la tarea");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            System.out.println("POST /api/tareas - payload: " + req);
+            Tarea creada = tareaService.crearTarea(req);
+            if (creada == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                    .body("Error al crear la tarea (servicio retornó null)");
             }
+            return ResponseEntity.status(HttpStatus.CREATED).body(creada);
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Error al crear la tarea: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body("Error al crear la tarea: " + e.getMessage());
         }
     }
 

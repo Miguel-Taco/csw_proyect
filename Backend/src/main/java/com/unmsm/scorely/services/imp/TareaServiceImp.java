@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.unmsm.scorely.dto.CrearTareaRequest;
+import com.unmsm.scorely.models.Seccion;
 import com.unmsm.scorely.models.Tarea;
+import com.unmsm.scorely.repository.SeccionRepository;
 import com.unmsm.scorely.repository.TareaRepository;
 import com.unmsm.scorely.services.TareaService;
 
@@ -16,9 +18,11 @@ import com.unmsm.scorely.services.TareaService;
 public class TareaServiceImp implements TareaService {
 
     private final TareaRepository tareaRepository;
+    private final SeccionRepository seccionRepository;
 
-    public TareaServiceImp(TareaRepository tareaRepository) {
+    public TareaServiceImp(TareaRepository tareaRepository, SeccionRepository seccionRepository) {
         this.tareaRepository = tareaRepository;
+        this.seccionRepository = seccionRepository;
     }
 
     @Override
@@ -30,6 +34,14 @@ public class TareaServiceImp implements TareaService {
             tarea.setTipo(req.getTipo());
             tarea.setDescripcion(req.getDescripcion());
             tarea.setFechaVencimiento(req.getFechaVencimiento());
+            // usar id de request si viene, si no usar por defecto 3
+            Integer idSeccion = req.getIdSeccion() != null ? req.getIdSeccion() : 3;
+            Seccion seccion = seccionRepository.findById(idSeccion).orElse(null);
+            if (seccion == null) {
+                System.err.println("No existe la sección con id: " + idSeccion);
+                return null;
+            }
+            tarea.setSeccion(seccion);
             tarea.setFechaCreacion(LocalDateTime.now());
 
             return tareaRepository.save(tarea);
@@ -92,6 +104,15 @@ public class TareaServiceImp implements TareaService {
             tarea.setTipo(req.getTipo());
             tarea.setDescripcion(req.getDescripcion());
             tarea.setFechaVencimiento(req.getFechaVencimiento());
+
+            // mantener mismo comportamiento: usar id del request o 3 por defecto
+            Integer idSeccion = req.getIdSeccion() != null ? req.getIdSeccion() : 3;
+            Seccion seccion = seccionRepository.findById(idSeccion).orElse(null);
+            if (seccion == null) {
+                System.err.println("No existe la sección con id: " + idSeccion);
+                return null;
+            }
+            tarea.setSeccion(seccion);
 
             return tareaRepository.save(tarea);
         } catch (Exception e) {

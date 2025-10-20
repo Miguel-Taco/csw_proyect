@@ -1,5 +1,6 @@
 package com.unmsm.scorely.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class Seccion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_profesor", nullable = false)
+    @JsonIgnore
     private Profesor profesor;
 
     @Column(name = "nombre_curso", nullable = false, length = 40)

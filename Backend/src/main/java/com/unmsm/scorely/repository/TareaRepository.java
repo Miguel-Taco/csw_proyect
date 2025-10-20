@@ -13,7 +13,7 @@ public interface TareaRepository extends CrudRepository<Tarea, Integer> {
 
     @Query(value = """
         SELECT *
-        FROM tarea
+        FROM Tarea
         WHERE id_seccion = ?1
         """, nativeQuery = true)
     List<Tarea> findByIdSeccion(Integer idSeccion);

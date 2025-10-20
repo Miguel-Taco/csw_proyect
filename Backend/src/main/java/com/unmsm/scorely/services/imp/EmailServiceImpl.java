@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
 
-    @Value("${app.base-url:http://localhost:8080}") //cambiar
+    @Value("${app.base-url:http://localhost:5173}") //cambiar
     private String baseUrl;
 
     @Value("${spring.mail.username}") //cambiar
@@ -41,7 +41,8 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private String construirMensaje(Invitacion invitacion) {
-        String linkInvitacion = baseUrl + "/api/invitaciones/aceptar?token=" + invitacion.getToken();
+        String linkInvitacion = baseUrl + "/login";
+        //String linkInvitacion = baseUrl + "/api/invitaciones/aceptar?token=" + invitacion.getToken();
 
         return String.format(
                 "Hola,\n\n" +
