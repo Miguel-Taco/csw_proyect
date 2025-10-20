@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/tareasALumnos")
 @CrossOrigin(origins = "*")
-public class TareasController {
+public class NotasController {
 
     //Listar las notas individuales de los alumnos por seccion
     @GetMapping("/aLumno")
