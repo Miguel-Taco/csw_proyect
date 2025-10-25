@@ -66,13 +66,48 @@
   transform: translateY(-1px);
 }
 
+.seccion-info {
+  margin-bottom: 15px;
+}
+
+.seccion-info h2 {
+  color: var(--color-secondary);
+  margin: 0 0 5px 0;
+  font-size: 1.5rem;
+}
+
+.total-alumnos {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.loading-message,
+.error-message {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 1rem;
+}
+
+.error-message {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+}
+
 .tabla-tareas {
   width: 100%;
   border-collapse: collapse;
   background: white;
   table-layout: fixed;
+<<<<<<< HEAD
   border-radius: 8px;
   overflow: hidden;
+=======
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+>>>>>>> master
 }
 
 .tabla-tareas th,
@@ -82,30 +117,78 @@
   text-align: left;
 }
 
+<<<<<<< HEAD
 .tabla-tareas th:nth-child(1),
 .tabla-tareas td:nth-child(1) {
   width: 100px;
+=======
+/* Columnas con ancho específico */
+.tabla-tareas th.col-nota,
+.tabla-tareas td.col-nota {
+  width: 120px;
+>>>>>>> master
   text-align: center;
+  font-weight: 600;
 }
 
+<<<<<<< HEAD
 .tabla-tareas th:nth-child(2),
 .tabla-tareas td:nth-child(2) {
   width: calc(100% - 100px);
+=======
+.tabla-tareas th.col-codigo,
+.tabla-tareas td.col-codigo {
+  width: 150px;
+  text-align: center;
+>>>>>>> master
 }
 
 .tabla-tareas th {
   background: var(--color-accent);
   color: var(--color-secondary);
   font-weight: 600;
+<<<<<<< HEAD
 }
 
 .tabla-tareas tbody tr:hover {
   background: #f8f9fa;
+=======
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+/* Filas de alumnos clickeables */
+.alumno-row {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.alumno-row:hover {
+  background-color: #f8f9fa;
+  transform: translateX(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alumno-row:active {
+  transform: translateX(1px);
+}
+
+.nombre-alumno {
+  color: var(--color-secondary);
+  font-weight: 500;
+}
+
+.alumno-row:hover .nombre-alumno {
+  color: var(--color-primary);
+  font-weight: 600;
+>>>>>>> master
 }
 
 .vacio {
   text-align: center;
   color: #888;
+<<<<<<< HEAD
   padding: 40px !important;
 }
 
@@ -122,5 +205,31 @@
 
   .btn {
     flex: 1;
+  }
+=======
+  font-style: italic;
+  padding: 30px !important;
+>>>>>>> master
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tareas-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .tabla-tareas th,
+  .tabla-tareas td {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .col-codigo {
+    display: none;
+  }
+
+  .seccion-info h2 {
+    font-size: 1.2rem;
   }
 }

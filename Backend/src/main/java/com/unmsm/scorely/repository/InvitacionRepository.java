@@ -30,4 +30,15 @@ public interface InvitacionRepository extends JpaRepository<Invitacion, Integer>
             @Param("correo") String correo,
             @Param("idSeccion") Integer idSeccion
     );
+
+    @Query("""
+        SELECT i FROM Invitacion i
+        JOIN i.seccion s
+        WHERE i.correo = :correo
+        AND i.estado = 'PENDIENTE'
+        AND i.fechaExpiracion > CURRENT_TIMESTAMP
+        ORDER BY i.fechaCreacion DESC
+    """)
+    List<Invitacion> findPendingInvitationsByCorreo(@Param("correo") String correo);
+
 }

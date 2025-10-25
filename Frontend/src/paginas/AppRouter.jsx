@@ -1,75 +1,32 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "../paginas/Login";
-import Register from "../paginas/Register";
-import Dashboard from "../paginas/SeccionesPage";
-import ProtectedRoute from "../context/ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
-import InvitacionButton from "../componentes/InvitacionButton";
+
+// Importa tus páginas
+import LoginPage from "../paginas/Login";
+import RegisterPage from "../paginas/Register";
 import SeccionesPage from "../paginas/SeccionesPage";
-import TareasIndividuales from "../paginas/TareasIndividuales";
+import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
+import InvitacionesPendientesButton from "../componentes/InvitacionesPendientesButton";
 
-//Le puso el invitacionButton para probar nada más :vs
+// --- Componentes de Control de Rutas ---
 
-//Si quieres ver tu vista, reemplaza SeccionesPage por el tuyo aca abajo y al final pon en export verVista
-//Restauralo despues de probarlo para que no haya conflictos en el merge luego
-function verVista() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        //<Route path="/" element={<SeccionesPage />} />
-        //<Route path="*" element={<SeccionesPage />} />
-        <Route path="/" element={<CrearTareaPage />} />
-        <Route path="*" element={<CrearTareaPage />} />
-      </Routes>
-    </BrowserRouter>
-  );
+// Rutas protegidas (solo usuarios autenticados)
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
 }
 
-function AppRouter() {
-  return (
-    <BrowserRouter>
-      <InvitacionButton />
-      <Routes>
-        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
-
-        <Route 
-          path="/seccionesPage" 
-          element={
-            //<ProtectedRoute>
-              <Dashboard />
-            //</ProtectedRoute>
-          } 
-        />
-
-        <Route 
-          path="/tareasIndividuales"
-          element={
-            //<ProtectedRoute>
-              <TareasIndividuales />
-            //</ProtectedRoute>
-          }
-        />
-
-        <Route 
-          path="/CrearTareaPage"
-          element={
-            //<ProtectedRoute>
-              <CrearTareaPage />
-            //</ProtectedRoute>
-          }
-        />
-
-        <Route path="/crearTarea" element={<CrearTareaPage />} />
-
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
-
+// Rutas públicas (login, register)
 function PublicRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
 
@@ -78,10 +35,95 @@ function PublicRoute({ children }) {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/seccionesPage" replace />;
+    return <Navigate to="/secciones" replace />;
   }
 
   return children;
+}
+
+// --- Enrutador Principal ---
+
+function AppRouter() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Rutas Públicas */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
+
+        {/* Rutas Protegidas */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Navigate to="/secciones" replace />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/secciones"
+          element={
+            <ProtectedRoute>
+              <InvitacionesPendientesButton />
+              <SeccionesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ver alumnos y tareas de una sección */}
+        <Route
+          path="/secciones/:idSeccion/tareas"
+          element={
+            <ProtectedRoute>
+              <TareasIndividualesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Crear tarea en una sección */}
+        <Route
+          path="/secciones/:idSeccion/crear-tarea"
+          element={
+            <ProtectedRoute>
+              <CrearTareaPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ✅ NUEVA RUTA: Ver tareas de un alumno específico en una sección */}
+        <Route
+          path="/secciones/:idSeccion/alumno/:idAlumno/tareas"
+          element={
+            <ProtectedRoute>
+              {/* Aquí pondrás tu componente de tareas del alumno */}
+              <div style={{ padding: '20px' }}>
+                <h2>Vista de Tareas del Alumno</h2>
+                <p>Próximamente: Aquí verás las tareas individuales del alumno</p>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ruta para cualquier otra URL no definida */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default AppRouter;

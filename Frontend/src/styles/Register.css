@@ -1,93 +1,262 @@
-.register-body{
+/* Página principal */
+.register-page {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
-    font-family: sans-serif
+    padding: 20px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.register-main-container{
+/* Container principal */
+.register-container {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 550px;
+    padding: 40px;
+    box-sizing: border-box;
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.register-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.register-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
+}
+
+.register-header p {
+    margin: 0;
+    color: #666;
+    font-size: 15px;
+}
+
+/* Form */
+.register-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    align-self: center;
-
-    background-color: var(--color-neutral);
-    border: 3px solid var(--color-secondary);
-    border-radius: 40px;
-    width: 30%;
-    height: 90vh;
-    box-sizing: border-box;
-    color: black;
+    gap: 20px;
 }
 
-.register-input-container{
+/* Form Group */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input::placeholder {
+    color: #999;
+}
+
+/* Form Row (para apellidos) */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Tipo de Usuario */
+.user-type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.user-type-option {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: white;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 8px;
+}
+
+.user-type-option:hover {
+    border-color: #667eea;
+    background-color: #f8f9ff;
+}
+
+.user-type-option.active {
+    border-color: #667eea;
+    background-color: #f0f4ff;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.user-type-option input[type="radio"] {
+    display: none;
+}
+
+.user-type-option .icon {
+    font-size: 28px;
+}
+
+/* Código de Estudiante con animación */
+.codigo-estudiante-group {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-hint {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #666;
+}
+
+/* Password Input */
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper .form-input {
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 16px;
+    color: #666;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+    color: #667eea;
+}
+
+/* Botón de Registro */
+.btn-register {
     width: 100%;
-    height: 70%;
-    gap: 2%;
-}
-
-.register-input-container-area{
-    width: 80%;
-}
-
-
-.register-input-container-area input{
-    border-radius: 10px;
+    padding: 14px;
+    background: var(--color-primary);
+    color: black;
     border: none;
-    outline: none;
-    width: 100%;
-    height: 40%;
-    color: black !important;
-    background-color: white !important;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
 }
 
-.register-input-container-area h3{
-    font-family: 'Times New Roman', Times, serif;
-    margin: 0;
+.btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
 }
 
-.register-button{
-    width: 80%;
-    height: 6%;
+.btn-register:active {
+    transform: translateY(0);
 }
 
-.register-input-password {
-  display: flex;
-  align-items: center;
-  border: none;
-  border-radius: 10px;
-  padding: 0 10px;
-  background-color: white;
-  height: 50%;
+/* Link a Login */
+.login-link {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
 }
 
-.register-input-password input {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 14px;
-  height: 90%;
-  color: black !important;
-  background-color: white !important;
+.login-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
-.register-input-password i {
-  margin-left: 10px;
-  cursor: pointer;
+.login-link a:hover {
+    color: #764ba2;
+    text-decoration: underline;
 }
 
-.main-container-label{
-    height: 8%;
+/* Responsive */
+@media (max-width: 768px) {
+    .register-container {
+        padding: 30px 20px;
+    }
+
+    .register-header h1 {
+        font-size: 26px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .user-type-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-.ir-login-button{
-    margin-top: 5%;
-    height: 10%;
+@media (max-width: 480px) {
+    .register-page {
+        padding: 10px;
+    }
+
+    .register-container {
+        padding: 25px 15px;
+    }
 }

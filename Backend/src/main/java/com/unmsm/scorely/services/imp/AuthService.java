@@ -1,20 +1,18 @@
 package com.unmsm.scorely.services.imp;
 
 import com.unmsm.scorely.dto.LoginResponse;
-import com.unmsm.scorely.repository.PersonaRepository;
+import com.unmsm.scorely.repository.PersonaUserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    private final PersonaRepository personaRepository;
-
-    public AuthService(PersonaRepository personaRepository) {
-        this.personaRepository = personaRepository;
-    }
+    private final PersonaUserRepository personaUserRepository;
 
     public LoginResponse login(String correo, String contraseña) {
-        return personaRepository.login(correo, contraseña)
+        return personaUserRepository.login(correo, contraseña)
                 .map(user -> {
                     if (user.getTipo() != null) {
                         user.setTipo(user.getTipo().toLowerCase());

@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/invitaciones")
@@ -101,7 +102,8 @@ public class InvitacionController {
     ) {
         log.info("Confirmando aceptación de invitación provisional");
 
-        Integer idAlumno = request.getIdAlumno(); // viene del frontend
+        Integer idPersona = request.getIdAlumno(); // viene del frontend
+        Integer idAlumno = invitacionService.buscarAlumnoPorIdPersona(idPersona);
 
         AceptarInvitacionResponse response = invitacionService.aceptarInvitacion(
                 request.getToken(),
@@ -132,6 +134,21 @@ public class InvitacionController {
         return ResponseEntity.ok(
                 ApiResponse.success("Invitación rechazada", "Invitación rechazada exitosamente")
         );
+    }
+
+    /**
+     * Endpoint para obtener invitaciones pendientes de un alumno
+     * GET /api/invitaciones/pendientes/correo
+     */
+    @GetMapping("/pendientes")
+    public ResponseEntity<ApiResponse<List<InvitacionResponse>>> obtenerInvitacionesPendientesPorCorreo(
+            @RequestParam String correo
+    ) {
+        log.info("Obteniendo invitaciones pendientes para el alumno con correo: {}", correo);
+
+        List<InvitacionResponse> pendientes = invitacionService.obtenerInvitacionesPendientes(correo);
+
+        return ResponseEntity.ok(ApiResponse.success(pendientes, "Invitaciones pendientes obtenidas"));
     }
 
     /**

@@ -1,19 +1,28 @@
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import "../styles/Modal.css"; // Reutilizamos el mismo CSS
+import "../styles/Modal.css";
 
-export default function CrearSeccionModal({ open, onClose, onCrear, anioActual }) {
+export default function EditarSeccionModal({ open, onClose, onEditar, seccion, anioActual }) {
   const dialogRef = useRef(null);
   const [nombreSeccion, setNombreSeccion] = useState("");
+  const [anioSeccion, setAnioSeccion] = useState(anioActual);
   const [error, setError] = useState("");
 
-  CrearSeccionModal.propTypes = {
+  EditarSeccionModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    onCrear: PropTypes.func.isRequired,
+    onEditar: PropTypes.func.isRequired,
+    seccion: PropTypes.object,
     anioActual: PropTypes.number.isRequired,
   };
+
+  useEffect(() => {
+    if (seccion) {
+      setNombreSeccion(seccion.nombreCurso || "");
+      setAnioSeccion(seccion.anio || anioActual);
+    }
+  }, [seccion, anioActual]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -21,7 +30,6 @@ export default function CrearSeccionModal({ open, onClose, onCrear, anioActual }
     if (open && !dialog.open) {
       dialog.showModal();
       document.body.style.overflow = "hidden";
-      setNombreSeccion(""); // Limpiar al abrir
       setError("");
     } else if (!open && dialog.open) {
       dialog.close();
@@ -46,15 +54,29 @@ export default function CrearSeccionModal({ open, onClose, onCrear, anioActual }
       return;
     }
 
-    onCrear(nombreSeccion.trim());
-    setNombreSeccion("");
+    // Verificar si no hubo cambios
+    if (nombreSeccion.trim() === seccion.nombreCurso && anioSeccion === seccion.anio) {
+      setError("No se realizaron cambios");
+      return;
+    }
+
+    onEditar(seccion.idSeccion, nombreSeccion.trim(), anioSeccion);
     setError("");
+  };
+
+  // Generar opciones de años (actual y futuros)
+  const generarOpcionesAnios = () => {
+    const anios = [];
+    for (let i = 0; i < 5; i++) {
+      anios.push(anioActual + i);
+    }
+    return anios;
   };
 
   return createPortal(
     <dialog ref={dialogRef} className="modal" onCancel={onClose}>
       <div className="modal-header">
-        <h2 id="modal-title">Crear Nueva Sección</h2>
+        <h2 id="modal-title">Editar Sección</h2>
         <button
           className="icon-btn"
           onClick={onClose}
@@ -80,9 +102,21 @@ export default function CrearSeccionModal({ open, onClose, onCrear, anioActual }
               autoFocus
               maxLength={40}
             />
-            <small style={{ color: '#666', fontSize: '12px' }}>
-              Año: {anioActual}
-            </small>
+          </label>
+
+          <label className="field">
+            <span>Año académico</span>
+            <select
+              value={anioSeccion}
+              onChange={(e) => {
+                setAnioSeccion(Number(e.target.value));
+                setError("");
+              }}
+            >
+              {generarOpcionesAnios().map(anio => (
+                <option key={anio} value={anio}>{anio}</option>
+              ))}
+            </select>
           </label>
 
           {error && (
@@ -103,7 +137,7 @@ export default function CrearSeccionModal({ open, onClose, onCrear, anioActual }
               Cancelar
             </button>
             <button type="submit" className="btn btn-primary">
-              Crear Sección
+              Guardar Cambios
             </button>
           </div>
         </form>
