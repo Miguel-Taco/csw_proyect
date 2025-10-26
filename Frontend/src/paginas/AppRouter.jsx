@@ -7,6 +7,7 @@ import RegisterPage from "../paginas/Register";
 import SeccionesPage from "../paginas/SeccionesPage";
 import TareasPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
+//import NotasGrupales from "../componentes/notasGrupales";
 
 // --- Componentes de Control de Rutas ---
 
