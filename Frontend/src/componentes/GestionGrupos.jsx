@@ -3,18 +3,19 @@ import React, { useEffect, useMemo, useState } from "react";
 /** Util: ID simple */
 const uid = () => Math.random().toString(36).slice(2, 9);
 
-export default function GestionGrupos({ storageKey = "scorely_grupos_v1" }) {
-    /** Persistencia (ligada a storageKey) */
-    const loadState = () => {
-        try {
-            const raw = localStorage.getItem(storageKey);
-            return raw ? JSON.parse(raw) : null;
-        } catch {
-            return null;
-        }
-    };
-    const saveState = (state) => localStorage.setItem(storageKey, JSON.stringify(state));
+/** Persistencia en localStorage */
+const STORAGE_KEY = "scorely_grupos_v1";
+const loadState = () => {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+    } catch {
+        return null;
+    }
+};
+const saveState = (state) => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 
+export default function GestionGrupos() {
     const persisted = loadState();
 
     const [alumnosPool, setAlumnosPool] = useState(persisted?.alumnosPool ?? []);
@@ -25,8 +26,7 @@ export default function GestionGrupos({ storageKey = "scorely_grupos_v1" }) {
     /** Guardar cada cambio */
     useEffect(() => {
         saveState({ alumnosPool, grupos });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [alumnosPool, grupos, storageKey]);
+    }, [alumnosPool, grupos]);
 
     /** === Crear grupo === */
     const crearGrupo = () => {
@@ -94,7 +94,7 @@ export default function GestionGrupos({ storageKey = "scorely_grupos_v1" }) {
         const pool = [...alumnosPool];
         const next = grupos.map((g) => ({ ...g, miembros: [...g.miembros] }));
 
-        // Asignación balanceada
+        // Ordenar grupos por tamaño (se irá actualizando en cada vuelta)
         while (pool.length) {
             next.sort((a, b) => a.miembros.length - b.miembros.length);
             const alumno = pool.shift();
