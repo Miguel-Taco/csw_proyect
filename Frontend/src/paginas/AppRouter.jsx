@@ -140,11 +140,26 @@ function AppRouter() {
           }
         />
 
+        {/* Crear tarea en una sección */}
         <Route
           path="/secciones/:idSeccion/crear-tarea"
           element={
             <ProtectedRoute allowedRoles={['profesor']}>
               <CrearTareaPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ✅ NUEVA RUTA: Ver tareas de un alumno específico en una sección */}
+        <Route
+          path="/secciones/:idSeccion/alumno/:idAlumno/tareas"
+          element={
+            <ProtectedRoute>
+              {/* Aquí pondrás tu componente de tareas del alumno */}
+              <div style={{ padding: '20px' }}>
+                <h2>Vista de Tareas del Alumno</h2>
+                <p>Próximamente: Aquí verás las tareas individuales del alumno</p>
+              </div>
             </ProtectedRoute>
           }
         />
