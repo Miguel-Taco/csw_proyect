@@ -10,7 +10,7 @@ export default function InvitacionesPendientesButton() {
   const [mensaje, setMensaje] = useState("");
   
   const { user } = useAuth();
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = 'http://localhost:8080';
 
   const openModal = () => setOpen(true);
   const closeModal = () => {

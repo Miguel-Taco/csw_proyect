@@ -1,5 +1,6 @@
 // InvitacionButton.jsx
 import { useState } from "react";
+import { useParams } from "react-router-dom"; // ✅ Import necesario
 import "../styles/InvitacionButton.css";
 import Modal from "./Modal";
 import { useAuth } from "../context/AuthContext";
@@ -10,16 +11,19 @@ export default function InvitacionButton() {
   const [mensaje, setMensaje] = useState("");
   const [loading, setLoading] = useState(false);
   const [enviadas, setEnviadas] = useState([]);
-  
+
   const { user } = useAuth();
-  const API_URL = import.meta.env.VITE_API_URL;
+  const { idSeccion } = useParams(); // ✅ Captura el id de la URL
+  const API_URL = "http://localhost:8080";
 
   const openModal = () => setOpen(true);
-  const closeModal = () => { 
-    setOpen(false); 
-    setEmail(""); 
+  const closeModal = () => {
+    setOpen(false);
+    setEmail("");
     setMensaje("");
   };
+
+  console.log("ID de la sección desde URL:", idSeccion); // ✅ Verifica el ID
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -35,11 +39,16 @@ export default function InvitacionButton() {
       return;
     }
 
+    if (!idSeccion) {
+      setMensaje("No se encontró el ID de la sección en la URL.");
+      return;
+    }
+
     setLoading(true);
 
     const data = {
       correoAlumno: email,
-      idSeccion: 3,
+      idSeccion: Number(idSeccion), // ✅ usa el id dinámico
     };
 
     try {
@@ -69,7 +78,11 @@ export default function InvitacionButton() {
 
   return (
     <>
-      <button className="btn btn-primary btn-invitacion" onClick={openModal} type="button">
+      <button
+        className="btn btn-primary btn-invitacion"
+        onClick={openModal}
+        type="button"
+      >
         Invitar Alumno
       </button>
 
@@ -91,18 +104,14 @@ export default function InvitacionButton() {
             <button type="button" className="btn" onClick={closeModal}>
               Cancelar
             </button>
-            <button type="submit" className="btn btn-primary" disabled={loading}> 
+            <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? "Enviando..." : "Enviar Invitación"}
             </button>
           </div>
         </form>
-        
-        {mensaje && (
-          <p className="mensaje-feedback">
-            {mensaje}
-          </p>
-        )}
-        
+
+        {mensaje && <p className="mensaje-feedback">{mensaje}</p>}
+
         {enviadas.length > 0 && (
           <div className="invitaciones-enviadas">
             <h4>Invitaciones enviadas:</h4>

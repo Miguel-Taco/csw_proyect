@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom"; // ✅ Importar useParams
 import "../styles/FormularioTarea.css";
 
 export default function FormularioTarea() {
@@ -9,9 +9,9 @@ export default function FormularioTarea() {
   const [fecha, setFecha] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-  // Por ahora idSeccion 3 luego se conectara a seccionCard
-  const idSeccion = 3;
+  
+  // ✅ Obtener idSeccion desde la URL
+  const { idSeccion } = useParams();
 
   const manejarEnvio = async (e) => {
     e.preventDefault();
@@ -21,12 +21,18 @@ export default function FormularioTarea() {
       return;
     }
 
+    // ✅ Validar que exista idSeccion
+    if (!idSeccion) {
+      setError("No se pudo identificar la sección.");
+      return;
+    }
+
     const nuevaTarea = {
-      idSeccion, // Enviado automáticamente como 3 por ahora
+      idSeccion: Number(idSeccion), // ✅ Usar el id dinámico desde la URL
       nombre,
       tipo,
       descripcion,
-      fechaVencimiento: fecha + "T00:00:00", // formato compatible con LocalDateTime
+      fechaVencimiento: fecha + "T00:00:00",
     };
 
     try {
@@ -45,8 +51,8 @@ export default function FormularioTarea() {
       const data = await respuesta.json();
       console.log("✅ Tarea creada:", data);
 
-      // Redirigir a la lista de tareas
-      navigate("/tareasIndividuales");
+      // ✅ Redirigir de vuelta a las tareas de esta sección
+      navigate(`/secciones/${idSeccion}/tareas`);
     } catch (error) {
       console.error("❌ Error:", error);
       setError("No se pudo crear la tarea. Inténtalo nuevamente.");
@@ -56,6 +62,11 @@ export default function FormularioTarea() {
   return (
     <form className="formulario-tarea" onSubmit={manejarEnvio}>
       <h2>Crear nueva tarea</h2>
+      
+      {/* ✅ Mostrar la sección actual */}
+      <p style={{ textAlign: 'center', color: '#666', fontSize: '14px', marginBottom: '10px' }}>
+        Sección ID: {idSeccion}
+      </p>
 
       {error && <div style={{ color: "red", marginBottom: "8px" }}>{error}</div>}
 

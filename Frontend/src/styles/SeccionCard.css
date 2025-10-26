@@ -1,49 +1,76 @@
-.seccion-card{
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
-    width: 300px;
-    background-color: rgb(148, 154, 109);
-    border: 1px solid var(--color-secondary);;
-    border-top-left-radius: 35px;
-    font-family: Inter,'Courier New', Courier, monospace;
-    font-size: 1.2rem;
-    font-weight: 600;
-    text-align: center;
-    color: #f3f3f3f9;
-    box-sizing: border-box;
-    padding: 0 10px;
-    cursor: pointer;
-    transition: 400ms;
+.seccion-card {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 300px;
+  background-color: rgb(148, 154, 109);
+  border: 1px solid var(--color-secondary);
+  border-top-left-radius: 35px;
+  font-family: Inter, 'Courier New', Courier, monospace;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  color: #f3f3f3f9;
+  box-sizing: border-box;
+  padding: 0 15px;
+  cursor: pointer;
+  transition: 400ms;
 }
 
-.seccion-card p{
-    margin: 0;
-    max-width: 100%; 
-    user-select: none;
+.seccion-card:hover {
+  background-color: #94a59d;
+  box-shadow: 0px 0px 2px 2px var(--color-shadow);
 }
 
-.seccion-card:hover{
-    background-color: #94a59d;
-    box-shadow: 0px 0px 2px 2   px var(--color-shadow);
+.seccion-nombre {
+  margin: 0;
+  text-align: center;
+  user-select: none;
 }
 
-.seccion-card button{
-    position: absolute;
-    top: 0;
-    right: 0;   
-    font-size: 1.2rem;
-    border-bottom-left-radius: 12px;
-    border: 0;
-    background-color: rgb(221, 197, 124);
-    transition: 300ms;
-    user-select: none;
-    cursor: pointer;
+/* --- Botones en esquina superior derecha --- */
+.actions-top-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 0;              /* sin espacio entre botones */
 }
 
-.seccion-card button:hover{
-    box-shadow: -1px 1px 1px 1px var(--color-shadow);
+/* Estilo base para los botones */
+.seccion-actions button {
+  font-size: 0.85rem;
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 0;      /* bordes cuadrados para alinearse al borde */
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, box-shadow 0.2s;
 }
 
+/* Botón editar */
+.btn-editar {
+  background-color: rgb(100, 181, 246);
+  color: white;
+  border-top-right-radius: 4px; /* esquina superior derecha redondeada */
+}
+.btn-editar:hover {
+  background-color: rgb(66, 165, 245);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Botón eliminar */
+.btn-eliminar {
+  background-color: rgb(239, 154, 154);
+  color: white;
+}
+.btn-eliminar:hover {
+  background-color: rgb(229, 115, 115);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}

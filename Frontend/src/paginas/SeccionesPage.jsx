@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/SeccionesPage.css"
 import SeccionCard from "../componentes/SeccionCard";
-import CrearSeccionModal from "../componentes/CrearSeccionModal"; // ← IMPORTAR
+import CrearSeccionModal from "../componentes/CrearSeccionModal";
+import EditarSeccionModal from "../componentes/EditarSeccionModal";
 
 function SeccionesPage(){
     const { user, logout } = useAuth();
@@ -14,18 +15,18 @@ function SeccionesPage(){
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [idProfesor, setIdProfesor] = useState(null);
-    const [modalOpen, setModalOpen] = useState(false); // ← NUEVO ESTADO
+    const [modalCrearOpen, setModalCrearOpen] = useState(false);
+    const [modalEditarOpen, setModalEditarOpen] = useState(false);
+    const [seccionAEditar, setSeccionAEditar] = useState(null);
     
-    const BASE_URL = 'https://cswproyect-production.up.railway.app';
+    const BASE_URL = 'http://localhost:8080';
 
-    // Obtener id_profesor al cargar
     useEffect(() => {
         if (user?.id) {
             obtenerIdProfesor();
         }
     }, [user]);
 
-    // Cargar secciones cuando tengamos el id_profesor
     useEffect(() => {
         if (idProfesor) {
             cargarSecciones();
@@ -84,30 +85,21 @@ function SeccionesPage(){
         }
     };
 
-    // ← MODIFICAR ESTA FUNCIÓN
     const handleAgregarSeccion = () => {
-        setModalOpen(true);
+        setModalCrearOpen(true);
     };
 
-    // ← NUEVA FUNCIÓN
     const handleCrearSeccion = async (nombreSeccion) => {
-        console.log("🔵 Iniciando creación de sección"); // ← AGREGAR
-        console.log("🔵 idProfesor actual:", idProfesor); // ← AGREGAR
-        console.log("🔵 nombreSeccion:", nombreSeccion); // ← AGREGAR
-        console.log("🔵 anioSeleccionado:", anioSeleccionado); // ← AGREGAR
-        
         setLoading(true);
-        setModalOpen(false);
+        setModalCrearOpen(false);
         
         try {
             const payload = {
-                idProfesor: idProfesor,
+                id_profesor: idProfesor,
                 nombreCurso: nombreSeccion,
                 anio: anioSeleccionado,
                 codigo: Math.floor(Math.random() * 10000)
             };
-            
-            console.log("🟢 Payload a enviar:", JSON.stringify(payload, null, 2)); // ← AGREGAR
             
             const response = await fetch(`${BASE_URL}/api/secciones`, {
                 method: 'POST',
@@ -118,19 +110,75 @@ function SeccionesPage(){
             });
 
             const data = await response.json();
-            console.log("🟢 Respuesta del servidor:", data); // ← AGREGAR
 
             if (data.success) {
                 await cargarSecciones();
-                console.log("✅ Sección creada:", data.seccion);
             } else {
                 alert(data.message || "Error al crear la sección");
             }
         } catch (err) {
-            console.error("💥 Error al crear sección:", err);
+            console.error("Error al crear sección:", err);
             alert("Error de conexión con el servidor");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleAbrirEditar = (seccion) => {
+        setSeccionAEditar(seccion);
+        setModalEditarOpen(true);
+    };
+
+    const handleIrATareas = (idSeccion) => {
+        navigate(`/secciones/${idSeccion}/tareas`);
+    };
+
+
+    const handleEditarSeccion = async (idSeccion, nombreCurso, anio) => {
+        console.log("🔵 Editando sección");
+        console.log("   ID Sección:", idSeccion);
+        console.log("   Nombre:", nombreCurso);
+        console.log("   Año:", anio);
+        console.log("   ID Profesor:", idProfesor);
+        
+        setLoading(true);
+        setModalEditarOpen(false);
+        
+        try {
+            // ✅ Payload correcto - solo nombreCurso y anio
+            const payload = {
+                nombreCurso: nombreCurso,
+                anio: anio
+            };
+            
+            console.log("🟢 Payload a enviar:", JSON.stringify(payload, null, 2));
+            
+            const response = await fetch(
+                `${BASE_URL}/api/secciones/${idSeccion}/profesor/${idProfesor}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                }
+            );
+
+            const data = await response.json();
+            console.log("🟢 Respuesta del servidor:", data);
+
+            if (data.success) {
+                await cargarSecciones();
+                alert("Sección actualizada exitosamente");
+            } else {
+                alert(data.message || "Error al editar la sección");
+            }
+        } catch (err) {
+            console.error("💥 Error al editar sección:", err);
+            alert("Error de conexión con el servidor");
+        } finally {
+            setLoading(false);
+            setSeccionAEditar(null);
         }
     };
 
@@ -223,18 +271,30 @@ function SeccionesPage(){
                                     key={sec.idSeccion} 
                                     seccion={sec}
                                     onEliminar={handleEliminarSeccion}
-                                />
+                                    onEditar={handleAbrirEditar}
+                                    onIrATareas={handleIrATareas}
+                                    />
                             ))
                         )}
                     </div>
                 </div>
             </div>
 
-            {/* ← AGREGAR EL MODAL */}
             <CrearSeccionModal
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
+                open={modalCrearOpen}
+                onClose={() => setModalCrearOpen(false)}
                 onCrear={handleCrearSeccion}
+                anioActual={anioSeleccionado}
+            />
+
+            <EditarSeccionModal
+                open={modalEditarOpen}
+                onClose={() => {
+                    setModalEditarOpen(false);
+                    setSeccionAEditar(null);
+                }}
+                onEditar={handleEditarSeccion}
+                seccion={seccionAEditar}
                 anioActual={anioSeleccionado}
             />
         </div>
