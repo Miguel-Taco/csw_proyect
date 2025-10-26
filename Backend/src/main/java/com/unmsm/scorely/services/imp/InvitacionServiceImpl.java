@@ -157,6 +157,30 @@ public class InvitacionServiceImpl implements InvitacionService {
     }
 
     @Override
+    @Transactional
+    public void rechazarInvitacion(String token) {
+        log.info("Rechazando invitacion con token {}", token);
+
+        Invitacion invitacion = invitacionRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("Invitacion No Encontrada"));
+
+        if (invitacion.getEstado() == EstadoInvitacion.ACEPTADA) {
+            throw new RuntimeException("No puedes rechazar una invitación que ya fue aceptada");
+        }
+
+        if (invitacion. getEstado() == EstadoInvitacion.RECHAZADA ||
+            invitacion.getEstado() == EstadoInvitacion.EXPIRADA) {
+            log.warn("Se intentó rechazar una invitación que ya estaba en estado final: {}", invitacion.getEstado());
+            return;
+        }
+
+        invitacion.setEstado(EstadoInvitacion.RECHAZADA);
+        invitacionRepository.save(invitacion);
+
+        log.info("Invitacion rechazada exitosamente con token {}", token);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Integer buscarAlumnoPorIdPersona(Integer idPersona) {
         log.info("Buscando idAlumno para idPersona: {}", idPersona);

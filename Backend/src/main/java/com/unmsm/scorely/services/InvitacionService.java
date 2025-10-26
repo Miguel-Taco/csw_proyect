@@ -11,6 +11,7 @@ public interface InvitacionService {
     AceptarInvitacionResponse aceptarInvitacion(String token, Integer idAlumno);
     InvitacionResponse obtenerInvitacionPorToken(String token);
     List<InvitacionResponse> obtenerInvitacionesPendientes(String correo);
+    void rechazarInvitacion(String token);
     Integer buscarAlumnoPorIdPersona(Integer idPersona);
     Integer buscarProfesorPorIdPersona(Integer idPersona);
 }

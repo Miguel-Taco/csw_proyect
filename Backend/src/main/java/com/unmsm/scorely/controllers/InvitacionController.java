@@ -38,7 +38,7 @@ public class InvitacionController {
     ) {
         log.info("Solicitud de creación de invitación recibida");
 
-        Integer idProfesor = invitacionService.buscarProfesorPorIdPersona(request.getIdPersona());;
+        Integer idProfesor = invitacionService.buscarProfesorPorIdPersona(request.getIdPersona());
 
         InvitacionResponse response = invitacionService.crearInvitacion(request, idProfesor);
 
@@ -67,7 +67,6 @@ public class InvitacionController {
     /**
      * Endpoint para aceptar invitación (redirige al frontend)
      * GET /api/invitaciones/aceptar?token=xxx
-     *
      * Este endpoint maneja la lógica de redirección:
      * - Si el usuario está logueado -> redirige al frontend con modal de confirmación
      * - Si no está logueado -> redirige a login/registro
@@ -123,12 +122,11 @@ public class InvitacionController {
      */
     @PostMapping("/rechazar")
     public ResponseEntity<ApiResponse<String>> rechazarInvitacion(
-            @Valid @RequestBody AceptarInvitacionRequest request,
-            Authentication authentication
+            @Valid @RequestBody AceptarInvitacionRequest request
     ) {
         log.info("Rechazando invitación");
 
-        // TODO: Implementar lógica de rechazo si es necesario
+        invitacionService.rechazarInvitacion(request.getToken());
 
         return ResponseEntity.ok(
                 ApiResponse.success("Invitación rechazada", "Invitación rechazada exitosamente")
