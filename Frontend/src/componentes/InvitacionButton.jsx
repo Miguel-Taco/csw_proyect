@@ -14,7 +14,7 @@ export default function InvitacionButton() {
 
   const { user } = useAuth();
   const { idSeccion } = useParams(); // ✅ Captura el id de la URL
-  const API_URL = "http://localhost:8080";
+  const API_URL = "https://cswproyect-production.up.railway.app";
 
   const openModal = () => setOpen(true);
   const closeModal = () => {
@@ -23,7 +23,8 @@ export default function InvitacionButton() {
     setMensaje("");
   };
 
-  console.log("ID de la sección desde URL:", idSeccion); // ✅ Verifica el ID
+  console.log("ID de la sección desde URL:", idSeccion);
+  console.log("Usuario actual:", user.id);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -48,7 +49,8 @@ export default function InvitacionButton() {
 
     const data = {
       correoAlumno: email,
-      idSeccion: Number(idSeccion), // ✅ usa el id dinámico
+      idSeccion: Number(idSeccion),
+      idProfesor: user.id
     };
 
     try {
