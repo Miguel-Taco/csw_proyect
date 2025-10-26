@@ -64,36 +64,6 @@ public class InvitacionController {
         );
     }
 
-    /**
-     * Endpoint para aceptar invitación (redirige al frontend)
-     * GET /api/invitaciones/aceptar?token=xxx
-     * Este endpoint maneja la lógica de redirección:
-     * - Si el usuario está logueado -> redirige al frontend con modal de confirmación
-     * - Si no está logueado -> redirige a login/registro
-     */
-    @GetMapping("/aceptar")
-    public void aceptarInvitacionRedirect(
-            @RequestParam String token,
-            Authentication authentication,
-            HttpServletResponse response
-    ) throws IOException {
-        log.info("Procesando aceptación de invitación via GET");
-
-        String frontendUrl = frontendUrlEnv;
-
-        // Verificar si el usuario está autenticado
-        if (authentication == null || !authentication.isAuthenticated()) {
-            // Usuario no logueado -> redirigir a login con el token
-            String redirectUrl = String.format("%s/login?invitacion=%s", frontendUrl, token);
-            response.sendRedirect(redirectUrl);
-            return;
-        }
-
-        // Usuario logueado -> redirigir al home con modal de confirmación
-        String redirectUrl = String.format("%s/seccionesPage?invitacion=%s", frontendUrl, token);
-        response.sendRedirect(redirectUrl);
-    }
-
     @PostMapping("/confirmar")
     public ResponseEntity<ApiResponse<AceptarInvitacionResponse>> confirmarAceptacion(
             @Valid @RequestBody AceptarInvitacionRequest request
@@ -117,6 +87,21 @@ public class InvitacionController {
     }
 
     /**
+     * Endpoint para obtener invitaciones pendientes de un alumno
+     * GET /api/invitaciones/pendientes/correo
+     */
+    @GetMapping("/pendientes")
+    public ResponseEntity<ApiResponse<List<InvitacionResponse>>> obtenerInvitacionesPendientesPorCorreo(
+            @RequestParam String correo
+    ) {
+        log.info("Obteniendo invitaciones pendientes para el alumno con correo: {}", correo);
+
+        List<InvitacionResponse> pendientes = invitacionService.obtenerInvitacionesPendientes(correo);
+
+        return ResponseEntity.ok(ApiResponse.success(pendientes, "Invitaciones pendientes obtenidas"));
+    }
+
+    /**
      * Endpoint para rechazar una invitación
      * POST /api/invitaciones/rechazar
      */
@@ -132,20 +117,4 @@ public class InvitacionController {
                 ApiResponse.success("Invitación rechazada", "Invitación rechazada exitosamente")
         );
     }
-
-    /**
-     * Endpoint para obtener invitaciones pendientes de un alumno
-     * GET /api/invitaciones/pendientes/correo
-     */
-    @GetMapping("/pendientes")
-    public ResponseEntity<ApiResponse<List<InvitacionResponse>>> obtenerInvitacionesPendientesPorCorreo(
-            @RequestParam String correo
-    ) {
-        log.info("Obteniendo invitaciones pendientes para el alumno con correo: {}", correo);
-
-        List<InvitacionResponse> pendientes = invitacionService.obtenerInvitacionesPendientes(correo);
-
-        return ResponseEntity.ok(ApiResponse.success(pendientes, "Invitaciones pendientes obtenidas"));
-    }
-
 }
