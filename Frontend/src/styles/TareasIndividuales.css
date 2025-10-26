@@ -1,11 +1,9 @@
 .tareas-container {
-  margin: 20px;
-  padding: 20px;
-  border: 1px solid var(--color-shadow);
-  border-radius: 12px;
   background: var(--color-neutral);
-  box-shadow: 0 4px 8px var(--color-shadow);
-  font-family: 'Inter', 'Open Sans', 'Roboto', sans-serif;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px var(--color-shadow);
+  margin: 20px;
 }
 
 .header {
@@ -14,52 +12,126 @@
   margin-bottom: 15px;
 }
 
-.crear-tarea-btn {
-  padding: 10px 18px;
-  background-color: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
+.seccion-info {
+  margin-bottom: 15px;
 }
 
-.crear-tarea-btn:hover {
-  background-color: var(--color-secondary);
+.seccion-info h2 {
+  color: var(--color-secondary);
+  margin: 0 0 5px 0;
+  font-size: 1.5rem;
+}
+
+.total-alumnos {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.loading-message,
+.error-message {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-size: 1rem;
+}
+
+.error-message {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
 }
 
 .tabla-tareas {
   width: 100%;
   border-collapse: collapse;
-  border-radius: 8px;
-  overflow: hidden;
+  background: white;
+  table-layout: fixed;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .tabla-tareas th,
 .tabla-tareas td {
-  border: 1px solid var(--color-shadow);
+  border: 1px solid var(--color-primary);
   padding: 12px;
+  text-align: left;
+}
+
+/* Columnas con ancho específico */
+.tabla-tareas th.col-nota,
+.tabla-tareas td.col-nota {
+  width: 120px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.tabla-tareas th.col-codigo,
+.tabla-tareas td.col-codigo {
+  width: 150px;
   text-align: center;
 }
 
 .tabla-tareas th {
-  background-color: var(--color-accent);
+  background: var(--color-accent);
   color: var(--color-secondary);
-  font-weight: 700;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
 }
 
-.tabla-tareas tr:nth-child(even) {
-  background-color: #fff;
+/* Filas de alumnos clickeables */
+.alumno-row {
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.tabla-tareas tr:nth-child(odd) {
-  background-color: var(--color-neutral);
+.alumno-row:hover {
+  background-color: #f8f9fa;
+  transform: translateX(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alumno-row:active {
+  transform: translateX(1px);
+}
+
+.nombre-alumno {
+  color: var(--color-secondary);
+  font-weight: 500;
+}
+
+.alumno-row:hover .nombre-alumno {
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
 .vacio {
   text-align: center;
-  color: var(--color-secondary);
+  color: #888;
   font-style: italic;
-  padding: 20px;
+  padding: 30px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tareas-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .tabla-tareas th,
+  .tabla-tareas td {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .col-codigo {
+    display: none;
+  }
+
+  .seccion-info h2 {
+    font-size: 1.2rem;
+  }
 }

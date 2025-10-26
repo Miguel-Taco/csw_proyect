@@ -1,40 +1,127 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "../paginas/Login";
-import Register from "../paginas/Register";
-import Dashboard from "../paginas/SeccionesPage";
-import AsignacionGrupos from "../paginas/AsignacionGruposPage";
-import SubirTareas from "../paginas/SubirTareas";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-function AppRoutes() {
-  return (
-    <>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/seccionesPage" element={<Dashboard />} />
-        <Route path="/asignacionGrupos" element={<AsignacionGrupos />} />
-        <Route path="/asignaciongrupos" element={<AsignacionGrupos />} />
-        <Route path="/AsignacionGrupos" element={<AsignacionGrupos />} />
-        <Route path="/subirTareas" element={<SubirTareas />} />
-        <Route path="/subirtareas" element={<SubirTareas />} />
-        <Route path="*" element={
-          <div style={{ padding: 24, color: 'red', fontSize: 20 }}>
-            ❌ Ruta no encontrada
-            <br/><a href="/">Ir a inicio</a>
-            <br/><a href="/asignacionGrupos">Ir a Asignación Grupos</a>
-            <br/><a href="/subirTareas">Ir a Subir Tareas</a>
-          </div>
-        } />
-      </Routes>
-    </>
-  );
+// Importa tus páginas
+import LoginPage from "../paginas/Login";
+import RegisterPage from "../paginas/Register";
+import SeccionesPage from "../paginas/SeccionesPage";
+import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
+import CrearTareaPage from "../paginas/CrearTareaPage";
+import InvitacionesPendientesButton from "../componentes/InvitacionesPendientesButton";
+
+// --- Componentes de Control de Rutas ---
+
+// Rutas protegidas (solo usuarios autenticados)
+function ProtectedRoute({ children }) {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
 }
+
+// Rutas públicas (login, register)
+function PublicRoute({ children }) {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/secciones" replace />;
+  }
+
+  return children;
+}
+
+// --- Enrutador Principal ---
 
 function AppRouter() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <Routes>
+        {/* Rutas Públicas */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
+
+        {/* Rutas Protegidas */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Navigate to="/secciones" replace />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/secciones"
+          element={
+            <ProtectedRoute>
+              <InvitacionesPendientesButton />
+              <SeccionesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ver alumnos y tareas de una sección */}
+        <Route
+          path="/secciones/:idSeccion/tareas"
+          element={
+            <ProtectedRoute>
+              <TareasIndividualesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Crear tarea en una sección */}
+        <Route
+          path="/secciones/:idSeccion/crear-tarea"
+          element={
+            <ProtectedRoute>
+              <CrearTareaPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ✅ NUEVA RUTA: Ver tareas de un alumno específico en una sección */}
+        <Route
+          path="/secciones/:idSeccion/alumno/:idAlumno/tareas"
+          element={
+            <ProtectedRoute>
+              {/* Aquí pondrás tu componente de tareas del alumno */}
+              <div style={{ padding: '20px' }}>
+                <h2>Vista de Tareas del Alumno</h2>
+                <p>Próximamente: Aquí verás las tareas individuales del alumno</p>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ruta para cualquier otra URL no definida */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </BrowserRouter>
   );
 }

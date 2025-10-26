@@ -1,4 +1,7 @@
 package com.unmsm.scorely.services;
 
-public class EmailService {
+import com.unmsm.scorely.models.Invitacion;
+
+public interface EmailService {
+    void enviarInvitacion(Invitacion invitacion);
 }

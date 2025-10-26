@@ -1,0 +1,157 @@
+.asignarNotas-body{
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;     /* centra horizontal */
+}
+
+/* Hereda el comportamiento de box-sizing para todo */
+.asignarNotas-body *{
+  box-sizing: border-box;
+}
+
+/* TITULAR (nombre del alumno) */
+.asignarNotas-header{
+  flex-shrink: 0;
+  height: 12%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px double var(--color-accent);
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  background-color: var(--color-neutral);
+  color: #3a3a3a;
+  font-weight: 600;
+  letter-spacing: .5px;
+}
+
+/* TARJETA/CONTENEDOR PRINCIPAL */
+.main-asignarNotas-container{
+  align-self: center;
+  max-width: 85%;
+  max-height: 80vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-neutral);
+  box-shadow: 0 0 10px 5px var(--color-shadow);
+  border-radius: 24px;
+  overflow: hidden;            /* redondeo limpio con header */
+}
+
+/* ZONA SCROLLEABLE QUE CONTIENE LAS TAREAS */
+.tareas-scroll{
+  flex: 1;
+  margin: 2.5% 3%;
+  padding: 2%;
+  border: 4px double var(--color-accent);
+  border-radius: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;                   /* separación uniforme entre ítems */
+}
+
+/* Item de tarea (barra alargada) */
+.tarea-item{
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  border: 2px solid rgba(0,0,0,.15);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,.05);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+/* micro feedback */
+.tarea-item:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0,0,0,.08);
+}
+
+/* Título (lado izquierdo) */
+.tarea-titulo{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 16px 18px;
+  color: #2c2c2c;
+  font-weight: 500;
+}
+
+/* Caja de la nota (lado derecho) — se ve como el recuadro con número */
+.tarea-nota{
+  min-width: 86px;            /* ancho mínimo para 2 dígitos sin romper */
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 2px solid rgba(0,0,0,.15);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f1f14;
+  background: #fafafa;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Si la nota es editable con <input>, usa esta variante */
+.tarea-nota input{
+  width: 100%;
+  text-align: center;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+/* BOTÓN ACCIÓN (si necesitas uno, consistente con SeccionesPage) */
+.btn-asignarNotas{
+  align-self: flex-end;
+  margin: 12px 3% 20px;
+  height: 40px;
+  min-width: 180px;
+  background-color: var(--color-secondary);
+  color: #fff;
+  font-family: Roboto,'Courier New', Courier, monospace;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 300ms;
+}
+.btn-asignarNotas:hover{
+  background-color: #1f1f14;
+}
+
+/* SCROLLBAR (opcional, para que luzca más parecido al boceto) */
+.tareas-scroll::-webkit-scrollbar{
+  width: 10px;
+}
+.tareas-scroll::-webkit-scrollbar-track{
+  background: #eee;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+.tareas-scroll::-webkit-scrollbar-thumb{
+    background: #c9c9c9;
+    border-radius: 10px;
+}
+.tareas-scroll{
+  scrollbar-width: thin;           /* Firefox */
+  scrollbar-color: #c9c9c9 #eee;   /* Firefox */
+}
+
+/* RESPONSIVE mínimo */
+@media (max-width: 768px){
+  .main-asignarNotas-container{
+    max-width: 95%;
+  }
+  .tarea-nota{
+    min-width: 72px;
+    font-size: 1.1rem;
+}
+}
