@@ -2,8 +2,12 @@ package com.unmsm.scorely.models;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +20,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Tarea")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,8 +31,9 @@ public class Tarea {
     @Column(name = "id_tarea")
     private Integer idTarea;
 
-    @ManyToOne
-    @JoinColumn(name = "id_seccion", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_seccion")
+    @JsonIgnore // evita serializar la Seccion y previene errores 500 por lazy/proxies o ciclos
     private Seccion seccion;
 
     @Column(name = "nombre", nullable = false, length = 100)

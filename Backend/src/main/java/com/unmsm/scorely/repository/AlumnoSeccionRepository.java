@@ -1,11 +1,14 @@
+
 package com.unmsm.scorely.repository;
 
-import com.unmsm.scorely.models.AlumnoSeccion;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
+import com.unmsm.scorely.models.AlumnoSeccion;
 
 public interface AlumnoSeccionRepository extends JpaRepository<AlumnoSeccion, Integer> {
 
@@ -25,4 +28,12 @@ public interface AlumnoSeccionRepository extends JpaRepository<AlumnoSeccion, In
             @Param("idAlumno") Integer idAlumno,
             @Param("idSeccion") Integer idSeccion
     );
+
+    // ✅ NUEVO: Obtener todos los alumnos de una sección
+    @Query("SELECT als FROM AlumnoSeccion als " +
+            "JOIN FETCH als.alumno a " +
+            "JOIN FETCH a.persona p " +
+            "WHERE als.seccion.idSeccion = :idSeccion " +
+            "ORDER BY p.apellidoP, p.apellidoM, p.nombres")
+    List<AlumnoSeccion> findBySeccion_IdSeccion(@Param("idSeccion") Integer idSeccion);
 }
