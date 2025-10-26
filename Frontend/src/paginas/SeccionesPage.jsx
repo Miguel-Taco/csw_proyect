@@ -129,6 +129,11 @@ function SeccionesPage(){
         setModalEditarOpen(true);
     };
 
+    const handleIrATareas = (idSeccion) => {
+        navigate(`/secciones/${idSeccion}/tareas`);
+    };
+
+
     const handleEditarSeccion = async (idSeccion, nombreCurso, anio) => {
         console.log("🔵 Editando sección");
         console.log("   ID Sección:", idSeccion);
@@ -267,7 +272,8 @@ function SeccionesPage(){
                                     seccion={sec}
                                     onEliminar={handleEliminarSeccion}
                                     onEditar={handleAbrirEditar}
-                                />
+                                    onIrATareas={handleIrATareas}
+                                    />
                             ))
                         )}
                     </div>

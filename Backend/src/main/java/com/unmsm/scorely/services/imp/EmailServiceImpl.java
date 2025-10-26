@@ -52,7 +52,7 @@ public class EmailServiceImpl implements EmailService {
                         "Para unirte al curso, haz clic en el siguiente enlace:\n\n" +
                         "%s\n\n" +
                         "Esta invitación expirará el: %s\n\n" +
-                        "Saludos GAAAAAAA,\n",
+                        "Saludos,\n",
                 invitacion.getSeccion().getNombreCurso(),
                 invitacion.getSeccion().getAnio(),
                 linkInvitacion,

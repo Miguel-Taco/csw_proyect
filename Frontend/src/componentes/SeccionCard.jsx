@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import "../styles/SeccionCard.css";
 
-function SeccionCard({ seccion, onEliminar, onEditar }) {
+function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
   const handleEliminar = async (e) => {
     e.stopPropagation();
     
@@ -17,8 +17,14 @@ function SeccionCard({ seccion, onEliminar, onEditar }) {
     onEditar(seccion);
   };
 
+  const handleIrATareas = () => {
+    if (onIrATareas) {
+      onIrATareas(seccion.idSeccion);
+    }
+  };
+
   return (
-    <div className="seccion-card">
+    <div className="seccion-card" onClick={handleIrATareas}>
       {/* Botones flotantes */}
       <div className="seccion-actions actions-top-right">
         <button
@@ -39,6 +45,7 @@ function SeccionCard({ seccion, onEliminar, onEditar }) {
 
       {/* Texto centrado */}
       <p className="seccion-nombre">{seccion.nombreCurso}</p>
+      <p className="seccion-anio">{seccion.anio}</p>
     </div>
   );
 }
@@ -51,6 +58,7 @@ SeccionCard.propTypes = {
   }).isRequired,
   onEliminar: PropTypes.func.isRequired,
   onEditar: PropTypes.func.isRequired,
+  onIrATareas: PropTypes.func, // 🔹 Nueva prop opcional
 };
 
 export default SeccionCard;
