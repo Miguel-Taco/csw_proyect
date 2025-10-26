@@ -1,16 +1,7 @@
 import PropTypes from "prop-types";
-<<<<<<< HEAD
-import { useNavigate } from "react-router-dom";
-import "../styles/SeccionCard.css"
-
-function SeccionCard({ seccion, onEliminar }) {
-  const navigate = useNavigate();
-
-=======
 import "../styles/SeccionCard.css";
 
 function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
->>>>>>> master
   const handleEliminar = async (e) => {
     e.stopPropagation();
     if (
@@ -22,24 +13,6 @@ function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
     }
   };
 
-<<<<<<< HEAD
-  const handleClick = () => {
-    // Guardar el ID de la sección en localStorage
-    localStorage.setItem('seccionActual', JSON.stringify({
-      idSeccion: seccion.idSeccion,
-      nombreCurso: seccion.nombreCurso,
-      anio: seccion.anio
-    }));
-    
-    // Navegar a la página de tareas
-    navigate('/tareasIndividuales');
-  };
-
-  return (
-    <div className="seccion-card" onClick={handleClick}>
-      <p>{seccion.nombreCurso}</p>
-      <button onClick={handleEliminar}>x</button>
-=======
   const handleEditar = (e) => {
     e.stopPropagation();
     onEditar(seccion);
@@ -74,7 +47,6 @@ function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
       {/* Texto centrado */}
       <p className="seccion-nombre">{seccion.nombreCurso}</p>
       <p className="seccion-anio">{seccion.anio}</p>
->>>>>>> master
     </div>
   );
 }
@@ -83,11 +55,7 @@ SeccionCard.propTypes = {
   seccion: PropTypes.shape({
     idSeccion: PropTypes.number.isRequired,
     nombreCurso: PropTypes.string.isRequired,
-<<<<<<< HEAD
-    anio: PropTypes.number
-=======
     anio: PropTypes.number.isRequired,
->>>>>>> master
   }).isRequired,
   onEliminar: PropTypes.func.isRequired,
   onEditar: PropTypes.func.isRequired,

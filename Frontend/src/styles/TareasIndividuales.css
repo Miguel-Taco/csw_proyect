@@ -4,66 +4,12 @@
   border-radius: 12px;
   box-shadow: 0 2px 6px var(--color-shadow);
   margin: 20px;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.header-container {
+.header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: white;
-  border-radius: 8px;
-  border: 1px solid var(--color-primary);
-}
-
-.seccion-info h2 {
-  margin: 0 0 5px 0;
-  color: var(--color-secondary);
-}
-
-.seccion-info p {
-  margin: 0;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.header-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-primary {
-  background: #2563eb;
-  color: white;
-}
-
-.btn-primary:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background: #6c757d;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background: #5a6268;
-  transform: translateY(-1px);
+  justify-content: flex-end;
+  margin-bottom: 15px;
 }
 
 .seccion-info {
@@ -102,12 +48,7 @@
   border-collapse: collapse;
   background: white;
   table-layout: fixed;
-<<<<<<< HEAD
-  border-radius: 8px;
-  overflow: hidden;
-=======
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
->>>>>>> master
 }
 
 .tabla-tareas th,
@@ -117,42 +58,24 @@
   text-align: left;
 }
 
-<<<<<<< HEAD
-.tabla-tareas th:nth-child(1),
-.tabla-tareas td:nth-child(1) {
-  width: 100px;
-=======
 /* Columnas con ancho específico */
 .tabla-tareas th.col-nota,
 .tabla-tareas td.col-nota {
   width: 120px;
->>>>>>> master
   text-align: center;
   font-weight: 600;
 }
 
-<<<<<<< HEAD
-.tabla-tareas th:nth-child(2),
-.tabla-tareas td:nth-child(2) {
-  width: calc(100% - 100px);
-=======
 .tabla-tareas th.col-codigo,
 .tabla-tareas td.col-codigo {
   width: 150px;
   text-align: center;
->>>>>>> master
 }
 
 .tabla-tareas th {
   background: var(--color-accent);
   color: var(--color-secondary);
   font-weight: 600;
-<<<<<<< HEAD
-}
-
-.tabla-tareas tbody tr:hover {
-  background: #f8f9fa;
-=======
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
@@ -182,34 +105,13 @@
 .alumno-row:hover .nombre-alumno {
   color: var(--color-primary);
   font-weight: 600;
->>>>>>> master
 }
 
 .vacio {
   text-align: center;
   color: #888;
-<<<<<<< HEAD
-  padding: 40px !important;
-}
-
-@media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .header-buttons {
-    width: 100%;
-    justify-content: stretch;
-  }
-
-  .btn {
-    flex: 1;
-  }
-=======
   font-style: italic;
   padding: 30px !important;
->>>>>>> master
 }
 
 /* Responsive */
