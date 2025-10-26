@@ -34,6 +34,10 @@ function Login(){
                 <Link to="/seccionesPage" className="login-button">
                     Log in
                 </Link>
+                {/* Enlace de prueba para abrir directamente la página de Asignación de Grupos */}
+                <Link to="/asignacionGrupos" className="login-button" style={{ marginTop: 8, display: 'inline-block', backgroundColor: '#313423', color: '#f4f4ec', padding: '8px 12px', borderRadius: 6, textDecoration: 'none' }}>
+                    Ir a Asignación Grupos (TEST)
+                </Link>
                 <Link to="/register" className="login-registrar">
                      No tiene cuenta? Regístrese aquí!
                 </Link>

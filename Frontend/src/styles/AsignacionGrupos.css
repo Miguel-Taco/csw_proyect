@@ -1,14 +1,4 @@
-/* Variables ya deberían estar definidas en tu proyecto */
-/* Si no, descomenta estas líneas:
-:root {
-    --color-primary: #7fa88f;
-    --color-secondary: #1f1f14;
-    --color-accent: #d4d4d4;
-    --color-neutral: #f5f5f5;
-    --color-shadow: rgba(0, 0, 0, 0.1);
-    --color-border: #666666;
-}
-*/
+/* Estilos para la página de Asignación de Grupos */
 .asignacionPage-body {
     min-height: 100vh;
     display: flex;
@@ -21,10 +11,11 @@
 
 .asignacion-overlay {
     width: 100%;
-    height: 100%;
+    min-height: 500px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    padding-top: 20px;
 }
 
 .asignacion-modal {
