@@ -7,12 +7,7 @@ import RegisterPage from "../paginas/Register";
 import SeccionesPage from "../paginas/SeccionesPage";
 import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
-<<<<<<< HEAD
-//import NotasGrupales from "../componentes/notasGrupales";
-=======
 import InvitacionesPendientesButton from "../componentes/InvitacionesPendientesButton";
->>>>>>> origin/master
-
 // --- Componentes de Control de Rutas ---
 
 // Rutas protegidas (solo usuarios autenticados)
