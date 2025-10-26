@@ -27,17 +27,19 @@ function Login() {
 
     setLoading(true);
     try {
-      // Usar la función login del contexto
-      const result = await login(
-        { 
-          username: formData.correo, 
-          password: formData.contraseña 
-        },
-        'profesor' // Cambia esto según el rol que necesites: 'profesor', 'alumno', 'admin', etc.
-      );
+      const result = await login({
+        username: formData.correo,
+        password: formData.contraseña
+      });
 
       if (result.success) {
-        navigate("/seccionesPage");
+        // Redireccionar según el rol del usuario
+        const userRole = result.user?.role?.toLowerCase();
+        if (userRole === 'estudiante' || userRole === 'alumno') {
+          navigate("/AlumnoPage");
+        } else if (userRole === 'profesor') {
+          navigate("/seccionesPage");
+        }
       } else {
         setError(result.message || "Credenciales inválidas");
       }

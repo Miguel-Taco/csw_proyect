@@ -57,7 +57,7 @@ public class SeccionController {
             @PathVariable Integer idProfesor,
             @PathVariable Integer anio) {
         List<SeccionDTO> secciones = seccionService.obtenerSeccionesPorProfesorYAnio(idProfesor, anio);
-        return ResponseEntity.ok(secciones);
+        return ResponseEntity.ok(secciones  );
     }
 
     // POST: Crear nueva sección

@@ -1,6 +1,7 @@
 package com.unmsm.scorely.services;
 
 import com.unmsm.scorely.dto.CrearSeccionRequest;
+import com.unmsm.scorely.dto.SeccionAlumnoDTO;
 import com.unmsm.scorely.dto.SeccionDTO;
 import com.unmsm.scorely.dto.EditarSeccionRequest;
 import com.unmsm.scorely.models.Profesor;
@@ -146,5 +147,34 @@ public SeccionDTO editarSeccion(Integer idSeccion, Integer idProfesor, EditarSec
     // Obtener una sección por ID
     public Optional<Seccion> obtenerSeccionPorId(Integer idSeccion) {
         return seccionRepository.findById(idSeccion);
+    }
+
+    public List<SeccionAlumnoDTO> obtenerSeccionesPorAlumnoYAnio(Integer idAlumno, Integer anio) {
+        // Aquí deberías hacer un JOIN entre Alumno_Seccion, Seccion y Profesor
+        // Por ahora, asumo que obtienes las secciones del alumno
+
+        List<Seccion> secciones = seccionRepository.findByAlumnoAndAnio(idAlumno, anio);
+
+        return secciones.stream()
+                .map(this::convertirASeccionConProfesorDto)
+                .collect(Collectors.toList());
+    }
+
+    private SeccionAlumnoDTO convertirASeccionConProfesorDto(Seccion seccion) {
+        SeccionAlumnoDTO dto = new SeccionAlumnoDTO();
+        dto.setIdSeccion(seccion.getIdSeccion());
+        dto.setNombreCurso(seccion.getNombreCurso());
+        dto.setAnio(seccion.getAnio());
+        dto.setCodigo(seccion.getCodigo());
+        dto.setId_profesor(seccion.getProfesor().getIdProfesor());
+
+        // Construir nombre completo del profesor
+        Profesor profesor = seccion.getProfesor();
+        String nombreCompleto = profesor.getPersona().getNombres() + " " +
+                profesor.getPersona().getApellidoP() + " " +
+                profesor.getPersona().getApellidoM();
+        dto.setNombreProfesor(nombreCompleto);
+
+        return dto;
     }
 }
