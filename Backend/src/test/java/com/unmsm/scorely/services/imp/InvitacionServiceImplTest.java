@@ -59,7 +59,7 @@ class InvitacionServiceImplTest {
         alumnoDePrueba = new Alumno();
         alumnoDePrueba.setIdAlumno(5);
 
-        requestDePrueba = new InvitacionRequest(10, "alumno@test.com");
+        requestDePrueba = new InvitacionRequest(10, "alumno@test.com", 1);
 
     }
 

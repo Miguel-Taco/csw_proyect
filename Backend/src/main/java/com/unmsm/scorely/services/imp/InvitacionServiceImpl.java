@@ -1,5 +1,6 @@
 package com.unmsm.scorely.services.imp;
 
+import com.unmsm.scorely.repository.ProfesorRepository;
 import org.springframework.stereotype.Service;
 
 import com.unmsm.scorely.dto.AceptarInvitacionResponse;
@@ -30,6 +31,7 @@ public class InvitacionServiceImpl implements InvitacionService {
     private final EmailService emailService;
     private final InvitacionValidator invitacionValidator;
     private final MatriculaService matriculaService;
+    private final ProfesorRepository profesorRepository;
 
     public InvitacionServiceImpl(
             InvitacionRepository invitacionRepository,
@@ -38,7 +40,8 @@ public class InvitacionServiceImpl implements InvitacionService {
             TokenGenerator tokenGenerator,
             EmailService emailService,
             InvitacionValidator invitacionValidator,
-            MatriculaService matriculaService
+            MatriculaService matriculaService,
+            ProfesorRepository profesorRepository
     ) {
         this.invitacionRepository = invitacionRepository;
         this.seccionRepository = seccionRepository;
@@ -47,6 +50,7 @@ public class InvitacionServiceImpl implements InvitacionService {
         this.emailService = emailService;
         this.invitacionValidator = invitacionValidator;
         this.matriculaService = matriculaService;
+        this.profesorRepository = profesorRepository;
     }
 
     @Override
@@ -107,10 +111,6 @@ public class InvitacionServiceImpl implements InvitacionService {
         Alumno alumno = alumnoRepository.findById(idAlumno)
                 .orElseThrow(() -> new RuntimeException("Alumno no encontrado"));
 
-        /*if (!invitacion.getCorreo().equalsIgnoreCase(alumno.getPersona().getCorreo())){
-            throw new RuntimeException("Esta invitación no corresponde a tu correo");
-        }*/
-
         if (matriculaService.estaMatriculado(alumno, invitacion.getSeccion())){
             invitacion.setEstado(EstadoInvitacion.ACEPTADA);
             invitacionRepository.save(invitacion);
@@ -163,6 +163,17 @@ public class InvitacionServiceImpl implements InvitacionService {
 
         return alumnoRepository.findIdAlumnoByIdPersona(idPersona)
                 .orElseThrow(() -> new RuntimeException(
+                        "No se encontró un alumno asociado a la persona con ID: " + idPersona
+                ));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Integer buscarProfesorPorIdPersona(Integer idPersona) {
+        log.info("Buscando idProfesor para idPersona: {}", idPersona);
+
+        return profesorRepository.findIdProfesorByIdPersona(idPersona)
+                .orElseThrow(()-> new RuntimeException(
                         "No se encontró un alumno asociado a la persona con ID: " + idPersona
                 ));
     }

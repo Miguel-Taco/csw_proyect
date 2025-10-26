@@ -34,12 +34,11 @@ public class InvitacionController {
      */
     @PostMapping
     public ResponseEntity<ApiResponse<InvitacionResponse>> crearInvitacion(
-            @Valid @RequestBody InvitacionRequest request,
-            Authentication authentication
+            @Valid @RequestBody InvitacionRequest request
     ) {
         log.info("Solicitud de creación de invitación recibida");
 
-        Integer idProfesor = obtenerIdProfesorDeAuthentication(authentication);
+        Integer idProfesor = invitacionService.buscarProfesorPorIdPersona(request.getIdPersona());;
 
         InvitacionResponse response = invitacionService.crearInvitacion(request, idProfesor);
 
@@ -151,19 +150,4 @@ public class InvitacionController {
         return ResponseEntity.ok(ApiResponse.success(pendientes, "Invitaciones pendientes obtenidas"));
     }
 
-    /**
-     * Extrae el ID del profesor del objeto Authentication
-     */
-    private Integer obtenerIdProfesorDeAuthentication(Authentication authentication) {
-        // TODO: Implementar según el sistema de autenticación
-        return 1; // CAMBIAR EN PRODUCCIÓN
-    }
-
-    /**
-     * Extrae el ID del alumno del objeto Authentication
-     */
-    private Integer obtenerIdAlumnoDeAuthentication(Authentication authentication) {
-        // TODO: Implementar según el sistema de autenticación
-        return 1; // CAMBIAR EN PRODUCCIÓN
-    }
 }
