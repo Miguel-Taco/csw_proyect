@@ -32,7 +32,7 @@ public class TareaController {
     }
 
     // 🔹 Crear nueva tarea
-    @PostMapping("/api/tareas")
+    @PostMapping
     public ResponseEntity<?> crearTarea(@RequestBody CrearTareaRequest req) {
         try {
             System.out.println("POST /api/tareas - payload: " + req);
