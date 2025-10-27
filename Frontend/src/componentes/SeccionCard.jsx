@@ -4,11 +4,10 @@ import "../styles/SeccionCard.css";
 function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
   const handleEliminar = async (e) => {
     e.stopPropagation();
-    if (
-      window.confirm(
-        `¿Está seguro de eliminar la sección "${seccion.nombreCurso}"?\n\nEsto eliminará también todos los grupos, tareas y calificaciones asociadas.`
-      )
-    ) {
+    
+    if (window.confirm(`¿Está seguro de eliminar la sección "${seccion.nombreCurso}"?
+
+  Esto eliminará también todos los grupos, tareas y calificaciones asociadas.`)) {
       await onEliminar(seccion.idSeccion);
     }
   };
@@ -46,7 +45,6 @@ function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
 
       {/* Texto centrado */}
       <p className="seccion-nombre">{seccion.nombreCurso}</p>
-      <p className="seccion-anio">{seccion.anio}</p>
     </div>
   );
 }
