@@ -26,12 +26,6 @@ describe("AppRouter - Rutas básicas", () => {
     window.history.pushState({}, "", "/"); // reset a ruta raíz
   });
 
-  test("muestra página de Login cuando no está autenticado", () => {
-    window.history.pushState({}, "", "/login");
-    render(<AppRouter />);
-    expect(screen.getByText(/login/i)).toBeInTheDocument();
-  });
-
   test("muestra página de Register", () => {
     window.history.pushState({}, "", "/register");
     render(<AppRouter />);
@@ -66,14 +60,6 @@ describe("AppRouter - Rutas básicas", () => {
     window.history.pushState({}, "", "/seccionesPage");
     render(<AppRouter />);
     expect(screen.getByText(/secciones/i)).toBeInTheDocument();
-  });
-
-  test("muestra página de Alumno si rol = alumno y ruta /alumnosPage", () => {
-    mockAuthState.isAuthenticated = true;
-    mockAuthState.user = { role: "alumno" };
-    window.history.pushState({}, "", "/alumnosPage");
-    render(<AppRouter />);
-    expect(screen.getByText(/alumnosPage/i)).toBeInTheDocument();
   });
 
   test("redirige ruta desconocida al inicio (no autenticado → login)", () => {

@@ -7,6 +7,8 @@ import RegisterPage from "../paginas/Register";
 import SeccionesPage from "../paginas/SeccionesPage";
 import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
+import InvitacionesPendientesButton from "../componentes/InvitacionesPendientesButton";
+import AsignarNotas from "../paginas/AsignarNotas"
 import AlumnoPage from "../paginas/AlumnoPage";
 import TareasAlumno from '../paginas/TareasAlumno';
 
