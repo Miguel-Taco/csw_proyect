@@ -57,7 +57,7 @@ public class SeccionController {
             @PathVariable Integer idProfesor,
             @PathVariable Integer anio) {
         List<SeccionDTO> secciones = seccionService.obtenerSeccionesPorProfesorYAnio(idProfesor, anio);
-        return ResponseEntity.ok(secciones);
+        return ResponseEntity.ok(secciones  );
     }
 
     // POST: Crear nueva sección
@@ -100,7 +100,7 @@ public class SeccionController {
 
             // 🔵 ahora el service devuelve DTO
             SeccionDTO dto = seccionService.editarSeccion(idSeccion, idProfesor, request);
-
+    
             response.put("success", true);
             response.put("message", "Sección actualizada exitosamente");
             response.put("seccion", dto); // ✅ DTO, no entidad JPA
