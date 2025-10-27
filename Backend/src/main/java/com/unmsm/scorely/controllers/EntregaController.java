@@ -2,6 +2,7 @@ package com.unmsm.scorely.controllers;
 
 import com.unmsm.scorely.dto.RegistrarEntregasRequest;
 import com.unmsm.scorely.dto.ActualizarNotaRequest;
+import com.unmsm.scorely.dto.NotasDeTareas;
 import com.unmsm.scorely.models.Entrega;
 import com.unmsm.scorely.services.EntregaService;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -52,7 +54,20 @@ public class EntregaController {
         }
     }
 
-    // Actualizar nota por tarea + alumno (actualiza la última entrega)
+    // 🆕 LISTAR tareas con notas de un alumno en una sección
+    @GetMapping("/seccion/{idSeccion}/alumno/{idAlumno}/tareas-notas")
+    public ResponseEntity<?> obtenerTareasNotasAlumno(@PathVariable Integer idSeccion,
+                                                      @PathVariable Integer idAlumno) {
+        try {
+            List<NotasDeTareas> tareasNotas = entregaService.obtenerTareasNotasAlumno(idSeccion, idAlumno);
+            return ResponseEntity.ok(tareasNotas);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    // ✏️ ACTUALIZAR nota por tarea + alumno (actualiza la última entrega)
     @PutMapping("/tarea/{idTarea}/alumno/{idAlumno}/nota")
     public ResponseEntity<?> actualizarNotaPorTareaYAlumno(@PathVariable Integer idTarea,
                                                            @PathVariable Integer idAlumno,

@@ -1,5 +1,6 @@
 package com.unmsm.scorely.services;
 
+import com.unmsm.scorely.dto.NotasDeTareas;
 import com.unmsm.scorely.dto.RegistrarEntregasRequest;
 import com.unmsm.scorely.models.*;
 import com.unmsm.scorely.repository.*;
@@ -96,5 +97,33 @@ public class EntregaService {
         if (updated == 0) {
             throw new EntityNotFoundException("Entrega no encontrada: " + idEntrega);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<NotasDeTareas> obtenerTareasNotasAlumno(Integer idSeccion, Integer idAlumno) {
+        // 1. Obtener todas las tareas de la sección
+        List<Tarea> tareas = tareaRepository.findBySeccionIdSeccion(idSeccion);
+
+        // 2. Para cada tarea, buscar si existe una entrega del alumno
+        return tareas.stream().map(tarea -> {
+            // Buscar las entregas del alumno para esta tarea
+            List<Entrega> entregas = entregaRepository.findByTareaAndAlumnoOrderByFechaDesc(
+                    tarea.getIdTarea(),
+                    idAlumno
+            );
+
+            // Si hay entregas, tomar la más reciente (primera en la lista)
+            Entrega ultimaEntrega = entregas.isEmpty() ? null : entregas.get(0);
+
+            // Construir el DTO
+            return new NotasDeTareas(
+                    tarea.getIdTarea(),
+                    tarea.getNombre(), // o el nombre del campo que uses para el título
+                    ultimaEntrega != null ? ultimaEntrega.getIdEntrega() : null,
+                    ultimaEntrega != null && ultimaEntrega.getNota() != null
+                            ? ultimaEntrega.getNota().doubleValue()
+                            : null
+            );
+        }).collect(java.util.stream.Collectors.toList());
     }
 }

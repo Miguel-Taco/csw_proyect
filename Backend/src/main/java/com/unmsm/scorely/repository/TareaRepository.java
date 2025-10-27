@@ -17,4 +17,6 @@ public interface TareaRepository extends CrudRepository<Tarea, Integer> {
         WHERE id_seccion = ?1
         """, nativeQuery = true)
     List<Tarea> findByIdSeccion(Integer idSeccion);
+
+    List<Tarea> findBySeccionIdSeccion(Integer idSeccion);
 }
