@@ -63,6 +63,8 @@
     border-top-right-radius: 20px;
     justify-content: space-between;
     padding: 0 5%;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .secciones-header-container select{
@@ -108,4 +110,17 @@
 
 .button-seccionesPage:hover{
     background-color: #1f1f14;
+}
+
+.button-seccionesPage.secundaria{
+    background-color: transparent;
+    border: 2px solid var(--color-secondary);
+    color: var(--color-secondary);
+    min-width: 28%;
+    padding: 0 16px;
+}
+
+.button-seccionesPage.secundaria:hover{
+    background-color: rgba(31, 31, 20, 0.1);
+    color: #1f1f14;
 }

@@ -8,6 +8,7 @@ import SeccionesPage from "../paginas/SeccionesPage";
 import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
 import InvitacionesPendientesButton from "../componentes/InvitacionesPendientesButton";
+import AsignacionGruposPage from "../paginas/AsignacionGruposPage";
 
 // --- Componentes de Control de Rutas ---
 
@@ -81,6 +82,15 @@ function AppRouter() {
             <ProtectedRoute>
               <InvitacionesPendientesButton />
               <SeccionesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/asignacion-grupos"
+          element={
+            <ProtectedRoute>
+              <AsignacionGruposPage />
             </ProtectedRoute>
           }
         />

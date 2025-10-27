@@ -89,6 +89,10 @@ function SeccionesPage(){
         setModalCrearOpen(true);
     };
 
+    const handleVerAsignacionGrupos = () => {
+        navigate("/asignacion-grupos");
+    };
+
     const handleCrearSeccion = async (nombreSeccion) => {
         setLoading(true);
         setModalCrearOpen(false);
@@ -244,6 +248,13 @@ function SeccionesPage(){
                             disabled={loading}
                         > 
                             Cerrar Sesión
+                        </button>
+                        <button
+                            className="button-seccionesPage secundaria"
+                            onClick={handleVerAsignacionGrupos}
+                            disabled={loading}
+                        >
+                            Ver asignación de grupos
                         </button>
                         <button 
                             className="button-seccionesPage" 
