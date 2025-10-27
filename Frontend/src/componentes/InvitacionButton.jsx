@@ -1,6 +1,6 @@
 // InvitacionButton.jsx
 import { useState } from "react";
-import { useParams } from "react-router-dom"; // ✅ Import necesario
+import { useParams } from "react-router-dom";
 import "../styles/InvitacionButton.css";
 import Modal from "./Modal";
 import { useAuth } from "../context/AuthContext";
@@ -13,7 +13,7 @@ export default function InvitacionButton() {
   const [enviadas, setEnviadas] = useState([]);
 
   const { user } = useAuth();
-  const { idSeccion } = useParams(); // ✅ Captura el id de la URL
+  const { idSeccion } = useParams();
   const API_URL = "https://cswproyect-production.up.railway.app";
 
   const openModal = () => setOpen(true);
@@ -22,9 +22,6 @@ export default function InvitacionButton() {
     setEmail("");
     setMensaje("");
   };
-
-  console.log("ID de la sección desde URL:", idSeccion);
-  console.log("Usuario actual:", user.id);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -119,7 +116,7 @@ export default function InvitacionButton() {
             <h4>Invitaciones enviadas:</h4>
             <ul>
               {enviadas.map((mail, i) => (
-                <li key={i}>{mail}</li>
+                <li key={i.id}>{mail}</li>
               ))}
             </ul>
           </div>
