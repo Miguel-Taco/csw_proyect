@@ -33,7 +33,7 @@ export default function InvitacionButton() {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setMensaje("Por favor ingrese un correo válido.");
+      setMensaje("Por favor ingrese un correo válido.") ;
       return;
     }
 
@@ -115,8 +115,8 @@ export default function InvitacionButton() {
           <div className="invitaciones-enviadas">
             <h4>Invitaciones enviadas:</h4>
             <ul>
-              {enviadas.map((mail, i) => (
-                <li key={i.id}>{mail}</li>
+              {enviadas.map((mail) => (
+                <li key={mail}>{mail}</li>
               ))}
             </ul>
           </div>
