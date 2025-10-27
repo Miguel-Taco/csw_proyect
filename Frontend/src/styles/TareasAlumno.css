@@ -1,0 +1,109 @@
+.tareas-page {
+    background: var(--color-accent);
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    max-width: 1200px;
+    height: auto;
+    min-height: 80vh;
+    background: var(--color-neutral);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px var(--color-shadow);
+    padding: 20px;
+}
+
+.encabezado {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+
+.encabezado h1{
+    width: 20%;
+}
+
+.encabezado h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Clase reutilizable para botones */
+.btn-primary {
+    margin-bottom: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: var(--color-accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: opacity 0.2s;
+    border: 0.3px solid rgb(109, 109, 109);
+}
+
+.btn-primary:hover {
+    opacity: 0.8;
+}
+
+.tareas-lista {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.tarea-card {
+    background: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px var(--color-shadow);
+}
+
+.tarea-card h3 {
+    margin: 0 0 8px 0;
+    color: var(--color-accent);
+    font-size: 18px;
+}
+
+.tarea-card p {
+    margin: 4px 0;
+    font-size: 14px;
+}
+
+.tareas-fechas {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0;
+    margin-top: 8px;
+}
+
+.tareas-fechas p {
+    margin: 0;
+    font-size: 13px;
+}
+
+.tarea-entrega {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tarea-entrega button {
+    margin-bottom: 0; /* Ajustar para alineación */
+}
