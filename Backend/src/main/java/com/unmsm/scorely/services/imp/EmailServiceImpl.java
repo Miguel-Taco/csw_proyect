@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
 
-    @Value("${app.base-url:http://localhost:5173}") //cambiar
+    @Value("${app.base-url:https://cswproyect-production.up.railway.app}") //cambiar
     private String baseUrl;
 
     @Value("${spring.mail.username}") //cambiar
