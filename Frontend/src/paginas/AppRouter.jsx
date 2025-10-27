@@ -7,6 +7,8 @@ import RegisterPage from "../paginas/Register";
 import SeccionesPage from "../paginas/SeccionesPage";
 import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
+import InvitacionesPendientesButton from "../componentes/InvitacionesPendientesButton";
+import AsignarNotas from "../paginas/AsignarNotas";
 import AlumnoPage from "../paginas/AlumnoPage";
 import TareasAlumno from '../paginas/TareasAlumno';
 
@@ -165,11 +167,7 @@ function AppRouter() {
           path="/secciones/:idSeccion/alumno/:idAlumno/tareas"
           element={
             <ProtectedRoute>
-              {/* Aquí pondrás tu componente de tareas del alumno */}
-              <div style={{ padding: '20px' }}>
-                <h2>Vista de Tareas del Alumno</h2>
-                <p>Próximamente: Aquí verás las tareas individuales del alumno</p>
-              </div>
+              <AsignarNotas />
             </ProtectedRoute>
           }
         />
