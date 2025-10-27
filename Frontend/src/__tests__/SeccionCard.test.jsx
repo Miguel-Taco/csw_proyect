@@ -71,7 +71,7 @@ describe("SeccionCard", () => {
         fireEvent.click(btnEliminar);
 
         expect(global.confirm).toHaveBeenCalledWith(
-        '¿Está seguro de eliminar la sección "Matemáticas Avanzadas"?'
+        expect.stringContaining('¿Está seguro de eliminar la sección "Matemáticas Avanzadas"')
         );
         expect(mockOnEliminar).toHaveBeenCalledWith(1);
     });

@@ -54,18 +54,13 @@ export default function EditarSeccionModal({ open, onClose, onEditar, seccion, a
       return;
     }
 
-    // Verificar si hay cambios
-    if (nombreSeccion.trim() === seccion.nombreCurso && anio === seccion.anio) {
+    // Verificar si no hubo cambios
+    if (nombreSeccion.trim() === seccion.nombreCurso && anioSeccion === seccion.anio) {
       setError("No se realizaron cambios");
       return;
     }
 
-    onActualizar({
-      nombreCurso: nombreSeccion.trim(),
-      anio: anio
-    });
-    
-    setNombreSeccion("");
+    onEditar(seccion.idSeccion, nombreSeccion.trim(), anioSeccion);
     setError("");
   };
 

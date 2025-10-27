@@ -45,7 +45,6 @@ function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
 
       {/* Texto centrado */}
       <p className="seccion-nombre">{seccion.nombreCurso}</p>
-      <p className="seccion-anio">{seccion.anio}</p>
     </div>
   );
 }
