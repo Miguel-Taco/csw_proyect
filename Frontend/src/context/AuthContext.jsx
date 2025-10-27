@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const BASE_URL = 'http://localhost:8080';
+  const BASE_URL = 'https://cswproyect-production.up.railway.app';
   // base de datos de nuestro repositorio, fue desplegada en railway y este es el url
 
   // Restaurar sesión al cargar la app

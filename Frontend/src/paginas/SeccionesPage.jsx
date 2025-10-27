@@ -19,7 +19,7 @@ function SeccionesPage(){
     const [modalEditarOpen, setModalEditarOpen] = useState(false);
     const [seccionAEditar, setSeccionAEditar] = useState(null);
     
-    const BASE_URL = 'http://localhost:8080';
+    const BASE_URL = 'https://cswproyect-production.up.railway.app';
 
     useEffect(() => {
         if (user?.id) {
