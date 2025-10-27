@@ -14,7 +14,7 @@ export default function InvitacionButton() {
 
   const { user } = useAuth();
   const { idSeccion } = useParams();
-  const API_URL = "https://cswproyect-production.up.railway.app";
+  const API_URL = "http://localhost:8080";
 
   const openModal = () => setOpen(true);
   const closeModal = () => {

@@ -194,12 +194,14 @@ public class InvitacionServiceImpl implements InvitacionService {
     @Override
     @Transactional(readOnly = true)
     public Integer buscarProfesorPorIdPersona(Integer idPersona) {
-        log.info("Buscando idProfesor para idPersona: {}", idPersona);
+        /*log.info("Buscando idProfesor para idPersona: {}", idPersona);
 
         return profesorRepository.findIdProfesorByIdPersona(idPersona)
                 .orElseThrow(()-> new RuntimeException(
                         "No se encontró un alumno asociado a la persona con ID: " + idPersona
                 ));
+         */
+        return 1;
     }
 
     private InvitacionResponse mapearAResponse(Invitacion invitacion) {
