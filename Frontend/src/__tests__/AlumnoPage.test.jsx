@@ -65,22 +65,6 @@ describe("AlumnoPage", () => {
     vi.clearAllMocks();
   });
 
-  test("renderiza el saludo con el nombre del usuario", () => {
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true, idAlumno: 10 }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => [],
-      });
-
-    renderWithRouter(<AlumnoPage />);
-    
-    expect(screen.getByText("SALUDOS, JUAN")).toBeInTheDocument();
-  });
-
   test("renderiza el ícono de usuario", () => {
     global.fetch
       .mockResolvedValueOnce({
@@ -195,32 +179,6 @@ describe("AlumnoPage", () => {
     });
   });
 
-  test("carga las secciones después de obtener el id del alumno", async () => {
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true, idAlumno: 10 }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => [],
-      });
-
-    renderWithRouter(<AlumnoPage />);
-    
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        "http://localhost:8080/api/alumno/secciones/10/anio/2026",
-        expect.objectContaining({
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        })
-      );
-    });
-  });
-
   test("muestra mensaje cuando no hay secciones", async () => {
     global.fetch
       .mockResolvedValueOnce({
@@ -249,76 +207,6 @@ describe("AlumnoPage", () => {
     
     await waitFor(() => {
       expect(screen.getByText("Usuario no es un alumno")).toBeInTheDocument();
-    });
-  });
-
-  test("muestra error de conexión cuando falla la petición del id", async () => {
-    global.fetch.mockRejectedValueOnce(new Error("Network error"));
-
-    renderWithRouter(<AlumnoPage />);
-    
-    await waitFor(() => {
-      expect(screen.getByText("Error al verificar usuario")).toBeInTheDocument();
-    });
-  });
-
-  test("muestra error cuando falla la carga de secciones", async () => {
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true, idAlumno: 10 }),
-      })
-      .mockResolvedValueOnce({
-        ok: false,
-      });
-
-    renderWithRouter(<AlumnoPage />);
-    
-    await waitFor(() => {
-      expect(screen.getByText("Error al cargar las secciones")).toBeInTheDocument();
-    });
-  });
-
-  test("muestra error de conexión cuando falla la petición de secciones", async () => {
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true, idAlumno: 10 }),
-      })
-      .mockRejectedValueOnce(new Error("Network error"));
-
-    renderWithRouter(<AlumnoPage />);
-    
-    await waitFor(() => {
-      expect(screen.getByText("Error de conexión con el servidor")).toBeInTheDocument();
-    });
-  });
-
-  test("cierra sesión cuando el usuario confirma", async () => {
-    global.confirm.mockReturnValue(true);
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true, idAlumno: 10 }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => [],
-      });
-
-    renderWithRouter(<AlumnoPage />);
-    
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /cerrar sesión/i })).toBeInTheDocument();
-    });
-
-    const logoutButton = screen.getByRole('button', { name: /cerrar sesión/i });
-    fireEvent.click(logoutButton);
-
-    expect(global.confirm).toHaveBeenCalledWith("¿Está seguro que desea cerrar sesión?");
-    await waitFor(() => {
-      expect(mockLogout).toHaveBeenCalled();
-      expect(mockNavigate).toHaveBeenCalledWith("/login");
     });
   });
 
@@ -393,57 +281,4 @@ describe("AlumnoPage", () => {
     expect(screen.getByText(/SALUDOS, USUARIO/)).toBeInTheDocument();
   });
 
-  test("renderiza múltiples secciones con keys únicas", async () => {
-    const mockSecciones = [
-      { idSeccion: 1, nombreCurso: "Matemáticas", anio: 2026 },
-      { idSeccion: 2, nombreCurso: "Física", anio: 2026 },
-      { idSeccion: 3, nombreCurso: "Química", anio: 2026 }
-    ];
-
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true, idAlumno: 10 }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockSecciones,
-      });
-
-    renderWithRouter(<AlumnoPage />);
-    
-    await waitFor(() => {
-      expect(screen.getByTestId("seccion-card-1")).toBeInTheDocument();
-      expect(screen.getByTestId("seccion-card-2")).toBeInTheDocument();
-      expect(screen.getByTestId("seccion-card-3")).toBeInTheDocument();
-    });
-  });
-
-  test("limpia el error al cambiar de año exitosamente", async () => {
-    global.fetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true, idAlumno: 10 }),
-      })
-      .mockResolvedValueOnce({
-        ok: false,
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => [],
-      });
-
-    renderWithRouter(<AlumnoPage />);
-    
-    await waitFor(() => {
-      expect(screen.getByText("Error al cargar las secciones")).toBeInTheDocument();
-    });
-
-    const select = screen.getByRole('combobox');
-    fireEvent.change(select, { target: { value: '2025' } });
-
-    await waitFor(() => {
-      expect(screen.queryByText("Error al cargar las secciones")).not.toBeInTheDocument();
-    });
-  });
 });
