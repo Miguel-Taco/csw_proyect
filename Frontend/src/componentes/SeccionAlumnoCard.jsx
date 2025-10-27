@@ -1,10 +1,15 @@
 import PropTypes from "prop-types";
 import "../styles/SeccionAlumnoCard.css";
+import { useNavigate } from "react-router-dom";
 
-function SeccionCard({ seccion}) {
+function SeccionCard({ seccion }) {
+  const navigate = useNavigate();
 
+  const handleClick = () => {
+        navigate(`/alumno/seccion/${seccion.idSeccion}/tareas`);
+    };
   return (
-    <div className="seccion-card" >
+    <div className="seccion-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
 
       {/* Texto centrado */}
       <div className="seccion-card-data">

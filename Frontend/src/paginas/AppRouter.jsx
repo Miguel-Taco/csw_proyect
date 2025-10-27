@@ -8,6 +8,7 @@ import SeccionesPage from "../paginas/SeccionesPage";
 import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
 import AlumnoPage from "../paginas/AlumnoPage";
+import TareasAlumno from '../paginas/TareasAlumno';
 
 // --- Componentes de Control de Rutas ---
 
@@ -146,6 +147,15 @@ function AppRouter() {
           element={
             <ProtectedRoute allowedRoles={['profesor']}>
               <CrearTareaPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/alumno/seccion/:idSeccion/tareas"
+          element={
+            <ProtectedRoute allowedRoles={['alumno']}>
+              <TareasAlumno />
             </ProtectedRoute>
           }
         />

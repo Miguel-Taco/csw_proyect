@@ -100,7 +100,7 @@ public class SeccionController {
 
             // 🔵 ahora el service devuelve DTO
             SeccionDTO dto = seccionService.editarSeccion(idSeccion, idProfesor, request);
-
+    
             response.put("success", true);
             response.put("message", "Sección actualizada exitosamente");
             response.put("seccion", dto); // ✅ DTO, no entidad JPA

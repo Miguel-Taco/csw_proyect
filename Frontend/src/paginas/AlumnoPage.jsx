@@ -29,7 +29,7 @@ function AlumnoPage() {
             cargarSecciones();
         }
     }, [idAlumno, anioSeleccionado]);
-
+    
     const obtenerIdAlumno = async () => {
         try {
             const response = await fetch(
