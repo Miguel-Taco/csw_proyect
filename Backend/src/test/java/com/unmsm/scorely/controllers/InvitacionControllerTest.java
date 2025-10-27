@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -46,102 +47,99 @@ class InvitacionControllerTest {
 
     @BeforeEach
     void setUp() {
-        invitacionRequest = new InvitacionRequest();
         invitacionResponse = new InvitacionResponse();
+        invitacionRequest = new InvitacionRequest();
+        invitacionRequest.setIdPersona(1);
+        invitacionRequest.setCorreoAlumno("test@test.com");
+
         aceptarRequest = new AceptarInvitacionRequest();
+        aceptarRequest.setToken("dummy-token-para-probar");
+        aceptarRequest.setIdAlumno(123);
     }
 
     @Test
     void testCrearInvitacion_Success() throws Exception {
         when(invitacionService.buscarProfesorPorIdPersona(anyInt())).thenReturn(1);
         when(invitacionService.crearInvitacion(any(InvitacionRequest.class), anyInt()))
-            .thenReturn(invitacionResponse);
+                .thenReturn(invitacionResponse);
 
         mockMvc.perform(post("/api/invitaciones")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invitacionRequest)))
+                        .with(user("testUser")) // <-- AÑADE AUTENTICACIÓN
+                        .with(csrf())           // <-- AÑADE CSRF
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invitacionRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("Invitación enviada exitosamente"));
     }
 
     @Test
     void testObtenerInformacionInvitacion_Success() throws Exception {
-        // --- Arrange ---
         String token = "dummy-token-123";
         when(invitacionService.obtenerInvitacionPorToken(token)).thenReturn(invitacionResponse);
 
-        // --- Act & Assert ---
-        mockMvc.perform(get("/api/invitaciones/info") // Petición GET
-                        .param("token", token)) // Añadimos el RequestParam
-                .andExpect(status().isOk()) // Esperamos un status 200 (OK)
+        mockMvc.perform(get("/api/invitaciones/info")
+                        .param("token", token)
+                        .with(user("testUser"))) // <-- ¡AÑADE ESTO!
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Información de invitación obtenida"));
-        // .andExpect(jsonPath("$.data.nombreCurso").value("Diseño de Software"));
     }
 
     @Test
     void testConfirmarAceptacion_Success() throws Exception {
-        // --- Arrange ---
         AceptarInvitacionResponse successResponse = new AceptarInvitacionResponse();
-        // Asumiendo que AceptarInvitacionResponse tiene setters o constructor
-        // successResponse.setExito(true);
-        // successResponse.setMensaje("¡Bienvenido!");
+        successResponse.setExito(true);
 
-        when(invitacionService.buscarAlumnoPorIdPersona(anyInt())).thenReturn(20); // Devuelve un ID de alumno
+        when(invitacionService.buscarAlumnoPorIdPersona(anyInt())).thenReturn(20);
         when(invitacionService.aceptarInvitacion(anyString(), anyInt())).thenReturn(successResponse);
 
-        // --- Act & Assert ---
         mockMvc.perform(post("/api/invitaciones/confirmar")
+                        .with(user("testUser")) // <-- ¡AÑADE ESTO!
+                        .with(csrf())           // <-- ¡Y AÑADE ESTO!
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(aceptarRequest)))
-                .andExpect(status().isOk()) // Esperamos OK porque exito = true
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Te has unido al curso exitosamente"));
-        // .andExpect(jsonPath("$.data.exito").value(true));
     }
 
     @Test
     void testConfirmarAceptacion_Failure() throws Exception {
-        // --- Arrange ---
-        // Este es el caso donde la lógica del servicio falla (ej. token expirado)
         AceptarInvitacionResponse failResponse = new AceptarInvitacionResponse();
-        // failResponse.setExito(false);
-        // failResponse.setMensaje("El token ha expirado"); // Mensaje de error del servicio
+        failResponse.setExito(false);
+        failResponse.setMensaje("El token ha expirado");
 
         when(invitacionService.buscarAlumnoPorIdPersona(anyInt())).thenReturn(20);
         when(invitacionService.aceptarInvitacion(anyString(), anyInt())).thenReturn(failResponse);
 
-        // --- Act & Assert ---
         mockMvc.perform(post("/api/invitaciones/confirmar")
+                        .with(user("testUser")) // <-- AÑADE AUTENTICACIÓN
+                        .with(csrf())           // <-- AÑADE CSRF
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(aceptarRequest)))
-                .andExpect(status().isBadRequest()) // Esperamos BAD_REQUEST porque exito = false
-                .andExpect(jsonPath("$.message").value("El token ha expirado")); // Verifica el mensaje de error
-        // .andExpect(jsonPath("$.data.exito").value(false));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("El token ha expirado"));
     }
 
     @Test
     void testObtenerInvitacionesPendientesPorCorreo_Success() throws Exception {
-        // --- Arrange ---
         String correo = "test@alumno.com";
         List<InvitacionResponse> lista = Collections.singletonList(invitacionResponse);
         when(invitacionService.obtenerInvitacionesPendientes(correo)).thenReturn(lista);
 
-        // --- Act & Assert ---
         mockMvc.perform(get("/api/invitaciones/pendientes")
+                        .with(user("testUser")) // <-- AÑADE AUTENTICACIÓN
                         .param("correo", correo))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Invitaciones pendientes obtenidas"))
-                .andExpect(jsonPath("$.data.length()").value(1)); // Verificamos que la lista tiene 1 elemento
-        // .andExpect(jsonPath("$.data[0].token").value("dummy-token-123"));
+                .andExpect(jsonPath("$.data.length()").value(1));
     }
 
     @Test
     void testRechazarInvitacion_Success() throws Exception {
-        // --- Arrange ---
-        // Los métodos void se mockean con doNothing()
         doNothing().when(invitacionService).rechazarInvitacion(anyString());
 
-        // --- Act & Assert ---
         mockMvc.perform(post("/api/invitaciones/rechazar")
+                        .with(user("testUser")) // <-- AÑADE AUTENTICACIÓN
+                        .with(csrf())           // <-- AÑADE CSRF
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(aceptarRequest)))
                 .andExpect(status().isOk())
