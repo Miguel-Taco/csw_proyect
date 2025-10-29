@@ -1,6 +1,6 @@
 // InvitacionButton.jsx
 import { useState } from "react";
-import { useParams } from "react-router-dom"; // ✅ Import necesario
+import { useParams } from "react-router-dom";
 import "../styles/InvitacionButton.css";
 import Modal from "./Modal";
 import { useAuth } from "../context/AuthContext";
@@ -22,9 +22,6 @@ export default function InvitacionButton() {
     setEmail("");
     setMensaje("");
   };
-
-  console.log("ID de la sección desde URL:", idSeccion);
-  console.log("Usuario actual:", user.id);
 
   const onSubmit = async (e) => {
     e.preventDefault();

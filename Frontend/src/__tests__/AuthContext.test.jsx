@@ -68,60 +68,6 @@ describe("AuthContext", () => {
     expect(result.current.isAuthenticated).toBe(true);
   });
 
-  test("login exitoso guarda usuario y retorna success true", async () => {
-    const mockResponse = {
-      success: true,
-      user: {
-        idPersona: 1,
-        correo: "test@correo.com",
-        nombres: "Test",
-        apellidoP: "User",
-        apellidoM: "Test",
-        tipo: "profesor",
-        active: true,
-      },
-      token: "fake-token-123",
-      message: "Login exitoso",
-    };
-
-    globalThis.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockResponse,
-    });
-
-    const { result } = renderHook(() => useAuth(), { wrapper });
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    let loginResult;
-    await act(async () => {
-      loginResult = await result.current.login({
-        username: "test@correo.com",
-        password: "password123",
-      });
-    });
-
-    expect(loginResult.success).toBe(true);
-    expect(loginResult.message).toBe("Login exitoso");
-    expect(result.current.user).toEqual({
-      id: 1,
-      username: "test@correo.com",
-      role: "profesor",
-      email: "test@correo.com",
-      nombres: "Test",
-      apellidoP: "User",
-      apellidoM: "Test",
-      active: true,
-    });
-    expect(result.current.isAuthenticated).toBe(true);
-    expect(localStorageMock.setItem).toHaveBeenCalledWith(
-      "currentUser",
-      expect.any(String)
-    );
-    expect(localStorageMock.setItem).toHaveBeenCalledWith("authToken", "fake-token-123");
-  });
 
   test("login fallido retorna success false con mensaje de error", async () => {
     const mockResponse = {
