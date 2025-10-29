@@ -23,11 +23,11 @@ describe("AppRouter - Rutas básicas", () => {
     mockAuthState.isAuthenticated = false;
     mockAuthState.user = null;
     mockAuthState.loading = false;
-    window.history.pushState({}, "", "/"); // reset a ruta raíz
+    globalThis.history.pushState({}, "", "/"); // reset a ruta raíz
   });
 
   test("muestra página de Register", () => {
-    window.history.pushState({}, "", "/register");
+    globalThis.history.pushState({}, "", "/register");
     render(<AppRouter />);
     expect(screen.getByText(/crear cuenta/i)).toBeInTheDocument();
   });
@@ -41,7 +41,7 @@ describe("AppRouter - Rutas básicas", () => {
   test("redirige a seccionesPage cuando usuario es profesor", () => {
     mockAuthState.isAuthenticated = true;
     mockAuthState.user = { role: "profesor" };
-    window.history.pushState({}, "", "/");
+    globalThis.history.pushState({}, "", "/");
     render(<AppRouter />);
     expect(screen.getByText(/secciones/i)).toBeInTheDocument();
   });
@@ -49,7 +49,7 @@ describe("AppRouter - Rutas básicas", () => {
   test("redirige a alumnosPage cuando usuario es alumno", () => {
     mockAuthState.isAuthenticated = true;
     mockAuthState.user = { role: "alumno" };
-    window.history.pushState({}, "", "/");
+    globalThis.history.pushState({}, "", "/");
     render(<AppRouter />);
     expect(screen.getByText(/ver invitaciones pendientes/i)).toBeInTheDocument();
   });
@@ -57,13 +57,13 @@ describe("AppRouter - Rutas básicas", () => {
   test("muestra página de Secciones si rol = profesor y ruta /seccionesPage", () => {
     mockAuthState.isAuthenticated = true;
     mockAuthState.user = { role: "profesor" };
-    window.history.pushState({}, "", "/seccionesPage");
+    globalThis.history.pushState({}, "", "/seccionesPage");
     render(<AppRouter />);
     expect(screen.getByText(/secciones/i)).toBeInTheDocument();
   });
 
   test("redirige ruta desconocida al inicio (no autenticado → login)", () => {
-    window.history.pushState({}, "", "/rutaInexistente");
+    globalThis.history.pushState({}, "", "/rutaInexistente");
     render(<AppRouter />);
     expect(screen.getByText(/login/i)).toBeInTheDocument();
   });

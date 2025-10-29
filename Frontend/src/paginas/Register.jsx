@@ -19,7 +19,6 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     
-    // Asegúrate de que esta URL sea la correcta para tu backend
     const BASE_URL = 'https://cswproyect-production.up.railway.app/';
 
     const togglePassword = (index) => {
@@ -42,7 +41,7 @@ function Register() {
     };
 
     const handleCodigoChange = (e) => {
-        const value = e.target.value.replace(/\D/g, ''); // Solo permite dígitos
+        const value = e.target.value.replaceAll(/\D/g, '');
         if (value.length <= 8) {
             setFormData(prev => ({ ...prev, codigoEstudiante: value }));
         }
@@ -57,20 +56,16 @@ function Register() {
             return;
         }
         
-        // --- CORRECCIÓN CLAVE ---
-        // Este objeto (payload) se envía al backend.
-        // Las claves DEBEN coincidir con los nombres de los campos en tu clase Java `RegistroRequest`.
         const payload = {
             nombres: formData.nombres,
             apellidoP: formData.apellidoP,
             apellidoM: formData.apellidoM,
             correo: formData.correo,
-            contrasena: formData.contraseña,      // Corregido: sin 'ñ'
+            contrasena: formData.contraseña,
             tipoUsuario: formData.tipoUsuario,
-            codigoEstudiante: formData.tipoUsuario === 'Estudiante' ? formData.codigoEstudiante : null // Corregido: nombre completo
+            codigoEstudiante: formData.tipoUsuario === 'Estudiante' ? formData.codigoEstudiante : null
         };
         
-        // Útil para depurar: muestra en la consola lo que estás enviando.
         console.log("Enviando al backend:", JSON.stringify(payload, null, 2));
 
         setLoading(true);
@@ -114,8 +109,8 @@ function Register() {
                     
                     {/* Tipo de Usuario */}
                     <div className="form-group">
-                        <label className="form-label">Tipo de Usuario</label>
-                        <div className="user-type-grid">
+                        <p className="form-label" id="tipo-usuario-label" type="text">Tipo de Usuario</p>
+                        <div className="user-type-grid" role="radiogroup" aria-labelledby="tipo-usuario-label">
                             <label className={`user-type-option ${formData.tipoUsuario === "Estudiante" ? "active" : ""}`}>
                                 <input 
                                     type="radio" 
@@ -123,8 +118,9 @@ function Register() {
                                     value="Estudiante"
                                     checked={formData.tipoUsuario === "Estudiante"}
                                     onChange={() => handleTipoUsuarioChange("Estudiante")}
+                                    aria-label="Seleccionar Estudiante"
                                 />
-                                <span className="icon">👨‍🎓</span>
+                                <span className="icon" aria-hidden="true">👨‍🎓</span>
                                 <span>Estudiante</span>
                             </label>
                             <label className={`user-type-option ${formData.tipoUsuario === "Profesor" ? "active" : ""}`}>
@@ -134,8 +130,9 @@ function Register() {
                                     value="Profesor"
                                     checked={formData.tipoUsuario === "Profesor"}
                                     onChange={() => handleTipoUsuarioChange("Profesor")}
+                                    aria-label="Seleccionar Profesor"
                                 />
-                                <span className="icon">👨‍🏫</span>
+                                <span className="icon" aria-hidden="true">👨‍🏫</span>
                                 <span>Profesor</span>
                             </label>
                         </div>
@@ -143,8 +140,9 @@ function Register() {
                     
                     {/* Nombres */}
                     <div className="form-group">
-                        <label className="form-label">Nombres</label>
+                        <label className="form-label" htmlFor="nombres">Nombres</label>
                         <input 
+                            id="nombres"
                             type="text"
                             name="nombres"
                             className="form-input"
@@ -158,8 +156,9 @@ function Register() {
                     {/* Apellidos en grid */}
                     <div className="form-row">
                         <div className="form-group">
-                            <label className="form-label">Apellido Paterno</label>
+                            <label className="form-label" htmlFor="apellidoP">Apellido Paterno</label>
                             <input 
+                                id="apellidoP"
                                 type="text"
                                 name="apellidoP"
                                 className="form-input"
@@ -170,8 +169,9 @@ function Register() {
                             />
                         </div>
                         <div className="form-group">
-                            <label className="form-label">Apellido Materno</label>
+                            <label className="form-label" htmlFor="apellidoM">Apellido Materno</label>
                             <input 
+                                id="apellidoM"
                                 type="text"
                                 name="apellidoM"
                                 className="form-input"
@@ -185,8 +185,9 @@ function Register() {
                     
                     {/* Correo */}
                     <div className="form-group">
-                        <label className="form-label">Correo Electrónico</label>
+                        <label className="form-label" htmlFor="correo">Correo Electrónico</label>
                         <input 
+                            id="correo"
                             type="email"
                             name="correo"
                             className="form-input"
@@ -200,8 +201,9 @@ function Register() {
                     {/* Código de Estudiante */}
                     {formData.tipoUsuario === "Estudiante" && (
                         <div className="form-group codigo-estudiante-group">
-                            <label className="form-label">Código de Estudiante</label>
+                            <label className="form-label" htmlFor="codigoEstudiante">Código de Estudiante</label>
                             <input 
+                                id="codigoEstudiante"
                                 type="text"
                                 name="codigoEstudiante"
                                 className="form-input"
@@ -217,9 +219,10 @@ function Register() {
                     
                     {/* Contraseña */}
                     <div className="form-group">
-                        <label className="form-label">Contraseña</label>
+                        <label className="form-label" htmlFor="contraseña">Contraseña</label>
                         <div className="password-input-wrapper">
                             <input 
+                                id="contraseña"
                                 type={showPassword[0] ? "text" : "password"}
                                 name="contraseña"
                                 className="form-input"
@@ -228,19 +231,28 @@ function Register() {
                                 placeholder="Mínimo 8 caracteres"
                                 required
                             />
-                            <i
+                            <button
+                                type="button"
                                 className={`fas ${showPassword[0] ? "fa-eye-slash" : "fa-eye"} password-toggle`}
                                 onClick={() => togglePassword(0)}
-                                title={showPassword[0] ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        togglePassword(0);
+                                    }
+                                }}
+                                aria-label={showPassword[0] ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                tabIndex={0}
                             />
                         </div>
                     </div>
                     
                     {/* Repetir Contraseña */}
                     <div className="form-group">
-                        <label className="form-label">Confirmar Contraseña</label>
+                        <label className="form-label" htmlFor="repetirContraseña">Confirmar Contraseña</label>
                         <div className="password-input-wrapper">
                             <input 
+                                id="repetirContraseña"
                                 type={showPassword[1] ? "text" : "password"}
                                 name="repetirContraseña"
                                 className="form-input"
@@ -249,17 +261,25 @@ function Register() {
                                 placeholder="Repite tu contraseña"
                                 required
                             />
-                            <i
+                            <button
+                                type="button"
                                 className={`fas ${showPassword[1] ? "fa-eye-slash" : "fa-eye"} password-toggle`}
                                 onClick={() => togglePassword(1)}
-                                title={showPassword[1] ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        togglePassword(1);
+                                    }
+                                }}
+                                aria-label={showPassword[1] ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                tabIndex={0}
                             />
                         </div>
                     </div>
 
                     {/* Mensaje de error */}
                     {error && (
-                        <div className="error-message" style={{color: 'red', textAlign: 'center', marginBottom: '10px'}}>
+                        <div className="error-message" role="alert" style={{color: 'red', textAlign: 'center', marginBottom: '10px'}}>
                             {error}
                         </div>
                     )}

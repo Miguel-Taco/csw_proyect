@@ -19,7 +19,7 @@ function SeccionesPage(){
     const [modalEditarOpen, setModalEditarOpen] = useState(false);
     const [seccionAEditar, setSeccionAEditar] = useState(null);
     
-    const BASE_URL = 'https://cswproyect-production.up.railway.app';
+    const BASE_URL = 'http://localhost:8080';
 
     useEffect(() => {
         if (user?.id) {
@@ -211,12 +211,33 @@ function SeccionesPage(){
     };
 
     const handleLogout = async () => {
-        const confirmar = window.confirm("¿Está seguro que desea cerrar sesión?");
+        const confirmar = globalThis.confirm("¿Está seguro que desea cerrar sesión?");
         if (confirmar) {
             await logout();
             navigate("/login");
         }
     };
+
+    let contenidoSecciones;
+
+    if (loading && secciones.length === 0) {
+        // Estado: Cargando por primera vez
+        contenidoSecciones = <p>Cargando secciones...</p>;
+    } else if (secciones.length === 0) {
+        // Estado: Carga completa, pero no hay datos
+        contenidoSecciones = <p>No hay secciones para este año</p>;
+    } else {
+        // Estado: Carga completa, y hay secciones para mostrar
+        contenidoSecciones = secciones.map((sec) => (
+            <SeccionCard 
+                key={sec.idSeccion} 
+                seccion={sec}
+                onEliminar={handleEliminarSeccion}
+                onEditar={handleAbrirEditar}
+                onIrATareas={handleIrATareas}
+            />
+        ));
+    }
 
     return(
         <div className="seccionesPage-body">
@@ -261,21 +282,7 @@ function SeccionesPage(){
                     )}
 
                     <div className="secciones-container row">
-                        {loading && secciones.length === 0 ? (
-                            <p>Cargando secciones...</p>
-                        ) : secciones.length === 0 ? (
-                            <p>No hay secciones para este año</p>
-                        ) : (
-                            secciones.map((sec) => (
-                                <SeccionCard 
-                                    key={sec.idSeccion} 
-                                    seccion={sec}
-                                    onEliminar={handleEliminarSeccion}
-                                    onEditar={handleAbrirEditar}
-                                    onIrATareas={handleIrATareas}
-                                    />
-                            ))
-                        )}
+                        {contenidoSecciones}
                     </div>
                 </div>
             </div>

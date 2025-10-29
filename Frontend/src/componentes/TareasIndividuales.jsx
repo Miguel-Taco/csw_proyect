@@ -10,7 +10,7 @@ export default function TareasIndividuales() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   
-  const BASE_URL = 'https://cswproyect-production.up.railway.app';
+  const BASE_URL = 'http://localhost:8080';
 
   useEffect(() => {
     cargarAlumnos();
@@ -66,6 +66,61 @@ export default function TareasIndividuales() {
     return Number(nota).toFixed(2);
   };
 
+  // ...dentro de la función TareasIndividuales, antes del return()
+
+    let contenidoPrincipal;
+
+    if (loading) {
+        // Estado: Cargando
+        contenidoPrincipal = <div className="loading-message">Cargando alumnos...</div>;
+    
+    } else if (error) {
+        // Estado: Error
+        contenidoPrincipal = <div className="error-message">{error}</div>;
+    
+    } else {
+        // Estado: Carga completa, mostrar tabla
+        contenidoPrincipal = (
+            <table className="tabla-tareas">
+                <thead>
+                    <tr>
+                        <th className="col-nota">Promedio</th>
+                        <th>Nombre Completo</th>
+                        <th className="col-codigo">Código</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {alumnos.length === 0 ? (
+                        <tr>
+                            <td colSpan="3" className="vacio">
+                                No hay estudiantes matriculados en esta sección
+                            </td>
+                        </tr>
+                    ) : (
+                        alumnos.map((alumno) => (
+                            <tr 
+                                key={alumno.idAlumno} 
+                                className="alumno-row"
+                                onClick={() => handleAlumnoClick(alumno)}
+                                title="Click para ver tareas del alumno"
+                            >
+                                <td className="col-nota">
+                                    {formatearNota(alumno.promedioFinal)}
+                                </td>
+                                <td className="nombre-alumno">
+                                    {alumno.nombreCompleto}
+                                </td>
+                                <td className="col-codigo">
+                                    {alumno.codigoAlumno}
+                                </td>
+                            </tr>
+                        ))
+                    )}
+                </tbody>
+            </table>
+        );
+    }
+
   return (
     <div className="tareas-container">
       <div className="header">
@@ -80,50 +135,7 @@ export default function TareasIndividuales() {
           <p className="total-alumnos">Total: {alumnos.length} estudiante(s)</p>
         )}
       </div>
-
-      {loading ? (
-        <div className="loading-message">Cargando alumnos...</div>
-      ) : error ? (
-        <div className="error-message">{error}</div>
-      ) : (
-        <table className="tabla-tareas">
-          <thead>
-            <tr>
-              <th className="col-nota">Promedio</th>
-              <th>Nombre Completo</th>
-              <th className="col-codigo">Código</th>
-            </tr>
-          </thead>
-          <tbody>
-            {alumnos.length === 0 ? (
-              <tr>
-                <td colSpan="3" className="vacio">
-                  No hay estudiantes matriculados en esta sección
-                </td>
-              </tr>
-            ) : (
-              alumnos.map((alumno) => (
-                <tr 
-                  key={alumno.idAlumno} 
-                  className="alumno-row"
-                  onClick={() => handleAlumnoClick(alumno)}
-                  title="Click para ver tareas del alumno"
-                >
-                  <td className="col-nota">
-                    {formatearNota(alumno.promedioFinal)}
-                  </td>
-                  <td className="nombre-alumno">
-                    {alumno.nombreCompleto}
-                  </td>
-                  <td className="col-codigo">
-                    {alumno.codigoAlumno}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      )}
-    </div>
+      {contenidoPrincipal}
+    </div>  
   );
 }

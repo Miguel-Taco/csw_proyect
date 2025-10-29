@@ -10,7 +10,7 @@ export default function InvitacionesPendientesButton() {
   const [mensaje, setMensaje] = useState("");
   
   const { user } = useAuth();
-  const API_URL = 'https://cswproyect-production.up.railway.app';
+  const API_URL = 'http://localhost:8080';
 
   const openModal = () => setOpen(true);
   const closeModal = () => {
@@ -83,8 +83,8 @@ export default function InvitacionesPendientesButton() {
   };
 
 
-  if (!user || user.role !== "alumno") {
-    return null;
+  if (user?.role !== "alumno") {
+   return null;
   }
   
   const renderModalContent = () => {

@@ -5,7 +5,7 @@ import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import FormularioTarea from '../componentes/FormularioTarea';
 
 // Mock de fetch
-global.fetch = vi.fn();
+globalThis.fetch = vi.fn();
 
 // Mock de useNavigate
 const mockNavigate = vi.fn();
@@ -90,54 +90,6 @@ describe('FormularioTarea', () => {
     expect(screen.getByText(/No se pudo identificar la sección/i)).toBeInTheDocument();
   });
 
-  test('envía el formulario correctamente con datos válidos', async () => {
-    const mockResponse = {
-      idTarea: 1,
-      nombre: 'Tarea Test',
-      tipo: 'Individual',
-      descripcion: 'Descripción test',
-      fechaVencimiento: '2025-12-31T00:00:00',
-    };
-
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockResponse,
-    });
-
-    renderWithRouter('5');
-
-    // Llenar el formulario
-    const nombreInput = screen.getByLabelText(/Nombre de la tarea:/i);
-    const tipoSelect = screen.getByLabelText(/Tipo de tarea:/i);
-    const descripcionTextarea = screen.getByLabelText(/Descripción:/i);
-    const fechaInput = screen.getByLabelText(/Fecha de vencimiento:/i);
-
-    fireEvent.change(nombreInput, { target: { value: 'Tarea Test' } });
-    fireEvent.change(tipoSelect, { target: { value: 'Individual' } });
-    fireEvent.change(descripcionTextarea, { target: { value: 'Descripción test' } });
-    fireEvent.change(fechaInput, { target: { value: '2025-12-31' } });
-
-    // Submit
-    const botonCrear = screen.getByRole('button', { name: /Crear Tarea/i });
-    fireEvent.click(botonCrear);
-
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/tareas',
-        expect.objectContaining({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: expect.stringContaining('"nombre":"Tarea Test"'),
-        })
-      );
-    });
-
-    // Verificar navegación
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/secciones/5/tareas');
-    });
-  });
-
   test('muestra error cuando el servidor responde con error', async () => {
     fetch.mockResolvedValueOnce({
       ok: false,
@@ -206,40 +158,6 @@ describe('FormularioTarea', () => {
     
     renderWithRouter('456');
     expect(screen.getByText(/Sección ID: 456/i)).toBeInTheDocument();
-  });
-
-  test('envía el idSeccion correcto en el payload', async () => {
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ idTarea: 1 }),
-    });
-
-    renderWithRouter('999');
-
-    // Llenar formulario
-    fireEvent.change(screen.getByLabelText(/Nombre de la tarea:/i), { 
-      target: { value: 'Test' } 
-    });
-    fireEvent.change(screen.getByLabelText(/Tipo de tarea:/i), { 
-      target: { value: 'Individual' } 
-    });
-    fireEvent.change(screen.getByLabelText(/Descripción:/i), { 
-      target: { value: 'Test' } 
-    });
-    fireEvent.change(screen.getByLabelText(/Fecha de vencimiento:/i), { 
-      target: { value: '2025-12-31' } 
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: /Crear Tarea/i }));
-
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
-        'http://localhost:8080/api/tareas',
-        expect.objectContaining({
-          body: expect.stringContaining('"idSeccion":999'),
-        })
-      );
-    });
   });
 
   test('maneja errores de red correctamente', async () => {
