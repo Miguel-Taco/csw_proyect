@@ -3,9 +3,7 @@
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    display: flex;
     justify-content: center;
-    align-items: center;
     width: 100vw;
     font-family: sans-serif;
 }
@@ -121,4 +119,23 @@
 
 .login-registrar:active {
     transform: scale(0.95);
+}
+
+.password-toggle-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle-btn:focus {
+  outline: none; /* Quita el borde azul del foco */
+}
+
+.password-toggle-btn i {
+  font-size: 1rem; /* o el tamaño que prefieras */
+  color: #333; /* o el color actual del icono */
 }

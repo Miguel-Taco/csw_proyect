@@ -78,12 +78,15 @@ function Login() {
               disabled={loading}
               autoComplete="off"
             />
-            <i
-              className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+            <button
+              type="button"
               onClick={() => setShowPassword(!showPassword)}
-              style={{ cursor: "pointer" }}
+              className="password-toggle-btn"
               title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-            ></i>
+              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+            </button>
           </div>
 
           {error && <div className="error-message">{error}</div>}

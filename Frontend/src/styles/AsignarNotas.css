@@ -50,6 +50,8 @@
   display: flex;
   flex-direction: column;
   gap: 22px;                   /* separación uniforme entre ítems */
+  scrollbar-width: thin;           /* Firefox */
+  scrollbar-color: #c9c9c9 #eee;   /* Firefox */
 }
 
 /* Item de tarea (barra alargada) */
@@ -139,10 +141,6 @@
 .tareas-scroll::-webkit-scrollbar-thumb{
     background: #c9c9c9;
     border-radius: 10px;
-}
-.tareas-scroll{
-  scrollbar-width: thin;           /* Firefox */
-  scrollbar-color: #c9c9c9 #eee;   /* Firefox */
 }
 
 /* RESPONSIVE mínimo */

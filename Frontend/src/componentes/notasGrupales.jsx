@@ -38,7 +38,7 @@ function notasGrupales() {
 
   const cargarDatosGrupo = async () => {
     try {
-      // TODO: Reemplazar con tu endpoint real
+      // TOD: Reemplazar con tu endpoint real
       // const response = await fetch(`/api/grupos/${grupoId}`);
       // const data = await response.json();
       // setIntegrantes(data.integrantes);
@@ -55,7 +55,7 @@ function notasGrupales() {
     if (!nuevoIntegrante) return;
 
     try {
-      // TODO: Reemplazar con tu endpoint real
+      // TOD: Reemplazar con tu endpoint real
       // const response = await fetch(`/api/grupos/${grupoId}/integrantes`, {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
@@ -83,22 +83,20 @@ function notasGrupales() {
       return;
     }
     console.log("Ver detalles de tarea:", tareaSeleccionada);
-    // TODO: Navegar a vista de detalles o abrir modal
+    // TOD: Navegar a vista de detalles o abrir modal
   };
 
   return (
     <div className="grupoTrabajo-body">
       <div className="main-grupoTrabajo-container">
         
-        {/* HEADER - Título del grupo */}
         <div className="grupoTrabajo-header">
           GRUPO DE TRABAJO {grupoId}
         </div>
 
-        {/* CONTENIDO PRINCIPAL - Grid de dos columnas */}
+
         <div className="grupoTrabajo-content">
           
-          {/* COLUMNA IZQUIERDA - INTEGRANTES */}
           <div className="integrantes-panel">
             <div className="integrantes-actions">
               <button className="btn-integrantes-tab">
@@ -112,7 +110,6 @@ function notasGrupales() {
               </button>
             </div>
 
-            {/* Lista scrolleable de integrantes */}
             <div className="integrantes-scroll">
               {integrantes.map((integrante, index) => (
                 <div
@@ -125,7 +122,6 @@ function notasGrupales() {
             </div>
           </div>
 
-          {/* COLUMNA DERECHA - TAREAS */}
           <div className="tareas-panel">
             <div className="tareas-scroll">
               {tareas.map((tarea) => (
@@ -146,7 +142,6 @@ function notasGrupales() {
           </div>
         </div>
 
-        {/* BOTÓN DE ACCIÓN */}
         <button 
           className="btn-grupoTrabajo"
           onClick={handleVerDetalles}
