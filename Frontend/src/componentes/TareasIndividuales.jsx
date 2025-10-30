@@ -156,11 +156,7 @@ export default function TareasIndividuales() {
       </div>
 
       {loading ? (
-<<<<<<< Updated upstream
-        <div className="loading-message">Cargando alumnos...</div>
-=======
         <div className="loading-message">Cargando...</div>
->>>>>>> Stashed changes
       ) : error ? (
         <div className="error-message">{error}</div>
       ) : (
@@ -168,38 +164,6 @@ export default function TareasIndividuales() {
           <thead>
             <tr>
               <th className="col-nota">Promedio</th>
-<<<<<<< Updated upstream
-              <th>Nombre Completo</th>
-              <th className="col-codigo">Código</th>
-            </tr>
-          </thead>
-          <tbody>
-            {alumnos.length === 0 ? (
-              <tr>
-                <td colSpan="3" className="vacio">
-                  No hay estudiantes matriculados en esta sección
-                </td>
-              </tr>
-            ) : (
-              alumnos.map((alumno) => (
-                <tr 
-                  key={alumno.idAlumno} 
-                  className="alumno-row"
-                  onClick={() => handleAlumnoClick(alumno)}
-                  title="Click para ver tareas del alumno"
-                >
-                  <td className="col-nota">
-                    {formatearNota(alumno.promedioFinal)}
-                  </td>
-                  <td className="nombre-alumno">
-                    {alumno.nombreCompleto}
-                  </td>
-                  <td className="col-codigo">
-                    {alumno.codigoAlumno}
-                  </td>
-                </tr>
-              ))
-=======
               <th>
                 {activeTab === "individuales" ? "Nombre Completo" : "Nombre del Grupo"}
               </th>
@@ -254,7 +218,6 @@ export default function TareasIndividuales() {
                   </tr>
                 ))
               )
->>>>>>> Stashed changes
             )}
           </tbody>
         </table>
