@@ -1,6 +1,7 @@
 package com.unmsm.scorely.services.imp;
 
 import com.unmsm.scorely.enums.EstadoInvitacion;
+import com.unmsm.scorely.exception.InvitacionException;
 import com.unmsm.scorely.models.Invitacion;
 import com.unmsm.scorely.services.InvitacionValidator;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ public class InvitacionValidatorImpl implements InvitacionValidator {
     public void validarInvitacion(Invitacion invitacion) {
         if (invitacion.isExpirada()) {
             invitacion.setEstado(EstadoInvitacion.EXPIRADA);
-            throw new RuntimeException("Invitacion expirada");
+            throw new InvitacionException("Invitacion expirada");
         }
 
         if (!invitacion.isPendiente()) {
