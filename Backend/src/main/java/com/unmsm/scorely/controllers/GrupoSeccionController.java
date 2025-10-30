@@ -14,7 +14,7 @@ import com.unmsm.scorely.services.GrupoSeccionService;
 
 @RestController
 @RequestMapping("/api/grupos-seccion")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class GrupoSeccionController {
 
     private final GrupoSeccionService grupoSeccionService;
