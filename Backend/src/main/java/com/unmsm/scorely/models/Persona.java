@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Persona")
-@Data
+@Data  // ← IMPORTANTE: Esto genera automáticamente getNombres(), getApellidoP(), getApellidoM()
 @NoArgsConstructor
 @AllArgsConstructor
 public class Persona {
