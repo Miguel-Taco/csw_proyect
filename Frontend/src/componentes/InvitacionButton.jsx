@@ -13,7 +13,9 @@ export default function InvitacionButton() {
   const [enviadas, setEnviadas] = useState([]);
 
   const { user } = useAuth();
+
   const { idSeccion } = useParams();
+
   const API_URL = "http://localhost:8080";
 
   const openModal = () => setOpen(true);
@@ -26,7 +28,7 @@ export default function InvitacionButton() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (!user || user.role !== "profesor") {
+    if (user?.role !== "profesor") {
       setMensaje("Solo los profesores pueden enviar invitaciones.");
       return;
     }
@@ -47,7 +49,7 @@ export default function InvitacionButton() {
     const data = {
       correoAlumno: email,
       idSeccion: Number(idSeccion),
-      idProfesor: user.id
+      idPersona: user.id
     };
 
     try {
@@ -65,6 +67,7 @@ export default function InvitacionButton() {
         setTimeout(() => setMensaje(""), 3000);
         setEnviadas((prev) => [...prev, email]);
       } else {
+        console.log(data)
         setMensaje(result.message || "Error al enviar la invitación");
       }
     } catch (error) {
