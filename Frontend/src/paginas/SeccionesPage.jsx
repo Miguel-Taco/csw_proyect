@@ -267,7 +267,7 @@ function SeccionesPage(){
                             <p>No hay secciones para este año</p>
                         ) : (
                             secciones.map((sec) => (
-                                <SeccionCard 
+                                <SeccionCard className="card-container-item"
                                     key={sec.idSeccion} 
                                     seccion={sec}
                                     onEliminar={handleEliminarSeccion}
