@@ -13,8 +13,8 @@ export default function InvitacionButton() {
   const [enviadas, setEnviadas] = useState([]);
 
   const { user } = useAuth();
-  const { idSeccion } = useParams();
-  const API_URL = "https://cswproyect-production.up.railway.app";
+  const { idSeccion } = useParams(); // ✅ Captura el id de la URL
+  const API_URL = "http://localhost:8080";
 
   const openModal = () => setOpen(true);
   const closeModal = () => {
@@ -26,7 +26,7 @@ export default function InvitacionButton() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (!user || user.role !== "profesor") {
+    if (user?.role !== "profesor") {
       setMensaje("Solo los profesores pueden enviar invitaciones.");
       return;
     }
@@ -47,7 +47,7 @@ export default function InvitacionButton() {
     const data = {
       correoAlumno: email,
       idSeccion: Number(idSeccion),
-      idProfesor: user.id
+      idPersona: user.id
     };
 
     try {
@@ -65,6 +65,7 @@ export default function InvitacionButton() {
         setTimeout(() => setMensaje(""), 3000);
         setEnviadas((prev) => [...prev, email]);
       } else {
+        console.log(data)
         setMensaje(result.message || "Error al enviar la invitación");
       }
     } catch (error) {
@@ -115,8 +116,8 @@ export default function InvitacionButton() {
           <div className="invitaciones-enviadas">
             <h4>Invitaciones enviadas:</h4>
             <ul>
-              {enviadas.map((mail, i) => (
-                <li key={i.id}>{mail}</li>
+              {enviadas.map((mail) => (
+                <li key={mail}>{mail}</li>
               ))}
             </ul>
           </div>

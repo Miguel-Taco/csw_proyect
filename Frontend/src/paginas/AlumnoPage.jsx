@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -83,12 +82,28 @@ function AlumnoPage() {
     };
 
     const handleLogout = async () => {
-        const confirmar = window.confirm("¿Está seguro que desea cerrar sesión?");
+        const confirmar = globalThis.confirm("¿Está seguro que desea cerrar sesión?");
         if (confirmar) {
             await logout();
             navigate("/login");
         }
     };
+
+    // Determinar qué contenido mostrar
+    let seccionesContent;
+    
+    if (loading && secciones.length === 0) {
+        seccionesContent = <p>Cargando secciones...</p>;
+    } else if (secciones.length === 0) {
+        seccionesContent = <p>No estás inscrito en ninguna sección para este año. Revisa tus invitaciones pendientes.</p>;
+    } else {
+        seccionesContent = secciones.map((sec) => (
+            <SeccionAlumnoCard 
+                key={sec.idSeccion} 
+                seccion={sec}
+            />
+        ));
+    }
 
     return(
         <div className="seccionesPage-body">
@@ -130,18 +145,7 @@ function AlumnoPage() {
                     )}
 
                     <div className="secciones-container row">
-                        {loading && secciones.length === 0 ? (
-                            <p>Cargando secciones...</p>
-                        ) : secciones.length === 0 ? (
-                            <p>No estás inscrito en ninguna sección para este año. Revisa tus invitaciones pendientes.</p>
-                        ) : (
-                            secciones.map((sec) => (
-                                <SeccionAlumnoCard 
-                                    key={sec.idSeccion} 
-                                    seccion={sec}
-                                />
-                            ))
-                        )}
+                        {seccionesContent}
                     </div>
                 </div>
             </div>

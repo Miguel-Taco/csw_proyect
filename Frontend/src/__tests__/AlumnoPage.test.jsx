@@ -44,10 +44,10 @@ vi.mock("../componentes/InvitacionesPendientesButton", () => ({
 }));
 
 // Mock de fetch
-global.fetch = vi.fn();
+globalThis.fetch = vi.fn();
 
 // Mock de window.confirm
-global.confirm = vi.fn();
+globalThis.confirm = vi.fn();
 
 // Wrapper para agregar Router
 const renderWithRouter = (component) => {
@@ -57,8 +57,8 @@ const renderWithRouter = (component) => {
 describe("AlumnoPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    global.fetch.mockClear();
-    global.confirm.mockClear();
+    globalThis.fetch.mockClear();
+    globalThis.confirm.mockClear();
   });
 
   afterEach(() => {
@@ -66,7 +66,7 @@ describe("AlumnoPage", () => {
   });
 
   test("renderiza el ícono de usuario", () => {
-    global.fetch
+    globalThis.fetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true, idAlumno: 10 }),
@@ -83,7 +83,7 @@ describe("AlumnoPage", () => {
   });
 
   test("renderiza el selector de año con el valor por defecto 2026", () => {
-    global.fetch
+    globalThis.fetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true, idAlumno: 10 }),
@@ -101,7 +101,7 @@ describe("AlumnoPage", () => {
   });
 
   test("renderiza todas las opciones de año", () => {
-    global.fetch
+    globalThis.fetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true, idAlumno: 10 }),
@@ -120,7 +120,7 @@ describe("AlumnoPage", () => {
   });
 
   test("renderiza el botón de invitaciones pendientes", () => {
-    global.fetch
+    globalThis.fetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true, idAlumno: 10 }),
@@ -136,7 +136,7 @@ describe("AlumnoPage", () => {
   });
 
   test("renderiza el botón de cerrar sesión", () => {
-    global.fetch
+    globalThis.fetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true, idAlumno: 10 }),
@@ -154,7 +154,7 @@ describe("AlumnoPage", () => {
   });
 
   test("obtiene el id del alumno al cargar el componente", async () => {
-    global.fetch
+    globalThis.fetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true, idAlumno: 10 }),
@@ -167,7 +167,7 @@ describe("AlumnoPage", () => {
     renderWithRouter(<AlumnoPage />);
     
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         "http://localhost:8080/api/alumno/alumno-id/1",
         expect.objectContaining({
           method: 'GET',
@@ -180,7 +180,7 @@ describe("AlumnoPage", () => {
   });
 
   test("muestra mensaje cuando no hay secciones", async () => {
-    global.fetch
+    globalThis.fetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true, idAlumno: 10 }),
@@ -198,7 +198,7 @@ describe("AlumnoPage", () => {
   });
 
   test("muestra error cuando falla la obtención del id del alumno", async () => {
-    global.fetch.mockResolvedValueOnce({
+    globalThis.fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ success: false }),
     });
@@ -211,8 +211,8 @@ describe("AlumnoPage", () => {
   });
 
   test("no cierra sesión cuando el usuario cancela", async () => {
-    global.confirm.mockReturnValue(false);
-    global.fetch
+    globalThis.confirm.mockReturnValue(false);
+    globalThis.fetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true, idAlumno: 10 }),
@@ -231,13 +231,13 @@ describe("AlumnoPage", () => {
     const logoutButton = screen.getByRole('button', { name: /cerrar sesión/i });
     fireEvent.click(logoutButton);
 
-    expect(global.confirm).toHaveBeenCalledWith("¿Está seguro que desea cerrar sesión?");
+    expect(globalThis.confirm).toHaveBeenCalledWith("¿Está seguro que desea cerrar sesión?");
     expect(mockLogout).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   test("habilita los controles después de cargar", async () => {
-    global.fetch
+    globalThis.fetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true, idAlumno: 10 }),
@@ -266,7 +266,7 @@ describe("AlumnoPage", () => {
       }),
     }));
 
-    global.fetch
+    globalThis.fetch
       .mockResolvedValueOnce({
         ok: true,
         json: async () => ({ success: true, idAlumno: 10 }),

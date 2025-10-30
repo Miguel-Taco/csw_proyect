@@ -1,10 +1,10 @@
 // TareasAlumno.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import "../styles/TareasAlumno.css";
 
 function TareasAlumno() {
-    const { idSeccion } = useParams(); // Captura el parámetro de la URL
+    const { idSeccion } = useParams();
     const navigate = useNavigate();
     
     const [tareas, setTareas] = useState([]);
@@ -60,6 +60,34 @@ function TareasAlumno() {
         }
     };
 
+    // Determinar qué contenido mostrar
+    let tareasContent;
+    
+    if (loading) {
+        tareasContent = <p>Cargando tareas...</p>;
+    } else if (tareas.length === 0) {
+        tareasContent = <p>No hay tareas disponibles para esta sección.</p>;
+    } else {
+        tareasContent = (
+            <div className="tareas-lista">
+                {tareas.map((tarea) => (
+                    <div key={tarea.idTarea} className="tarea-card">
+                        <div className='tarea-entrega'>
+                            <h3>{tarea.nombre}</h3>
+                            <button className="btn-primary" onClick={() => console.log(tarea.idTarea)}>Subir Entrega</button>
+                        </div>
+                        <p>Descripción: {tarea.descripcion}</p>
+                        <p>Tipo de Tarea: {tarea.tipo}</p>
+                        <div className='tareas-fechas'>
+                            <p>Fecha Creación: {formatearFechaCorta(tarea.fechaCreacion)}</p>
+                            <p>Fecha Vencimiento: {formatearFechaCorta(tarea.fechaVencimiento)}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
     return (
         <div className="tareas-page">
             <div className='main-container'>
@@ -77,28 +105,7 @@ function TareasAlumno() {
                     </div>
                 )}
 
-                {loading ? (
-                    <p>Cargando tareas...</p>
-                ) : tareas.length === 0 ? (
-                    <p>No hay tareas disponibles para esta sección.</p>
-                ) : (
-                    <div className="tareas-lista">
-                        {tareas.map((tarea) => (
-                            <div key={tarea.idTarea} className="tarea-card">
-                                <div className='tarea-entrega'>
-                                    <h3>{tarea.nombre}</h3>
-                                    <button className="btn-primary" onClick={() => console.log(tarea.idTarea)}>Subir Entrega</button>
-                                </div>
-                                <p>Descripción: {tarea.descripcion}</p>
-                                <p>Tipo de Tarea: {tarea.tipo}</p>
-                                <div className='tareas-fechas'>
-                                    <p>Fecha Creación: {formatearFechaCorta(tarea.fechaCreacion)}</p>
-                                    <p>Fecha Vencimiento: {formatearFechaCorta(tarea.fechaVencimiento)}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                {tareasContent}
             </div>
         </div>
     );

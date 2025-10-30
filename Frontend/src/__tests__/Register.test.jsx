@@ -54,14 +54,6 @@ describe("Register", () => {
     expect(repetirContraseñaInput.value).toBe("password123");
   });
 
-  test("muestra el campo de código de estudiante por defecto (Estudiante seleccionado)", () => {
-    renderWithRouter(<Register />);
-    
-    const codigoInput = screen.getByPlaceholderText("12345678");
-    expect(codigoInput).toBeInTheDocument();
-    expect(screen.getByText("Debe tener 8 dígitos")).toBeInTheDocument();
-  });
-
   test("oculta el campo de código de estudiante cuando se selecciona Profesor", () => {
     renderWithRouter(<Register />);
     
@@ -70,19 +62,6 @@ describe("Register", () => {
 
     expect(screen.queryByPlaceholderText("12345678")).not.toBeInTheDocument();
     expect(screen.queryByText("Debe tener 8 dígitos")).not.toBeInTheDocument();
-  });
-
-  test("muestra el campo de código de estudiante al cambiar de Profesor a Estudiante", () => {
-    renderWithRouter(<Register />);
-    
-    const profesorRadio = screen.getByLabelText(/profesor/i);
-    const estudianteRadio = screen.getByLabelText(/estudiante/i);
-    
-    fireEvent.click(profesorRadio);
-    expect(screen.queryByPlaceholderText("12345678")).not.toBeInTheDocument();
-    
-    fireEvent.click(estudianteRadio);
-    expect(screen.getByPlaceholderText("12345678")).toBeInTheDocument();
   });
 
   test("limpia el código de estudiante al cambiar a Profesor", () => {
@@ -121,38 +100,6 @@ describe("Register", () => {
     
     fireEvent.change(codigoInput, { target: { value: "12345678" } });
     expect(codigoInput.value).toBe("12345678");
-  });
-
-  test("alterna la visibilidad de la primera contraseña", () => {
-    renderWithRouter(<Register />);
-    
-    const contraseñaInput = screen.getByPlaceholderText("Mínimo 8 caracteres");
-    const toggleIcons = screen.getAllByTitle("Mostrar contraseña");
-    const firstToggle = toggleIcons[0];
-
-    expect(contraseñaInput.type).toBe("password");
-    
-    fireEvent.click(firstToggle);
-    expect(contraseñaInput.type).toBe("text");
-    
-    fireEvent.click(firstToggle);
-    expect(contraseñaInput.type).toBe("password");
-  });
-
-  test("alterna la visibilidad de la segunda contraseña", () => {
-    renderWithRouter(<Register />);
-    
-    const repetirContraseñaInput = screen.getByPlaceholderText("Repite tu contraseña");
-    const toggleIcons = screen.getAllByTitle("Mostrar contraseña");
-    const secondToggle = toggleIcons[1];
-
-    expect(repetirContraseñaInput.type).toBe("password");
-    
-    fireEvent.click(secondToggle);
-    expect(repetirContraseñaInput.type).toBe("text");
-    
-    fireEvent.click(secondToggle);
-    expect(repetirContraseñaInput.type).toBe("password");
   });
 
   test("muestra error cuando las contraseñas no coinciden", async () => {

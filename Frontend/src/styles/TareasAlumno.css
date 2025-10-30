@@ -28,11 +28,8 @@
     justify-content: space-between;
 }
 
-.encabezado h1{
-    width: 20%;
-}
-
 .encabezado h1 {
+    width: 20%;
     margin: 0;
     font-size: 24px;
 }
@@ -42,7 +39,6 @@
     margin-bottom: 10px;
     padding: 10px 20px;
     cursor: pointer;
-    border: none;
     background-color: var(--color-accent);
     color: white;
     border-radius: 6px;

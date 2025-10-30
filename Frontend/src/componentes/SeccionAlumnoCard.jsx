@@ -9,7 +9,7 @@ function SeccionCard({ seccion }) {
         navigate(`/alumno/seccion/${seccion.idSeccion}/tareas`);
     };
   return (
-    <div className="seccion-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
+    <button className="seccion-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
 
       {/* Texto centrado */}
       <div className="seccion-card-data">
@@ -17,7 +17,7 @@ function SeccionCard({ seccion }) {
       </div>
       <p className="seccion-profesor">Profesor: {seccion.nombreProfesor}</p>
       <p></p>
-    </div>
+    </button>
   );
 }
 
@@ -26,6 +26,7 @@ SeccionCard.propTypes = {
     idSeccion: PropTypes.number.isRequired,
     nombreCurso: PropTypes.string.isRequired,
     anio: PropTypes.number.isRequired,
+    nombreProfesor: PropTypes.string.isRequired
   }).isRequired
 };
 

@@ -5,7 +5,7 @@ import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest';
 import FormularioTarea from '../componentes/FormularioTarea';
 
 // Mock de fetch
-global.fetch = vi.fn();
+globalThis.fetch = vi.fn();
 
 // Mock de useNavigate
 const mockNavigate = vi.fn();

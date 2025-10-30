@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 import { useAuth } from "../context/AuthContext";
 
 // Importa tus páginas
@@ -7,7 +8,6 @@ import RegisterPage from "../paginas/Register";
 import SeccionesPage from "../paginas/SeccionesPage";
 import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
-import InvitacionesPendientesButton from "../componentes/InvitacionesPendientesButton";
 import AsignarNotas from "../paginas/AsignarNotas";
 import AlumnoPage from "../paginas/AlumnoPage";
 import TareasAlumno from '../paginas/TareasAlumno';
@@ -55,6 +55,15 @@ function ProtectedRoute({ children, allowedRoles = [] }) {
   return children;
 }
 
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+  allowedRoles: PropTypes.arrayOf(PropTypes.string)
+};
+
+ProtectedRoute.defaultProps = {
+  allowedRoles: []
+};
+
 // Rutas públicas (login, register)
 function PublicRoute({ children }) {
   const { isAuthenticated, user, loading } = useAuth();
@@ -78,6 +87,10 @@ function PublicRoute({ children }) {
 
   return children;
 }
+
+PublicRoute.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 // --- Enrutador Principal ---
 
