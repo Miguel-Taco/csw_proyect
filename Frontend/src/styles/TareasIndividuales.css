@@ -8,8 +8,84 @@
 
 .header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 15px;
+  gap: 10px;
+}
+
+/* Botones del header */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #1f1f14;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #6a7a73;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Estilos para los tabs */
+.tabs-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  color: var(--color-secondary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+  position: relative;
+  bottom: -2px;
+}
+
+.tab-button:hover {
+  color: var(--color-primary);
+  background-color: rgba(125, 141, 134, 0.1);
+}
+
+.tab-button.active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+  background-color: rgba(188, 168, 141, 0.1);
 }
 
 .seccion-info {
@@ -49,6 +125,8 @@
   background: white;
   table-layout: fixed;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .tabla-tareas th,
@@ -58,7 +136,7 @@
   text-align: left;
 }
 
-/* Columnas con ancho específico */
+/* Columna de nota con ancho fijo */
 .tabla-tareas th.col-nota,
 .tabla-tareas td.col-nota {
   width: 120px;
@@ -66,10 +144,16 @@
   font-weight: 600;
 }
 
-.tabla-tareas th.col-codigo,
-.tabla-tareas td.col-codigo {
+/* Columna de integrantes para grupos */
+.col-integrantes {
   width: 150px;
   text-align: center;
+}
+
+/* Columna de nombre toma el resto del espacio */
+.tabla-tareas th:nth-child(2),
+.tabla-tareas td:nth-child(2) {
+  width: auto;
 }
 
 .tabla-tareas th {
@@ -81,7 +165,7 @@
   letter-spacing: 0.5px;
 }
 
-/* Filas de alumnos clickeables */
+/* Filas de alumnos y grupos clickeables */
 .alumno-row {
   cursor: pointer;
   transition: all 0.2s ease;
@@ -107,6 +191,16 @@
   font-weight: 600;
 }
 
+.nombre-grupo {
+  color: var(--color-secondary);
+  font-weight: 500;
+}
+
+.grupo-row:hover .nombre-grupo {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
 .vacio {
   text-align: center;
   color: #888;
@@ -121,17 +215,63 @@
     padding: 15px;
   }
 
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tabs-container {
+    flex-direction: column;
+    gap: 5px;
+    border-bottom: none;
+  }
+
+  .tab-button {
+    border-bottom: none;
+    border-left: 3px solid transparent;
+    padding: 10px 16px;
+    bottom: 0;
+  }
+
+  .tab-button.active {
+    border-bottom: none;
+    border-left-color: var(--color-accent);
+  }
+
   .tabla-tareas th,
   .tabla-tareas td {
     padding: 8px;
     font-size: 0.9rem;
   }
 
-  .col-codigo {
-    display: none;
-  }
-
   .seccion-info h2 {
     font-size: 1.2rem;
+  }
+
+  .col-integrantes {
+    width: 100px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .col-nota {
+    width: 80px !important;
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+
+  .tab-button {
+    font-size: 0.9rem;
+    padding: 8px 12px;
   }
 }
