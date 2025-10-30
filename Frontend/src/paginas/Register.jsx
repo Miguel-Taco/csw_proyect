@@ -19,7 +19,7 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     
-    const BASE_URL = 'https://cswproyect-production.up.railway.app/';
+    const BASE_URL = 'https://cswproyect-production.up.railway.app';
 
     const togglePassword = (index) => {
         const newState = [...showPassword];

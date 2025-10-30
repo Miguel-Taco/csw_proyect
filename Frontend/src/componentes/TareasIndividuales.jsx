@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/TareasIndividuales.css";
+import InvitacionButton from "./InvitacionButton";
 
 export default function TareasIndividuales() {
   const navigate = useNavigate();
@@ -124,6 +125,7 @@ export default function TareasIndividuales() {
   return (
     <div className="tareas-container">
       <div className="header">
+        <InvitacionButton />
         <button className="btn btn-primary" onClick={handleCrearTarea}>
           Crear Tarea
         </button>

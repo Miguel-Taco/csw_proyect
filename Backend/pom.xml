@@ -31,12 +31,6 @@
                 <start-class>com.unmsm.scorely.ScorelyApplication</start-class>
 	</properties>
 	<dependencies>
-		<!--
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
@@ -78,12 +72,6 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
-		<!--Para el usuario autenticado-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-
 		<!--Para poder leer las variables de entorno-->
 		<dependency>
 			<groupId>me.paulschwarz</groupId>
@@ -95,7 +83,7 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 		<!-- Base de datos H2 para tests (en memoria) -->
-    </dependency>
+   		 </dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>

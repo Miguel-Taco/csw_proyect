@@ -13,7 +13,9 @@ export default function InvitacionButton() {
   const [enviadas, setEnviadas] = useState([]);
 
   const { user } = useAuth();
-  const { idSeccion } = useParams(); // ✅ Captura el id de la URL
+
+  const { idSeccion } = useParams();
+
   const API_URL = "http://localhost:8080";
 
   const openModal = () => setOpen(true);
@@ -33,7 +35,7 @@ export default function InvitacionButton() {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setMensaje("Por favor ingrese un correo válido.");
+      setMensaje("Por favor ingrese un correo válido.") ;
       return;
     }
 
