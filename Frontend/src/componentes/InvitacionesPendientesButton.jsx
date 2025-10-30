@@ -83,9 +83,56 @@ export default function InvitacionesPendientesButton() {
   };
 
 
-  if (!user || user.role !== "alumno") {
-    return null;
+  if (user?.role !== "alumno") {
+   return null;
   }
+  
+  const renderModalContent = () => {
+    if (loading) {
+      return <p className="texto-centrado">Cargando...</p>;
+    }
+
+    if (invitaciones.length === 0) {
+      return (
+        <p className="texto-centrado">
+          No tienes invitaciones pendientes
+        </p>
+      );
+    }
+
+    // Si no está cargando y hay invitaciones
+    return (
+      <div className="invitaciones-lista">
+        {invitaciones.map((inv) => (
+          <div key={inv.id} className="invitacion-card">
+            <div className="invitacion-info">
+              <h4>Sección: {inv.nombreCurso || `Sección ${inv.idSeccion}`}</h4>
+              <p><strong>Profesor:</strong> {inv.nombreProfesor}</p>
+              <p><strong>Curso:</strong> {inv.nombreCurso}</p>
+              <p className="fecha-invitacion">
+                Enviada el {new Date(inv.fechaCreacion).toLocaleDateString()}
+              </p>
+            </div>
+            
+            <div className="btn-group">
+              <button
+                className="btn btn-success"
+                onClick={() => manejarRespuesta(inv.token, "aceptada")}
+              >
+                Aceptar
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => manejarRespuesta(inv.token, "rechazada")}
+              >
+                Rechazar
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -106,43 +153,7 @@ export default function InvitacionesPendientesButton() {
         title="Invitaciones Pendientes"
         disableBackdropClose={true}
       >
-        {loading ? (
-          <p className="texto-centrado">Cargando...</p>
-        ) : invitaciones.length === 0 ? (
-          <p className="texto-centrado">
-            No tienes invitaciones pendientes
-          </p>
-        ) : (
-          <div className="invitaciones-lista">
-            {invitaciones.map((inv) => (
-              <div key={inv.id} className="invitacion-card">
-                <div className="invitacion-info">
-                  <h4>Sección: {inv.nombreCurso || `Sección ${inv.idSeccion}`}</h4>
-                  <p><strong>Profesor:</strong> {inv.nombreProfesor}</p>
-                  <p><strong>Curso:</strong> {inv.nombreCurso}</p>
-                  <p className="fecha-invitacion">
-                    Enviada el {new Date(inv.fechaCreacion).toLocaleDateString()}
-                  </p>
-                </div>
-                
-                <div className="btn-group">
-                  <button
-                    className="btn btn-success"
-                    onClick={() => manejarRespuesta(inv.token, "aceptada")}
-                  >
-                    Aceptar
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => manejarRespuesta(inv.token, "rechazada")}
-                  >
-                    Rechazar
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {renderModalContent()}
 
         {mensaje && (
           <p className="mensaje-feedback">

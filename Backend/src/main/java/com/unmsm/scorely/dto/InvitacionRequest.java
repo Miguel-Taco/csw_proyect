@@ -20,4 +20,7 @@ public class InvitacionRequest {
     @NotBlank(message = "El correo es requerido")
     @Email(message = "Formato de correo inválido")
     private String correoAlumno;
+
+    @NotNull
+    private Integer idPersona;
 }

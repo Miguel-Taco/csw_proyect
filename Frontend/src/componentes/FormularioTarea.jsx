@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"; // ✅ Importar useParams
+import { useNavigate, useParams } from "react-router-dom";
 import "../styles/FormularioTarea.css";
 
 export default function FormularioTarea() {
@@ -28,7 +28,7 @@ export default function FormularioTarea() {
     }
 
     const nuevaTarea = {
-      idSeccion: Number(idSeccion), // ✅ Usar el id dinámico desde la URL
+      idSeccion: Number(idSeccion),
       nombre,
       tipo,
       descripcion,
@@ -36,7 +36,7 @@ export default function FormularioTarea() {
     };
 
     try {
-      const respuesta = await fetch("http://localhost:8080/api/tareas", {
+      const respuesta = await fetch("https://cswproyect-production.up.railway.app/api/tareas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,8 +71,9 @@ export default function FormularioTarea() {
       {error && <div style={{ color: "red", marginBottom: "8px" }}>{error}</div>}
 
       <div className="campo">
-        <label>Nombre de la tarea:</label>
+        <label htmlFor="nombre-tarea">Nombre de la tarea:</label>
         <input
+          id="nombre-tarea"
           type="text"
           value={nombre}
           onChange={(e) => {
@@ -84,8 +85,9 @@ export default function FormularioTarea() {
       </div>
 
       <div className="campo">
-        <label>Tipo de tarea:</label>
+        <label htmlFor="tipo-tarea">Tipo de tarea:</label>
         <select
+          id="tipo-tarea"
           value={tipo}
           onChange={(e) => {
             setTipo(e.target.value);
@@ -100,8 +102,9 @@ export default function FormularioTarea() {
       </div>
 
       <div className="campo">
-        <label>Descripción:</label>
+        <label htmlFor="descripcion-tarea">Descripción:</label>
         <textarea
+          id="descripcion-tarea"
           value={descripcion}
           onChange={(e) => {
             setDescripcion(e.target.value);
@@ -113,8 +116,9 @@ export default function FormularioTarea() {
       </div>
 
       <div className="campo">
-        <label>Fecha de vencimiento:</label>
+        <label htmlFor="fecha-tarea">Fecha de vencimiento:</label>
         <input
+          id="fecha-tarea"
           type="date"
           value={fecha}
           onChange={(e) => {

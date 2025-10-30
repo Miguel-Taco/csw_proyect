@@ -16,4 +16,4 @@ public class AceptarInvitacionRequest {
     private String token;
 
     private Integer idAlumno;
-}
+}   

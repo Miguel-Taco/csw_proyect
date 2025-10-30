@@ -240,12 +240,33 @@ function SeccionesPage(){
     };
 
     const handleLogout = async () => {
-        const confirmar = window.confirm("¿Está seguro que desea cerrar sesión?");
+        const confirmar = globalThis.confirm("¿Está seguro que desea cerrar sesión?");
         if (confirmar) {
             await logout();
             navigate("/login");
         }
     };
+
+    let contenidoSecciones;
+
+    if (loading && secciones.length === 0) {
+        // Estado: Cargando por primera vez
+        contenidoSecciones = <p>Cargando secciones...</p>;
+    } else if (secciones.length === 0) {
+        // Estado: Carga completa, pero no hay datos
+        contenidoSecciones = <p>No hay secciones para este año</p>;
+    } else {
+        // Estado: Carga completa, y hay secciones para mostrar
+        contenidoSecciones = secciones.map((sec) => (
+            <SeccionCard 
+                key={sec.idSeccion} 
+                seccion={sec}
+                onEliminar={handleEliminarSeccion}
+                onEditar={handleAbrirEditar}
+                onIrATareas={handleIrATareas}
+            />
+        ));
+    }
 
     return(
         <div className="seccionesPage-body">
@@ -307,6 +328,7 @@ function SeccionesPage(){
                                 />
                             ))
                         )}
+                        {contenidoSecciones}
                     </div>
                 </div>
             </div>
