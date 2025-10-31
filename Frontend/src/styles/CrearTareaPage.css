@@ -1,0 +1,51 @@
+.crear-tarea-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: var(--color-accent);
+  position: relative;
+}
+
+.crear-tarea-header {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.btn-volver {
+  padding: 10px 20px;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-volver:hover {
+  background-color: #6a7a73;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-volver:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  .crear-tarea-page {
+    padding: 15px;
+  }
+  
+  .crear-tarea-header {
+    max-width: 90%;
+  }
+}

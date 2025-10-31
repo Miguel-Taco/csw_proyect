@@ -14,7 +14,7 @@ import com.unmsm.scorely.services.AlumnoSeccionService;
 
 @RestController
 @RequestMapping("/api/alumnos-seccion")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AlumnoSeccionController {
 
     private final AlumnoSeccionService alumnoSeccionService;
