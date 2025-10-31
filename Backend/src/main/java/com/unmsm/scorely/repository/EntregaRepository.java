@@ -15,6 +15,7 @@ public interface EntregaRepository extends JpaRepository<Entrega, Integer> {
       FROM EntregaIndividual ei
       WHERE ei.entrega.tarea.idTarea = :idTarea
         AND ei.alumno.idAlumno = :idAlumno
+        AND ei.entrega.tarea.tipo = 'Individual'
       ORDER BY ei.entrega.fechaEntrega DESC
     """)
     List<Entrega> findByTareaAndAlumnoOrderByFechaDesc(@Param("idTarea") Integer idTarea,

@@ -102,7 +102,7 @@ public class EntregaService {
     @Transactional(readOnly = true)
     public List<NotasDeTareas> obtenerTareasNotasAlumno(Integer idSeccion, Integer idAlumno) {
         // 1. Obtener todas las tareas de la sección
-        List<Tarea> tareas = tareaRepository.findBySeccionIdSeccion(idSeccion);
+        List<Tarea> tareas = tareaRepository.findBySeccionIdSeccionAndTipo(idSeccion, "Individual");
 
         // 2. Para cada tarea, buscar si existe una entrega del alumno
         return tareas.stream().map(tarea -> {
