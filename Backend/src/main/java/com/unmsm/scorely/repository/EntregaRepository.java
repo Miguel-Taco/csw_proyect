@@ -22,6 +22,17 @@ public interface EntregaRepository extends JpaRepository<Entrega, Integer> {
     List<Entrega> findByTareaAndAlumnoOrderByFechaDesc(@Param("idTarea") Integer idTarea,
                                                        @Param("idAlumno") Integer idAlumno);
 
+    @Query("""
+      SELECT eg.entrega
+      FROM EntregaGrupal eg
+      WHERE eg.entrega.tarea.idTarea = :idTarea
+        AND eg.grupo.idGrupo = :idGrupo
+        AND eg.entrega.tarea.tipo = 'Grupal'
+      ORDER BY eg.entrega.fechaEntrega DESC
+    """)
+    List<Entrega> findByTareaAndGrupoOrderByFechaDesc(@Param("idTarea") Integer idTarea,
+                                                       @Param("idGrupo") Integer idGrupo);
+
     @Modifying
     @Query("UPDATE Entrega e SET e.nota = :nota WHERE e.idEntrega = :idEntrega")
     int updateNotaById(@Param("idEntrega") Integer idEntrega, @Param("nota") Double nota);

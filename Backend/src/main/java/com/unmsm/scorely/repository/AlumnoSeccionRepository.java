@@ -36,4 +36,11 @@ public interface AlumnoSeccionRepository extends JpaRepository<AlumnoSeccion, In
             "WHERE als.seccion.idSeccion = :idSeccion " +
             "ORDER BY p.apellidoP, p.apellidoM, p.nombres")
     List<AlumnoSeccion> findBySeccion_IdSeccion(@Param("idSeccion") Integer idSeccion);
+
+    @Query("""
+        SELECT as
+        FROM AlumnoSeccion as
+        WHERE as.grupo.idGrupo = :idGrupo
+    """)
+    List<AlumnoSeccion> findByGrupoId(@Param("idGrupo") Integer idGrupo);
 }

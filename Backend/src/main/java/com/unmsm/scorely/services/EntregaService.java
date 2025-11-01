@@ -103,7 +103,6 @@ public class EntregaService {
     public List<NotasDeTareas> obtenerTareasNotasAlumno(Integer idSeccion, Integer idAlumno) {
         // 1. Obtener todas las tareas de la sección
         List<Tarea> tareas = tareaRepository.findBySeccionIdSeccionAndTipo(idSeccion, "Individual");
-
         // 2. Para cada tarea, buscar si existe una entrega del alumno
         return tareas.stream().map(tarea -> {
             // Buscar las entregas del alumno para esta tarea
@@ -111,7 +110,6 @@ public class EntregaService {
                     tarea.getIdTarea(),
                     idAlumno
             );
-
             // Si hay entregas, tomar la más reciente (primera en la lista)
             Entrega ultimaEntrega = entregas.isEmpty() ? null : entregas.get(0);
 

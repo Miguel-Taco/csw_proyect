@@ -99,9 +99,13 @@ export default function TareasIndividuales() {
   };
 
   const handleGrupoClick = (grupo) => {
-    // TODO: Implementar navegación a vista de grupo
-    console.log("Click en grupo:", grupo);
-  };
+  navigate(`/secciones/${idSeccion}/grupo/${grupo.idGrupo}/tareas`, {
+    state: { 
+      grupo: grupo,
+      nombreSeccion: grupo.nombreGrupo // O usa el nombre real de la sección si lo tienes
+    }
+  });
+};
 
   const formatearNota = (nota) => {
     if (nota === null || nota === undefined) {
