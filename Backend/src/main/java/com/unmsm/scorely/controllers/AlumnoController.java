@@ -29,7 +29,7 @@ public class AlumnoController {
     @GetMapping("/alumno-id/{idPersona}")
     public ResponseEntity<Map<String, Object>> obtenerIdProfesor(@PathVariable Integer idPersona) {
         Map<String, Object> response = new HashMap<>();
-
+    
         return alumnoRepository.findIdAlumnoByIdPersona(idPersona)
                 .map(idAlumno -> {
                     response.put("success", true);

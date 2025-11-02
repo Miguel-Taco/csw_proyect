@@ -18,4 +18,10 @@ public interface GrupoRepository extends JpaRepository<Grupo, Integer> {
     // Obtener todos los grupos con sus alumnos
     @Query("SELECT g FROM Grupo g LEFT JOIN FETCH g.alumnos")
     List<Grupo> findAllGrupos();
+
+    @Query(value = "CALL ObtenerCompaneros(:idSeccion, :idPersona)", nativeQuery = true)
+    List<Object[]> obtenerCompaneros(
+            @Param("idSeccion") Integer idSeccion,
+            @Param("idPersona") Integer idPersona
+    );
 }

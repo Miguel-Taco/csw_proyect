@@ -3,6 +3,7 @@ package com.unmsm.scorely.services;
 import com.unmsm.scorely.dto.AlumnoDTO;
 import com.unmsm.scorely.dto.CrearGrupoRequest;
 import com.unmsm.scorely.dto.CrearGrupoResponse;
+import com.unmsm.scorely.dto.ObtenerCompanerosResponse;
 import com.unmsm.scorely.models.*;
 import com.unmsm.scorely.repository.AlumnoSeccionRepository;
 import com.unmsm.scorely.repository.GrupoRepository;
@@ -163,4 +164,22 @@ public class GrupoService {
         r.setCantidadAlumnos(alumnosDTO.size());
         return r;
     }
+
+    public List<ObtenerCompanerosResponse> obtenerCompaneros(Integer idSeccion, Integer idPersona) {
+        List<Object[]> resultados = grupoRepository.obtenerCompaneros(idSeccion, idPersona);
+
+        List<ObtenerCompanerosResponse> companeros = new ArrayList<>();
+
+        for (Object[] fila : resultados) {
+            ObtenerCompanerosResponse dto = new ObtenerCompanerosResponse();
+            dto.setNombres((String) fila[0]);
+            dto.setApellido_p((String) fila[1]);
+            dto.setApellido_m((String) fila[2]);
+            dto.setPromedio_final(fila[3] != null ? ((Number) fila[3]).intValue() : null);
+            companeros.add(dto);
+        }
+
+        return companeros;
+    }
+
 }

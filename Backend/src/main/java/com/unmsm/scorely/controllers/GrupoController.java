@@ -1,8 +1,6 @@
 package com.unmsm.scorely.controllers;
 
-import com.unmsm.scorely.dto.AlumnoDTO;
-import com.unmsm.scorely.dto.CrearGrupoRequest;
-import com.unmsm.scorely.dto.CrearGrupoResponse;
+import com.unmsm.scorely.dto.*;
 import com.unmsm.scorely.services.GrupoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -67,5 +65,17 @@ public class GrupoController {
         }
     }
 
-  
+    /**
+     * GET /api/grupos/seccion/{idSeccion}/idPersona/{idPersona}
+     * Obtiene el grupo al que pertenece un estudiante en una seccion
+     */
+    @PostMapping("/companeros")
+    public ResponseEntity<List<ObtenerCompanerosResponse>> obtenerCompaneros(
+            @RequestBody ObtenerCompanerosRequest request) {
+        List<ObtenerCompanerosResponse> companeros =
+                grupoService.obtenerCompaneros(request.getId_seccion(), request.getId_persona());
+        return ResponseEntity.ok(companeros);
+    }
+
+
 }
