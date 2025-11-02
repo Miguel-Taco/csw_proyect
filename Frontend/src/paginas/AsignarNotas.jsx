@@ -284,12 +284,14 @@ export default function AsignarNotas() {
                `${alumnoInfo.nombres || ''} ${alumnoInfo.apellidoP || ''} ${alumnoInfo.apellidoM || ''}`.trim() ||
                'Asignar Notas'}
             </h2>
-            {alumnoInfo.codigoAlumno && (
+            <div className="codigoCurso-row">
+              {alumnoInfo.codigoAlumno && (
               <p className="codigo-alumno">Código: {alumnoInfo.codigoAlumno}</p>
             )}
             {nombreSeccion && (
-              <p className="nombre-seccion">{nombreSeccion}</p>
+              <p className="nombre-seccion">Curso: {nombreSeccion}</p>
             )}
+            </div>
           </div>
           <button className="btn-volver" onClick={handleVolver}>
             ← Volver

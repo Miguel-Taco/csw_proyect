@@ -15,7 +15,7 @@
   height: 12%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   border: 4px double var(--color-accent);
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
@@ -23,6 +23,11 @@
   color: #3a3a3a;
   font-weight: 600;
   letter-spacing: .5px;
+  width: 100%;
+}
+
+.asignarNotas-header{
+ 
 }
 
 /* TARJETA/CONTENEDOR PRINCIPAL */
@@ -152,4 +157,10 @@
     min-width: 72px;
     font-size: 1.1rem;
 }
+}
+
+.codigoCurso-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
