@@ -9,10 +9,7 @@
 .header {
   display: flex;
   justify-content: space-between;
-<<<<<<< HEAD
-=======
   align-items: center;
->>>>>>> f08dccab0c3b81c69b2c466fdb0009cb686a1832
   margin-bottom: 15px;
   gap: 10px;
 }

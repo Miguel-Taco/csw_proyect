@@ -168,9 +168,6 @@ export default function TareasIndividuales() {
   return (
     <div className="tareas-container">
       <div className="header">
-<<<<<<< HEAD
-        <InvitacionButton />
-=======
         <button 
           className="btn btn-secondary" 
           onClick={handleVolverASecciones}
@@ -178,7 +175,6 @@ export default function TareasIndividuales() {
         >
           ← Volver a Secciones
         </button>
->>>>>>> f08dccab0c3b81c69b2c466fdb0009cb686a1832
         <button className="btn btn-primary" onClick={handleCrearTarea}>
           Crear Tarea
         </button>
@@ -214,10 +210,6 @@ export default function TareasIndividuales() {
           <p className="total-alumnos">Total: {grupos.length} grupo(s)</p>
         )}
       </div>
-<<<<<<< HEAD
-      {contenidoPrincipal}
-    </div>  
-=======
 
       {loading ? (
         <div className="loading-message">Cargando...</div>
@@ -287,6 +279,5 @@ export default function TareasIndividuales() {
         </table>
       )}
     </div>
->>>>>>> f08dccab0c3b81c69b2c466fdb0009cb686a1832
   );
 }

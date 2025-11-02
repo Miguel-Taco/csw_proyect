@@ -2,7 +2,6 @@ package com.unmsm.scorely.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.unmsm.scorely.config.SecurityConfig;
 import com.unmsm.scorely.dto.CrearTareaRequest;
 import com.unmsm.scorely.models.Seccion;
 import com.unmsm.scorely.models.Tarea;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,7 +27,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TareaController.class)
-@Import(SecurityConfig.class) // ✅ Importar configuración de seguridad
 class TareaControllerTest {
 
     @Autowired
