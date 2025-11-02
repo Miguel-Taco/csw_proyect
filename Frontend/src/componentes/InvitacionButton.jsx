@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import "../styles/InvitacionButton.css";
 import Modal from "./Modal";
 import { useAuth } from "../context/AuthContext";
+import validator from "validator";
 
 export default function InvitacionButton() {
   const [open, setOpen] = useState(false);
@@ -33,9 +34,8 @@ export default function InvitacionButton() {
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setMensaje("Por favor ingrese un correo válido.") ;
+    if (!validator.isEmail(email)){
+      setMensaje("Por favor ingrese un correo válido.");
       return;
     }
 
