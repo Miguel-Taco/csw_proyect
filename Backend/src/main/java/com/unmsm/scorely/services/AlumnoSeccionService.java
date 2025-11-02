@@ -1,23 +1,32 @@
 package com.unmsm.scorely.services;
 
-import com.unmsm.scorely.dto.AlumnoSeccionDTO;
-import com.unmsm.scorely.models.AlumnoSeccion;
-import com.unmsm.scorely.models.Persona;
-import com.unmsm.scorely.repository.AlumnoSeccionRepository;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.unmsm.scorely.dto.AlumnoSeccionDTO;
+import com.unmsm.scorely.models.AlumnoSeccion;
+import com.unmsm.scorely.models.Entrega;
+import com.unmsm.scorely.models.Persona;
+import com.unmsm.scorely.repository.AlumnoSeccionRepository;
+import com.unmsm.scorely.repository.EntregaRepository;
 
 @Service
 public class AlumnoSeccionService {
 
     private final AlumnoSeccionRepository alumnoSeccionRepository;
+    private final EntregaRepository entregaRepository;
 
-    public AlumnoSeccionService(AlumnoSeccionRepository alumnoSeccionRepository) {
+    public AlumnoSeccionService(
+            AlumnoSeccionRepository alumnoSeccionRepository,
+            EntregaRepository entregaRepository
+    ) {
         this.alumnoSeccionRepository = alumnoSeccionRepository;
+        this.entregaRepository = entregaRepository;
     }
 
     @Transactional(readOnly = true)
@@ -26,7 +35,7 @@ public class AlumnoSeccionService {
                 .findBySeccion_IdSeccion(idSeccion);
 
         return alumnosSecciones.stream()
-                .map(this::convertirADTO)
+                .map(alumnoSeccion -> convertirADTO(alumnoSeccion, idSeccion))
                 .collect(Collectors.toList());
     }
 
@@ -36,10 +45,10 @@ public class AlumnoSeccionService {
                 .findByAlumnoAndSeccion(idAlumno, idSeccion)
                 .orElseThrow(() -> new RuntimeException("Alumno no encontrado en la sección"));
 
-        return convertirADTO(alumnoSeccion);
+        return convertirADTO(alumnoSeccion, idSeccion);
     }
 
-    private AlumnoSeccionDTO convertirADTO(AlumnoSeccion alumnoSeccion) {
+    private AlumnoSeccionDTO convertirADTO(AlumnoSeccion alumnoSeccion, Integer idSeccion) {
         Persona persona = alumnoSeccion.getAlumno().getPersona();
         
         String nombreCompleto = String.format("%s %s %s",
@@ -47,8 +56,8 @@ public class AlumnoSeccionService {
                 persona.getApellidoP(),
                 persona.getApellidoM()).trim();
 
-        // Por ahora el promedio es null, se calculará cuando implementes las notas
-        BigDecimal promedio = calcularPromedio(alumnoSeccion);
+        // Calcular promedio real
+        BigDecimal promedio = calcularPromedio(alumnoSeccion.getAlumno().getIdAlumno(), idSeccion);
 
         return AlumnoSeccionDTO.builder()
                 .idAlumno(alumnoSeccion.getAlumno().getIdAlumno())
@@ -65,9 +74,49 @@ public class AlumnoSeccionService {
                 .build();
     }
 
-    private BigDecimal calcularPromedio(AlumnoSeccion alumnoSeccion) {
-        // TODO: Implementar cálculo real de promedio basado en entregas
-        // Por ahora retorna null o un valor de ejemplo
-        return null;
+    /**
+     * Calcula el promedio de un alumno en una sección basándose en sus entregas.
+     * Solo considera la entrega más reciente de cada tarea.
+     */
+    private BigDecimal calcularPromedio(Integer idAlumno, Integer idSeccion) {
+        try {
+            // Obtener todas las tareas de la sección
+            List<Integer> tareasIds = entregaRepository
+                    .findTareasIdsBySeccion(idSeccion);
+
+            if (tareasIds.isEmpty()) {
+                return null; // No hay tareas
+            }
+
+            BigDecimal sumaNotas = BigDecimal.ZERO;
+            int cantidadNotasValidas = 0;
+
+            // Para cada tarea, obtener la última entrega del alumno
+            for (Integer idTarea : tareasIds) {
+                List<Entrega> entregas = entregaRepository
+                        .findByTareaAndAlumnoOrderByFechaDesc(idTarea, idAlumno);
+
+                if (!entregas.isEmpty()) {
+                    Entrega ultimaEntrega = entregas.get(0);
+                    if (ultimaEntrega.getNota() != null) {
+                        sumaNotas = sumaNotas.add(ultimaEntrega.getNota());
+                        cantidadNotasValidas++;
+                    }
+                }
+            }
+
+            // Si no hay notas válidas, retornar null
+            if (cantidadNotasValidas == 0) {
+                return null;
+            }
+
+            // Calcular promedio y redondear a 2 decimales
+            return sumaNotas
+                    .divide(BigDecimal.valueOf(cantidadNotasValidas), 2, RoundingMode.HALF_UP);
+
+        } catch (Exception e) {
+            System.err.println("Error al calcular promedio: " + e.getMessage());
+            return null;
+        }
     }
 }

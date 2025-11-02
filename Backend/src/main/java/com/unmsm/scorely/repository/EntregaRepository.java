@@ -1,12 +1,13 @@
 package com.unmsm.scorely.repository;
 
-import com.unmsm.scorely.models.Entrega;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+import com.unmsm.scorely.models.Entrega;
 
 public interface EntregaRepository extends JpaRepository<Entrega, Integer> {
 
@@ -24,4 +25,13 @@ public interface EntregaRepository extends JpaRepository<Entrega, Integer> {
     @Query("UPDATE Entrega e SET e.nota = :nota WHERE e.idEntrega = :idEntrega")
     int updateNotaById(@Param("idEntrega") Integer idEntrega, @Param("nota") Double nota);
 
+    /**
+     * Obtiene los IDs de todas las tareas de una sección específica
+     */
+    @Query("""
+        SELECT DISTINCT t.idTarea
+        FROM Tarea t
+        WHERE t.seccion.idSeccion = :idSeccion
+    """)
+    List<Integer> findTareasIdsBySeccion(@Param("idSeccion") Integer idSeccion);
 }

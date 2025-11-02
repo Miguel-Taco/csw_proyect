@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory; 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,9 +24,10 @@ import com.unmsm.scorely.services.TareaService;
 
 @RestController
 @RequestMapping("/api/tareas")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TareaController {
 
+    private static final Logger logger = LoggerFactory.getLogger(TareaController.class); 
     private final TareaService tareaService;
 
     public TareaController(TareaService tareaService) {
@@ -35,17 +38,18 @@ public class TareaController {
     @PostMapping
     public ResponseEntity<?> crearTarea(@RequestBody CrearTareaRequest req) {
         try {
-            System.out.println("POST /api/tareas - payload: " + req);
+            logger.info("POST /api/tareas - payload: {}", req);
             Tarea creada = tareaService.crearTarea(req);
             if (creada == null) {
+                logger.error("Error al crear la tarea: servicio retornó null");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                    .body("Error al crear la tarea (servicio retornó null)");
+                        .body("Error al crear la tarea (servicio retornó null)");
             }
             return ResponseEntity.status(HttpStatus.CREATED).body(creada);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al crear la tarea", e); // 👈 reemplazo de e.printStackTrace()
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body("Error al crear la tarea: " + e.getMessage());
+                    .body("Error al crear la tarea: " + e.getMessage());
         }
     }
 
@@ -59,6 +63,7 @@ public class TareaController {
             response.put("tareas", tareas);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            logger.error("Error al obtener tareas por sección", e);
             response.put("success", false);
             response.put("message", "Error al obtener tareas: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -81,6 +86,7 @@ public class TareaController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
         } catch (Exception e) {
+            logger.error("Error al obtener la tarea", e);
             response.put("success", false);
             response.put("message", "Error al obtener la tarea: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -106,6 +112,7 @@ public class TareaController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
         } catch (Exception e) {
+            logger.error("Error al actualizar la tarea", e);
             response.put("success", false);
             response.put("message", "Error al actualizar la tarea: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
@@ -128,6 +135,7 @@ public class TareaController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
         } catch (Exception e) {
+            logger.error("Error al eliminar la tarea", e);
             response.put("success", false);
             response.put("message", "Error al eliminar la tarea: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
