@@ -84,7 +84,6 @@ export default function AsignarNotas() {
     );
   };
 
-  // Validar todas las notas
   const validarNotas = () => {
     for (const t of tareas) {
       if (t.nota !== "" && (Number.isNaN(t.nota) || t.nota < 0 || t.nota > 20)) {
@@ -94,7 +93,6 @@ export default function AsignarNotas() {
     return { valido: true, mensaje: "" };
   };
 
-  // Actualizar una entrega existente
   const actualizarEntrega = async (tarea) => {
     const response = await fetch(
       `${BASE_URL}/api/entregas/${tarea.idEntrega}/nota`,
@@ -113,7 +111,6 @@ export default function AsignarNotas() {
     }
   };
 
-  // Crear una nueva entrega
   const crearEntrega = async (tarea) => {
     const payload = {
       idTarea: tarea.idTarea,
@@ -134,7 +131,6 @@ export default function AsignarNotas() {
 
     if (response.ok) {
       const created = await response.json();
-      // Actualizar el idEntrega localmente
       setTareas((prev) =>
         prev.map((p) =>
           p.idTarea === tarea.idTarea 
@@ -148,8 +144,12 @@ export default function AsignarNotas() {
     }
   };
 
-  // Procesar una tarea (actualizar o crear)
   const procesarTarea = async (tarea) => {
+    // Solo procesar si tiene nota
+    if (tarea.nota === "" || tarea.nota === null) {
+      return;
+    }
+
     if (tarea.idEntrega) {
       await actualizarEntrega(tarea);
     } else {
@@ -162,23 +162,33 @@ export default function AsignarNotas() {
     setMessage(null);
     setError("");
 
-    // Validación de notas
     const validacion = validarNotas();
     if (!validacion.valido) {
-      setMessage({ type: "error", text: validacion.mensaje });
+      setError(validacion.mensaje);
       setSaving(false);
       return;
     }
 
     try {
-      // Procesar todas las tareas
-      for (const tarea of tareas) {
+      // Filtrar solo tareas con nota
+      const tareasConNota = tareas.filter(t => t.nota !== "" && t.nota !== null);
+      
+      if (tareasConNota.length === 0) {
+        setError("No hay notas para guardar");
+        setSaving(false);
+        return;
+      }
+
+      // Procesar solo las tareas con nota
+      for (const tarea of tareasConNota) {
         await procesarTarea(tarea);
       }
 
-      setMessage({ type: "success", text: "Notas guardadas correctamente." });
+      setMessage({ 
+        type: "success", 
+        text: `${tareasConNota.length} nota(s) guardada(s) correctamente.` 
+      });
       
-      // Recargar las tareas para reflejar los cambios
       setTimeout(() => {
         cargarTareasNotas();
       }, 1000);
@@ -195,7 +205,10 @@ export default function AsignarNotas() {
     navigate(`/secciones/${idSeccion}/tareas`);
   };
 
-  // Siempre retorna string
+  const cerrarError = () => {
+    setError("");
+  };
+
   const formatearNota = (nota) => {
     if (nota === null || nota === undefined || nota === "") {
       return "";
@@ -211,7 +224,6 @@ export default function AsignarNotas() {
     return (suma / notasValidas.length).toFixed(2);
   };
 
-  // Determinar contenido a mostrar
   let contenidoPrincipal;
   
   if (loading) {
@@ -225,7 +237,6 @@ export default function AsignarNotas() {
   } else {
     contenidoPrincipal = (
       <>
-        {/* Card de Resumen */}
         <div className="stats-card">
           <div className="stat-item">
             <div className="stat-label">Promedio Actual</div>
@@ -237,7 +248,6 @@ export default function AsignarNotas() {
           </div>
         </div>
 
-        {/* Lista de Tareas */}
         <div className="tareas-scroll">
           {tareas.map((tarea, index) => (
             <div className="tarea-item" key={tarea.idTarea}>
@@ -304,12 +314,28 @@ export default function AsignarNotas() {
           </div>
         )}
 
-        {error && (
-          <div className="error-message">{error}</div>
-        )}
-
         {contenidoPrincipal}
       </div>
+
+      {/* Modal de Error Flotante */}
+      {error && (
+        <div className="modal-overlay" onClick={cerrarError}>
+          <div className="modal-error" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <span className="modal-icon">⚠️</span>
+              <h3>Error</h3>
+            </div>
+            <div className="modal-body">
+              <p>{error}</p>
+            </div>
+            <div className="modal-footer">
+              <button className="btn-modal-cerrar" onClick={cerrarError}>
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
