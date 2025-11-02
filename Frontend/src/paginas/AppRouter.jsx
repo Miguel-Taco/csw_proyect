@@ -8,6 +8,7 @@ import RegisterPage from "../paginas/Register";
 import SeccionesPage from "../paginas/SeccionesPage";
 import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
+import AsignacionGruposPage from "../paginas/AsignacionGruposPage";
 import AsignarNotas from "../paginas/AsignarNotas";
 import AlumnoPage from "../paginas/AlumnoPage";
 import TareasAlumno from '../paginas/TareasAlumno';
@@ -147,6 +148,16 @@ function AppRouter() {
           }
         />
 
+        <Route
+          path="/asignacion-grupos"
+          element={
+            <ProtectedRoute>
+              <AsignacionGruposPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ver alumnos y tareas de una sección */}
         {/* Rutas dinámicas de Tareas (accesibles por profesor) */}
         <Route
           path="/secciones/:idSeccion/tareas"

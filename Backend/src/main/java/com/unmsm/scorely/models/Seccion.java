@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Seccion")
-@Data
+@Data  // ← Genera getIdSeccion() y otros getters/setters
 @NoArgsConstructor
 @AllArgsConstructor
 public class Seccion {

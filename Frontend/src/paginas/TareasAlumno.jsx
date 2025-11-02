@@ -1,11 +1,17 @@
 // TareasAlumno.jsx
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import Modal from "../componentes/Modal";
 import "../styles/TareasAlumno.css";
 
 function TareasAlumno() {
     const { idSeccion } = useParams();
     const navigate = useNavigate();
+
+    const [openModal, setOpenModal] = useState(false);
+    const [companeros, setCompaneros] = useState([]);
+    const [loadingCompaneros, setLoadingCompaneros] = useState(false);
+    const [errorCompaneros, setErrorCompaneros] = useState("");
     
     const [tareas, setTareas] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -60,6 +66,34 @@ function TareasAlumno() {
         }
     };
 
+    const obtenerCompaneros = async () => {
+        setLoadingCompaneros(true);
+        setErrorCompaneros("");
+        try {
+            const response = await fetch(`${BASE_URL}/api/grupos/companeros`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id_seccion: Number.parseInt(idSeccion),
+                    id_persona: 2 // 🔹 aquí puedes reemplazar por el id_persona del usuario logueado
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor");
+            }
+
+            const data = await response.json();
+            setCompaneros(data);
+        } catch (err) {
+            console.error("Error al obtener compañeros:", err);
+            setErrorCompaneros("No se pudieron cargar los compañeros del grupo");
+        } finally {
+            setLoadingCompaneros(false);
+        }
+    };
+
+
     // Determinar qué contenido mostrar
     let tareasContent;
     
@@ -88,6 +122,35 @@ function TareasAlumno() {
         );
     }
 
+    const modalContent = (
+        <Modal
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            title="Mi Grupo de Trabajo"
+        >
+            {(() => {
+                if (loadingCompaneros) {
+                    return <p>Cargando compañeros...</p>;
+                }
+                if (errorCompaneros) {
+                    return <p style={{ color: "red" }}>{errorCompaneros}</p>;
+                }
+                if (companeros.length === 0) {
+                    return <p>No se encontraron compañeros en tu grupo.</p>;
+                }
+                return (
+                    <div className="companeros-lista">
+                        {companeros.map((c) => (
+                            <li key={`${c.id_persona}`} className="companero-card">
+                                <p>{c.nombres} {c.apellido_p} {c.apellido_m}</p>
+                            </li>
+                        ))}
+                    </div>
+                );
+            })()}
+        </Modal>
+    );
+
     return (
         <div className="tareas-page">
             <div className='main-container'>
@@ -96,7 +159,15 @@ function TareasAlumno() {
                         ← Volver
                     </button>
                     <h1>Tareas de la Sección</h1>
-                    <button className="btn-primary">Ver Grupo de Trabajo</button>
+                    <button
+                        className="btn-primary"
+                        onClick={() => {
+                            setOpenModal(true);
+                            obtenerCompaneros();
+                        }}
+                    >
+                        Ver Grupo de Trabajo
+                    </button>
                 </div>
 
                 {error && (
@@ -106,6 +177,8 @@ function TareasAlumno() {
                 )}
 
                 {tareasContent}
+                {modalContent}
+
             </div>
         </div>
     );

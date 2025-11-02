@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Alumno")
-@Data
+@Data  // ← Genera getIdAlumno(), getPersona(), getCodigoAlumno()
 @NoArgsConstructor
 @AllArgsConstructor
 public class Alumno {
