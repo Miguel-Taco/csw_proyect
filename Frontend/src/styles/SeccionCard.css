@@ -28,6 +28,7 @@
   margin: 0;
   text-align: center;
   user-select: none;
+  margin: auto 10%;
 }
 
 /* --- Botones en esquina superior derecha --- */
@@ -37,7 +38,9 @@
   right: 0;
   display: flex;
   gap: 0;              /* sin espacio entre botones */
+  margin: 0;
 }
+
 
 /* Estilo base para los botones */
 .seccion-actions button {

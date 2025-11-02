@@ -282,7 +282,21 @@ function SeccionesPage(){
                     )}
 
                     <div className="secciones-container row">
-                        {contenidoSecciones}
+                        {loading && secciones.length === 0 ? (
+                            <p>Cargando secciones...</p>
+                        ) : secciones.length === 0 ? (
+                            <p>No hay secciones para este año</p>
+                        ) : (
+                            secciones.map((sec) => (
+                                <SeccionCard className="card-container-item"
+                                    key={sec.idSeccion} 
+                                    seccion={sec}
+                                    onEliminar={handleEliminarSeccion}
+                                    onEditar={handleAbrirEditar}
+                                    onIrATareas={handleIrATareas}
+                                    />
+                            ))
+                        )}
                     </div>
                 </div>
             </div>
