@@ -99,9 +99,13 @@ export default function TareasIndividuales() {
   };
 
   const handleGrupoClick = (grupo) => {
-    // TODO: Implementar navegación a vista de grupo
-    console.log("Click en grupo:", grupo);
-  };
+  navigate(`/secciones/${idSeccion}/grupo/${grupo.idGrupo}/tareas`, {
+    state: { 
+      grupo: grupo,
+      nombreSeccion: grupo.nombreGrupo // O usa el nombre real de la sección si lo tienes
+    }
+  });
+};
 
   const formatearNota = (nota) => {
     if (nota === null || nota === undefined) {
@@ -109,62 +113,7 @@ export default function TareasIndividuales() {
     }
     return Number(nota).toFixed(2);
   };
-
-  // ...dentro de la función TareasIndividuales, antes del return()
-
-    let contenidoPrincipal;
-
-    if (loading) {
-        // Estado: Cargando
-        contenidoPrincipal = <div className="loading-message">Cargando alumnos...</div>;
-    
-    } else if (error) {
-        // Estado: Error
-        contenidoPrincipal = <div className="error-message">{error}</div>;
-    
-    } else {
-        // Estado: Carga completa, mostrar tabla
-        contenidoPrincipal = (
-            <table className="tabla-tareas">
-                <thead>
-                    <tr>
-                        <th className="col-nota">Promedio</th>
-                        <th>Nombre Completo</th>
-                        <th className="col-codigo">Código</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {alumnos.length === 0 ? (
-                        <tr>
-                            <td colSpan="3" className="vacio">
-                                No hay estudiantes matriculados en esta sección
-                            </td>
-                        </tr>
-                    ) : (
-                        alumnos.map((alumno) => (
-                            <tr 
-                                key={alumno.idAlumno} 
-                                className="alumno-row"
-                                onClick={() => handleAlumnoClick(alumno)}
-                                title="Click para ver tareas del alumno"
-                            >
-                                <td className="col-nota">
-                                    {formatearNota(alumno.promedioFinal)}
-                                </td>
-                                <td className="nombre-alumno">
-                                    {alumno.nombreCompleto}
-                                </td>
-                                <td className="col-codigo">
-                                    {alumno.codigoAlumno}
-                                </td>
-                            </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
-        );
-    }
-
+  
   return (
     <div className="tareas-container">
       <div className="header">
