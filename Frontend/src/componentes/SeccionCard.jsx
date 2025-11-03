@@ -35,13 +35,6 @@ function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas, onAsignarGrup
           ✏️
         </button>
         <button
-          onClick={(e) => { e.stopPropagation(); if (onAsignarGrupos) onAsignarGrupos(seccion); }}
-          className="btn-asignar"
-          title="Asignar grupos"
-        >
-          👥
-        </button>
-        <button
           onClick={handleEliminar}
           className="btn-eliminar"
           title="Eliminar sección"
