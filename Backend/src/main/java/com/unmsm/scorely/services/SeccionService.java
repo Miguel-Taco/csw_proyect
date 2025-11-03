@@ -4,29 +4,29 @@ import com.unmsm.scorely.dto.CrearSeccionRequest;
 import com.unmsm.scorely.dto.SeccionAlumnoDTO;
 import com.unmsm.scorely.dto.SeccionDTO;
 import com.unmsm.scorely.dto.EditarSeccionRequest;
+import com.unmsm.scorely.exception.SeccionServiceException;
 import com.unmsm.scorely.models.Profesor;
 import com.unmsm.scorely.models.Seccion;
 import com.unmsm.scorely.repository.ProfesorRepository;
 import com.unmsm.scorely.repository.SeccionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class SeccionService {
-    @Autowired
     private final SeccionRepository seccionRepository;
 
-    @Autowired
-    private ProfesorRepository profesorRepository;
+    private final ProfesorRepository profesorRepository;
 
-    public SeccionService(SeccionRepository seccionRepository) {
+    public SeccionService(SeccionRepository seccionRepository, ProfesorRepository profesorRepository) {
         this.seccionRepository = seccionRepository;
+        this.profesorRepository = profesorRepository;
     }
 
     // Obtener todas las secciones de un profesor
@@ -35,22 +35,20 @@ public class SeccionService {
             List<Seccion> secciones = seccionRepository.findByProfesor_IdProfesor(idProfesor);
             return secciones != null ? secciones : new ArrayList<>();
         } catch (Exception e) {
-            System.err.println("Error al obtener secciones: " + e.getMessage());
+            log.error("Error al obtener secciones: " + e.getMessage());
             return new ArrayList<>();
         }
     }
 
     public List<SeccionDTO> obtenerSeccionesPorProfesorYAnio(Integer idProfesor, Integer anio) {
-        // 1. Llama al repositorio. Spring Data JPA se encarga de todo.
         List<Seccion> secciones = seccionRepository.findByProfesor_IdProfesorAndAnio(idProfesor, anio);
 
         // 2. Convierte la lista de entidades a una lista de DTOs y la devuelve.
         return secciones.stream()
                 .map(this::convertirASeccionDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    // Asegúrate de tener este método de ayuda en la misma clase
     private SeccionDTO convertirASeccionDto(Seccion seccion) {
         SeccionDTO dto = new SeccionDTO();
         dto.setIdSeccion(seccion.getIdSeccion());
@@ -77,7 +75,6 @@ public class SeccionService {
         return seccionRepository.save(nuevaSeccion);
     }
     
-    // Método para editar sección
     @Transactional
     public SeccionDTO editarSeccion(Integer idSeccion, Integer idProfesor, EditarSeccionRequest request) {
         validarNombreCurso(request.getNombreCurso());
@@ -135,7 +132,7 @@ public class SeccionService {
 
         return secciones.stream()
                 .map(this::convertirASeccionConProfesorDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private SeccionAlumnoDTO convertirASeccionConProfesorDto(Seccion seccion) {
@@ -185,7 +182,7 @@ public class SeccionService {
                 .anyMatch(s -> s.getNombreCurso().equalsIgnoreCase(nombreCurso));
         
         if (existe) {
-            throw new RuntimeException("Ya existe una sección con ese nombre en el año " + anio);
+            throw new SeccionServiceException("Ya existe una sección con ese nombre en el año " + anio);
         }
     }
     
@@ -198,7 +195,7 @@ public class SeccionService {
                         && !s.getIdSeccion().equals(idSeccionActual));
         
         if (existe) {
-            throw new RuntimeException("Ya existe una sección con ese nombre en el año " + anio);
+            throw new SeccionServiceException("Ya existe una sección con ese nombre en el año " + anio);
         }
     }
     
@@ -207,7 +204,7 @@ public class SeccionService {
                 .orElseThrow(() -> new RuntimeException("Sección no encontrada"));
 
         if (!seccion.getProfesor().getIdProfesor().equals(idProfesor)) {
-            throw new RuntimeException("No tiene permisos para editar esta sección");
+            throw new SeccionServiceException("No tiene permisos para editar esta sección");
         }
 
         return seccion;

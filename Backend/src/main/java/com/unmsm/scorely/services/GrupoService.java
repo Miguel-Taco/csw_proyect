@@ -4,6 +4,7 @@ import com.unmsm.scorely.dto.AlumnoDTO;
 import com.unmsm.scorely.dto.CrearGrupoRequest;
 import com.unmsm.scorely.dto.CrearGrupoResponse;
 import com.unmsm.scorely.dto.ObtenerCompanerosResponse;
+import com.unmsm.scorely.exception.GrupoServiceException;
 import com.unmsm.scorely.models.*;
 import com.unmsm.scorely.repository.AlumnoSeccionRepository;
 import com.unmsm.scorely.repository.GrupoRepository;
@@ -39,7 +40,7 @@ public class GrupoService {
 
         return alumnosSecciones.stream()
                 .map(this::convertToAlumnoDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -51,7 +52,7 @@ public class GrupoService {
 
         return alumnosSecciones.stream()
                 .map(this::convertToAlumnoDTOWithGrupo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -65,14 +66,14 @@ public class GrupoService {
 
         // Validar que se seleccionaron al menos 2 alumnos
         if (request.getAlumnoIds() == null || request.getAlumnoIds().size() < 2) {
-            throw new RuntimeException("Debe seleccionar al menos 2 alumnos para crear un grupo");
+            throw new GrupoServiceException("Debe seleccionar al menos 2 alumnos para crear un grupo");
         }
 
 
         // Validar que ningún alumno ya tiene grupo asignado
         for (Integer idAlumno : request.getAlumnoIds()) {
             if (alumnoSeccionRepository.alumnoTieneGrupo(idAlumno, request.getSeccionId())) {
-                throw new RuntimeException("Uno o más alumnos ya pertenecen a un grupo");
+                throw new GrupoServiceException("Uno o más alumnos ya pertenecen a un grupo");
             }
         }
 
@@ -149,11 +150,11 @@ public class GrupoService {
                 .stream()
                 .filter(as -> as.getGrupo() != null &&
                         as.getGrupo().getIdGrupo().equals(grupo.getIdGrupo()))
-                .collect(Collectors.toList());
+                .toList();
 
         List<AlumnoDTO> alumnosDTO = alumnosSecciones.stream()
                 .map(this::convertToAlumnoDTO)
-                .collect(Collectors.toList());
+                .toList();
 
         CrearGrupoResponse r = new CrearGrupoResponse();
         r.setIdGrupo(grupo.getIdGrupo());

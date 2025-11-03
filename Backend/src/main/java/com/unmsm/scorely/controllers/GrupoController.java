@@ -52,7 +52,7 @@ public class GrupoController {
      * Crea un nuevo grupo con los alumnos seleccionados
      */
     @PostMapping
-    public ResponseEntity<?> crearGrupo(@Valid @RequestBody CrearGrupoRequest request) {
+    public ResponseEntity<Object> crearGrupo(@Valid @RequestBody CrearGrupoRequest request) {
         try {
             CrearGrupoResponse response = grupoService.crearGrupo(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
