@@ -13,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/registro")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class RegistroController {
 
