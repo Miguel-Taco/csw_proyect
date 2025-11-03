@@ -9,14 +9,6 @@ export default function EditarSeccionModal({ open, onClose, onEditar, seccion, a
   const [anioSeccion, setAnioSeccion] = useState(anioActual);
   const [error, setError] = useState("");
 
-  EditarSeccionModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onEditar: PropTypes.func.isRequired,
-    seccion: PropTypes.object,
-    anioActual: PropTypes.number.isRequired,
-  };
-
   useEffect(() => {
     if (seccion) {
       setNombreSeccion(seccion.nombreCurso || "");
@@ -146,3 +138,11 @@ export default function EditarSeccionModal({ open, onClose, onEditar, seccion, a
     document.body
   );
 }
+
+EditarSeccionModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onEditar: PropTypes.func.isRequired,
+  seccion: PropTypes.object,
+  anioActual: PropTypes.number.isRequired,
+};

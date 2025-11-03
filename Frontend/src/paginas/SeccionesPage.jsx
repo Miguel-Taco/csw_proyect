@@ -89,6 +89,35 @@ function SeccionesPage(){
         setModalCrearOpen(true);
     };
 
+    const handleAsignarGrupos = async (seccion) => {
+        // Cargar alumnos de la sección y navegar pasando la lista en navigation state
+        try {
+            setLoading(true);
+            const response = await fetch(
+                `${BASE_URL}/api/secciones/${seccion.idSeccion}/alumnos`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Error al obtener alumnos');
+            }
+
+            const alumnos = await response.json();
+            // Navegar a la pantalla de asignación pasando idSeccion y la lista de alumnos
+            navigate('/asignacion-grupos', { state: { idSeccion: seccion.idSeccion, alumnos } });
+        } catch (err) {
+            console.error('Error al cargar alumnos de la sección:', err);
+            alert('No se pudo cargar la lista de alumnos de la sección');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleCrearSeccion = async (nombreSeccion) => {
         setLoading(true);
         setModalCrearOpen(false);
@@ -266,6 +295,7 @@ function SeccionesPage(){
                         > 
                             Cerrar Sesión
                         </button>
+                        {/* botón global de asignación removido: ahora cada sección muestra su propio botón 'Asignar grupos' */}
                         <button 
                             className="button-seccionesPage" 
                             onClick={handleAgregarSeccion}

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import "../styles/SeccionCard.css";
 
-function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
+function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas, onAsignarGrupos }) {
   const handleEliminar = async (e) => {
     e.stopPropagation();
     
@@ -35,6 +35,13 @@ function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
           ✏️
         </button>
         <button
+          onClick={(e) => { e.stopPropagation(); if (onAsignarGrupos) onAsignarGrupos(seccion); }}
+          className="btn-asignar"
+          title="Asignar grupos"
+        >
+          👥
+        </button>
+        <button
           onClick={handleEliminar}
           className="btn-eliminar"
           title="Eliminar sección"
@@ -57,7 +64,8 @@ SeccionCard.propTypes = {
   }).isRequired,
   onEliminar: PropTypes.func.isRequired,
   onEditar: PropTypes.func.isRequired,
-  onIrATareas: PropTypes.func,
+  onIrATareas: PropTypes.func, // 🔹 Nueva prop opcional
+  onAsignarGrupos: PropTypes.func,
 };
 
 export default SeccionCard;

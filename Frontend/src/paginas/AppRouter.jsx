@@ -8,9 +8,11 @@ import RegisterPage from "../paginas/Register";
 import SeccionesPage from "../paginas/SeccionesPage";
 import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
+import AsignacionGruposPage from "../paginas/AsignacionGruposPage";
 import AsignarNotas from "../paginas/AsignarNotas";
 import AlumnoPage from "../paginas/AlumnoPage";
 import TareasAlumno from '../paginas/TareasAlumno';
+import AsignarNotasGrupales from '../paginas/AsignarNotasGrupales';
 
 // --- Componentes de Control de Rutas ---
 
@@ -146,6 +148,16 @@ function AppRouter() {
           }
         />
 
+        <Route
+          path="/asignacion-grupos"
+          element={
+            <ProtectedRoute>
+              <AsignacionGruposPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ver alumnos y tareas de una sección */}
         {/* Rutas dinámicas de Tareas (accesibles por profesor) */}
         <Route
           path="/secciones/:idSeccion/tareas"
@@ -181,6 +193,23 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <AsignarNotas />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route 
+          path="/secciones/:idSeccion/tareas" element={
+          <ProtectedRoute>
+            <TareasIndividualesPage />
+          </ProtectedRoute>
+        } 
+      />
+
+        <Route
+          path="/secciones/:idSeccion/grupo/:idGrupo/tareas"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <AsignarNotasGrupales />
             </ProtectedRoute>
           }
         />
