@@ -171,4 +171,12 @@ public class EntregaController {
                     .body(Map.of(ErrorConstants.ERROR_KEY, "Error al obtener la entrega: " + e.getMessage()));
         }
     }
+
+    @PostMapping("/grupo")
+    public ResponseEntity<ObtenerEntregaGrupoResponse> obtenerEntregaGrupo(
+            @RequestBody ObtenerEntregaGrupoRequest request) {
+
+        ObtenerEntregaGrupoResponse response = entregaGrupalService.obtenerEntregaGrupo(request);
+        return ResponseEntity.ok(response);
+    }
 }

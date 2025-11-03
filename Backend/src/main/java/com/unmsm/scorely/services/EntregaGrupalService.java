@@ -1,8 +1,6 @@
 package com.unmsm.scorely.services;
 
-import com.unmsm.scorely.dto.IntegranteGrupoDTO;
-import com.unmsm.scorely.dto.NotasDeTareas;
-import com.unmsm.scorely.dto.RegistrarEntregasRequest;
+import com.unmsm.scorely.dto.*;
 import com.unmsm.scorely.models.*;
 import com.unmsm.scorely.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,14 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class EntregaGrupalService {
     private final EntregaRepository entregaRepository;
+    private final EntregaGrupalRepository entregaGrupalRepository;
     private final TareaRepository tareaRepository;
     private final GrupoRepository grupoRepository;
-    private final EntregaGrupalRepository entregaGrupalRepository;
     private final AlumnoSeccionRepository alumnoSeccionRepository;
 
     public EntregaGrupalService(EntregaRepository entregaRepository,
@@ -119,5 +118,42 @@ public class EntregaGrupalService {
                     return new IntegranteGrupoDTO(nombreCompleto);
                 })
                 .toList();
+    }
+
+    public ObtenerEntregaGrupoResponse obtenerEntregaGrupo(ObtenerEntregaGrupoRequest request) {
+        try {
+            Map<String, Object> row = entregaGrupalRepository.obtenerEntregaGrupo(
+                    request.getIdSeccion(),
+                    request.getIdGrupo(),
+                    request.getIdTarea()
+            );
+
+            if (row != null && !row.isEmpty()) {
+                return new ObtenerEntregaGrupoResponse(
+                        true,
+                        "Entrega grupal obtenida exitosamente",
+                        row.get("fecha_entrega") != null ? row.get("fecha_entrega").toString() : null,
+                        row.get("enlace") != null ? row.get("enlace").toString() : null,
+                        row.get("nota") != null ? ((Number) row.get("nota")).doubleValue() : null
+                );
+            } else {
+                return new ObtenerEntregaGrupoResponse(
+                        true,
+                        "No se encontró entrega para este grupo",
+                        null,
+                        null,
+                        null
+                );
+            }
+
+        } catch (Exception e) {
+            return new ObtenerEntregaGrupoResponse(
+                    false,
+                    "Error al obtener entrega: " + e.getMessage(),
+                    null,
+                    null,
+                    null
+            );
+        }
     }
 }
