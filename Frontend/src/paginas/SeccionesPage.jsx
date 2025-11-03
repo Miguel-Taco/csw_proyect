@@ -19,7 +19,7 @@ function SeccionesPage(){
     const [modalEditarOpen, setModalEditarOpen] = useState(false);
     const [seccionAEditar, setSeccionAEditar] = useState(null);
     
-    const BASE_URL = 'https://cswproyect-production.up.railway.app';
+    const BASE_URL = 'http://localhost:8080';
 
     useEffect(() => {
         if (user?.id) {
@@ -267,7 +267,7 @@ function SeccionesPage(){
                             <p>No hay secciones para este año</p>
                         ) : (
                             secciones.map((sec) => (
-                                <SeccionCard className="card-container-item"
+                                <SeccionCard 
                                     key={sec.idSeccion} 
                                     seccion={sec}
                                     onEliminar={handleEliminarSeccion}

@@ -70,14 +70,18 @@ public class SeccionController {
             response.put("message", "Sección creada exitosamente");
             response.put("seccion", nuevaSeccion);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (RuntimeException e) {
             response.put("success", false);
             response.put("message", "Error al crear la sección: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
-    // ✅ MÉTODO ACTUALIZADO - Editar sección
+    // POST: Editar sección
     @PutMapping("/{idSeccion}/profesor/{idProfesor}")
     public ResponseEntity<Map<String, Object>> editarSeccion(
             @PathVariable Integer idSeccion,
@@ -98,22 +102,17 @@ public class SeccionController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
 
-            // 🔵 ahora el service devuelve DTO
             SeccionDTO dto = seccionService.editarSeccion(idSeccion, idProfesor, request);
     
             response.put("success", true);
             response.put("message", "Sección actualizada exitosamente");
-            response.put("seccion", dto); // ✅ DTO, no entidad JPA
+            response.put("seccion", dto);
             return ResponseEntity.ok(response);
 
         } catch (RuntimeException e) {
             response.put("success", false);
             response.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Error al editar la sección: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
     
