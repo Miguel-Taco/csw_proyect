@@ -1,6 +1,6 @@
 // InvitacionButton.jsx
 import { useState } from "react";
-import { useParams } from "react-router-dom"; // ✅ Import necesario
+import { useParams } from "react-router-dom";
 import "../styles/InvitacionButton.css";
 import Modal from "./Modal";
 import { useAuth } from "../context/AuthContext";
@@ -13,7 +13,9 @@ export default function InvitacionButton() {
   const [enviadas, setEnviadas] = useState([]);
 
   const { user } = useAuth();
-  const { idSeccion } = useParams(); // ✅ Captura el id de la URL
+
+  const { idSeccion } = useParams();
+
   const API_URL = "http://localhost:8080";
 
   const openModal = () => setOpen(true);
@@ -23,19 +25,17 @@ export default function InvitacionButton() {
     setMensaje("");
   };
 
-  console.log("ID de la sección desde URL:", idSeccion); // ✅ Verifica el ID
-
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (!user || user.role !== "profesor") {
+    if (user?.role !== "profesor") {
       setMensaje("Solo los profesores pueden enviar invitaciones.");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setMensaje("Por favor ingrese un correo válido.");
+      setMensaje("Por favor ingrese un correo válido.") ;
       return;
     }
 
@@ -48,7 +48,8 @@ export default function InvitacionButton() {
 
     const data = {
       correoAlumno: email,
-      idSeccion: Number(idSeccion), // ✅ usa el id dinámico
+      idSeccion: Number(idSeccion),
+      idPersona: user.id
     };
 
     try {
@@ -66,6 +67,7 @@ export default function InvitacionButton() {
         setTimeout(() => setMensaje(""), 3000);
         setEnviadas((prev) => [...prev, email]);
       } else {
+        console.log(data)
         setMensaje(result.message || "Error al enviar la invitación");
       }
     } catch (error) {
@@ -116,8 +118,8 @@ export default function InvitacionButton() {
           <div className="invitaciones-enviadas">
             <h4>Invitaciones enviadas:</h4>
             <ul>
-              {enviadas.map((mail, i) => (
-                <li key={i}>{mail}</li>
+              {enviadas.map((mail) => (
+                <li key={mail}>{mail}</li>
               ))}
             </ul>
           </div>

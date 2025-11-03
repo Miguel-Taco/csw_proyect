@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Alumno_Seccion")
-@Data
+@Data  // ← Genera setGrupo(), getGrupo(), getAlumno(), etc.
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

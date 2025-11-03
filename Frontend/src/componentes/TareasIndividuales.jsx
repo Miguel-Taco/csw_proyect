@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/TareasIndividuales.css";
+import InvitacionButton from "./InvitacionButton";
 
 export default function TareasIndividuales() {
   const navigate = useNavigate();
@@ -98,9 +99,13 @@ export default function TareasIndividuales() {
   };
 
   const handleGrupoClick = (grupo) => {
-    // TODO: Implementar navegación a vista de grupo
-    console.log("Click en grupo:", grupo);
-  };
+  navigate(`/secciones/${idSeccion}/grupo/${grupo.idGrupo}/tareas`, {
+    state: { 
+      grupo: grupo,
+      nombreSeccion: grupo.nombreGrupo // O usa el nombre real de la sección si lo tienes
+    }
+  });
+};
 
   const formatearNota = (nota) => {
     if (nota === null || nota === undefined) {
@@ -108,7 +113,7 @@ export default function TareasIndividuales() {
     }
     return Number(nota).toFixed(2);
   };
-
+  
   return (
     <div className="tareas-container">
       <div className="header">

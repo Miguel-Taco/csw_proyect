@@ -36,7 +36,7 @@ export default function FormularioTarea() {
     };
 
     try {
-      const respuesta = await fetch("http://localhost:8080/api/tareas", {
+      const respuesta = await fetch("https://cswproyect-production.up.railway.app/api/tareas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

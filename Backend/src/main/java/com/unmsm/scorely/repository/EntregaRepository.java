@@ -1,13 +1,12 @@
 package com.unmsm.scorely.repository;
 
+import com.unmsm.scorely.models.Entrega;
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.unmsm.scorely.models.Entrega;
 
 public interface EntregaRepository extends JpaRepository<Entrega, Integer> {
 
@@ -16,10 +15,22 @@ public interface EntregaRepository extends JpaRepository<Entrega, Integer> {
       FROM EntregaIndividual ei
       WHERE ei.entrega.tarea.idTarea = :idTarea
         AND ei.alumno.idAlumno = :idAlumno
+        AND ei.entrega.tarea.tipo = 'Individual'
       ORDER BY ei.entrega.fechaEntrega DESC
     """)
     List<Entrega> findByTareaAndAlumnoOrderByFechaDesc(@Param("idTarea") Integer idTarea,
                                                        @Param("idAlumno") Integer idAlumno);
+
+    @Query("""
+      SELECT eg.entrega
+      FROM EntregaGrupal eg
+      WHERE eg.entrega.tarea.idTarea = :idTarea
+        AND eg.grupo.idGrupo = :idGrupo
+        AND eg.entrega.tarea.tipo = 'Grupal'
+      ORDER BY eg.entrega.fechaEntrega DESC
+    """)
+    List<Entrega> findByTareaAndGrupoOrderByFechaDesc(@Param("idTarea") Integer idTarea,
+                                                       @Param("idGrupo") Integer idGrupo);
 
     @Modifying
     @Query("UPDATE Entrega e SET e.nota = :nota WHERE e.idEntrega = :idEntrega")

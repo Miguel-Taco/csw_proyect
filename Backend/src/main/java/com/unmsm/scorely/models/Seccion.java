@@ -1,6 +1,5 @@
 package com.unmsm.scorely.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Seccion")
-@Data
+@Data  // ← Genera getIdSeccion() y otros getters/setters
 @NoArgsConstructor
 @AllArgsConstructor
 public class Seccion {

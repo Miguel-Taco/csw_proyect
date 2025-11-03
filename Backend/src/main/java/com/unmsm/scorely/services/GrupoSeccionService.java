@@ -1,14 +1,14 @@
 package com.unmsm.scorely.services;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.unmsm.scorely.dto.GrupoSeccionDTO;
 import com.unmsm.scorely.models.Grupo;
 import com.unmsm.scorely.repository.GrupoRepository;
 import com.unmsm.scorely.repository.SeccionRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class GrupoSeccionService {
@@ -33,8 +33,8 @@ public class GrupoSeccionService {
         List<Grupo> grupos = grupoRepository.findGruposBySeccion(idSeccion);
 
         return grupos.stream()
-                .map(grupo -> convertirADTO(grupo, idSeccion))
-                .collect(Collectors.toList());
+        .map(grupo -> convertirADTO(grupo, idSeccion))
+        .toList();
     }
 
     @Transactional(readOnly = true)

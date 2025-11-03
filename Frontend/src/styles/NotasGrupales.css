@@ -1,0 +1,315 @@
+/* GrupoTrabajo.css */
+
+:root {
+  --color-accent: #4a90e2;
+  --color-neutral: #f8f9fa;
+  --color-shadow: rgba(0,0,0,0.1);
+  --color-secondary: #4a90e2;
+}
+
+/* BODY PRINCIPAL */
+.asignarNotas-body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: #f5f5f5;
+  font-family: Roboto, 'Courier New', Courier, monospace;
+}
+
+/* Hereda el comportamiento de box-sizing para todo */
+.asignarNotas-body * {
+  box-sizing: border-box;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.main-asignarNotas-container {
+  align-self: center;
+  max-width: 85%;
+  max-height: 80vh;
+  width: 100%;
+  display: flex;
+  background: var(--color-neutral);
+  box-shadow: 0 0 10px 5px var(--color-shadow);
+  border-radius: 24px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+/* PANEL IZQUIERDO */
+.left-panel {
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 3px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.integrantes-header {
+  padding: 20px;
+  display: flex;
+  gap: 12px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.integrantes-btn {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.integrantes-btn:hover {
+  background: #f5f5f5;
+  border-color: var(--color-accent);
+}
+
+.agregar-btn {
+  padding: 10px 16px;
+  border: 2px solid var(--color-accent);
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.agregar-btn:hover {
+  background: #357abd;
+}
+
+.integrantes-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.integrantes-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.integrante-item {
+  padding: 14px 18px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  background: white;
+  text-align: center;
+  font-weight: 500;
+  color: #2c2c2c;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.integrante-item:hover {
+  border-color: var(--color-accent);
+  background: #f8f9fa;
+}
+
+.scroll-indicators {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4px;
+  background: #f5f5f5;
+  border-left: 1px solid #e0e0e0;
+}
+
+.scroll-btn {
+  padding: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.scroll-btn:hover {
+  color: var(--color-accent);
+}
+
+/* PANEL DERECHO */
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER (nombre del grupo) */
+.asignarNotas-header {
+  flex-shrink: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px double var(--color-accent);
+  border-left: none;
+  border-top-right-radius: 24px;
+  background-color: var(--color-neutral);
+  color: #3a3a3a;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 1.25rem;
+}
+
+.tareas-container {
+  position: relative;
+  flex: 1;
+  display: flex;
+}
+
+/* ZONA SCROLLEABLE QUE CONTIENE LAS TAREAS */
+.tareas-scroll {
+  flex: 1;
+  margin: 2.5% 3%;
+  padding: 2%;
+  border: 4px double var(--color-accent);
+  border-radius: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Item de tarea (barra alargada) */
+.tarea-item {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  border: 2px solid rgba(0,0,0,0.15);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+/* micro feedback */
+.tarea-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* Título (lado izquierdo) */
+.tarea-titulo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 16px 18px;
+  color: #2c2c2c;
+  font-weight: 500;
+}
+
+/* Caja de la nota (lado derecho) */
+.tarea-nota {
+  min-width: 86px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 2px solid rgba(0,0,0,0.15);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f1f14;
+  background: #fafafa;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Si la nota es editable con <input> */
+.tarea-nota input {
+  width: 100%;
+  text-align: center;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.right-scroll-indicators {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* BOTÓN ACCIÓN (opcional) */
+.btn-asignarNotas {
+  align-self: flex-end;
+  margin: 12px 3% 20px;
+  height: 40px;
+  min-width: 180px;
+  background-color: var(--color-secondary);
+  color: #fff;
+  font-family: Roboto,'Courier New', Courier, monospace;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 300ms;
+}
+
+.btn-asignarNotas:hover {
+  background-color: #1f1f14;
+}
+
+/* SCROLLBAR */
+.tareas-scroll::-webkit-scrollbar,
+.integrantes-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.tareas-scroll::-webkit-scrollbar-track,
+.integrantes-list::-webkit-scrollbar-track {
+  background: #eee;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.tareas-scroll::-webkit-scrollbar-thumb,
+.integrantes-list::-webkit-scrollbar-thumb {
+  background: #c9c9c9;
+  border-radius: 10px;
+}
+
+.tareas-scroll,
+.integrantes-list {
+  scrollbar-width: thin;
+  scrollbar-color: #c9c9c9 #eee;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .main-asignarNotas-container {
+    max-width: 95%;
+    flex-direction: column;
+  }
+  
+  .left-panel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 3px solid #e0e0e0;
+  }
+
+  .tarea-nota {
+    min-width: 72px;
+    font-size: 1.1rem;
+  }
+}

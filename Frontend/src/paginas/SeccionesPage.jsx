@@ -89,6 +89,35 @@ function SeccionesPage(){
         setModalCrearOpen(true);
     };
 
+    const handleAsignarGrupos = async (seccion) => {
+        // Cargar alumnos de la sección y navegar pasando la lista en navigation state
+        try {
+            setLoading(true);
+            const response = await fetch(
+                `${BASE_URL}/api/secciones/${seccion.idSeccion}/alumnos`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Error al obtener alumnos');
+            }
+
+            const alumnos = await response.json();
+            // Navegar a la pantalla de asignación pasando idSeccion y la lista de alumnos
+            navigate('/asignacion-grupos', { state: { idSeccion: seccion.idSeccion, alumnos } });
+        } catch (err) {
+            console.error('Error al cargar alumnos de la sección:', err);
+            alert('No se pudo cargar la lista de alumnos de la sección');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleCrearSeccion = async (nombreSeccion) => {
         setLoading(true);
         setModalCrearOpen(false);
@@ -211,12 +240,33 @@ function SeccionesPage(){
     };
 
     const handleLogout = async () => {
-        const confirmar = window.confirm("¿Está seguro que desea cerrar sesión?");
+        const confirmar = globalThis.confirm("¿Está seguro que desea cerrar sesión?");
         if (confirmar) {
             await logout();
             navigate("/login");
         }
     };
+
+    let contenidoSecciones;
+
+    if (loading && secciones.length === 0) {
+        // Estado: Cargando por primera vez
+        contenidoSecciones = <p>Cargando secciones...</p>;
+    } else if (secciones.length === 0) {
+        // Estado: Carga completa, pero no hay datos
+        contenidoSecciones = <p>No hay secciones para este año</p>;
+    } else {
+        // Estado: Carga completa, y hay secciones para mostrar
+        contenidoSecciones = secciones.map((sec) => (
+            <SeccionCard 
+                key={sec.idSeccion} 
+                seccion={sec}
+                onEliminar={handleEliminarSeccion}
+                onEditar={handleAbrirEditar}
+                onIrATareas={handleIrATareas}
+            />
+        ));
+    }
 
     return(
         <div className="seccionesPage-body">
@@ -245,6 +295,7 @@ function SeccionesPage(){
                         > 
                             Cerrar Sesión
                         </button>
+                        {/* botón global de asignación removido: ahora cada sección muestra su propio botón 'Asignar grupos' */}
                         <button 
                             className="button-seccionesPage" 
                             onClick={handleAgregarSeccion}
@@ -261,21 +312,7 @@ function SeccionesPage(){
                     )}
 
                     <div className="secciones-container row">
-                        {loading && secciones.length === 0 ? (
-                            <p>Cargando secciones...</p>
-                        ) : secciones.length === 0 ? (
-                            <p>No hay secciones para este año</p>
-                        ) : (
-                            secciones.map((sec) => (
-                                <SeccionCard 
-                                    key={sec.idSeccion} 
-                                    seccion={sec}
-                                    onEliminar={handleEliminarSeccion}
-                                    onEditar={handleAbrirEditar}
-                                    onIrATareas={handleIrATareas}
-                                    />
-                            ))
-                        )}
+                        {contenidoSecciones}
                     </div>
                 </div>
             </div>

@@ -1,13 +1,10 @@
 package com.unmsm.scorely.repository;
-
 import java.util.List;
-
+import com.unmsm.scorely.models.Grupo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import com.unmsm.scorely.models.Grupo;
 
 @Repository
 public interface GrupoRepository extends JpaRepository<Grupo, Integer> {
@@ -33,5 +30,19 @@ public interface GrupoRepository extends JpaRepository<Grupo, Integer> {
     Long contarIntegrantesPorGrupoYSeccion(
         @Param("idGrupo") Integer idGrupo,
         @Param("idSeccion") Integer idSeccion
+    );
+
+    // Verificar si ya existe un grupo con ese nombre
+    @Query("SELECT COUNT(g) > 0 FROM Grupo g WHERE g.nombreGrupo = :nombreGrupo")
+    boolean existsByNombreGrupo(@Param("nombreGrupo") String nombreGrupo);
+
+    // Obtener todos los grupos con sus alumnos
+    @Query("SELECT g FROM Grupo g LEFT JOIN FETCH g.alumnos")
+    List<Grupo> findAllGrupos();
+
+    @Query(value = "CALL ObtenerCompaneros(:idSeccion, :idPersona)", nativeQuery = true)
+    List<Object[]> obtenerCompaneros(
+            @Param("idSeccion") Integer idSeccion,
+            @Param("idPersona") Integer idPersona
     );
 }
