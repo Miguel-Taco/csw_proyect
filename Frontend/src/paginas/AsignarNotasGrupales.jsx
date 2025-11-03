@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import "../styles/AsignarNotasGrupales.css";
+import VerEntregaGrupalModal from "../componentes/VerEntregaGrupalModal";
 
 export default function AsignarNotasGrupales() {
   const navigate = useNavigate();
@@ -18,6 +19,12 @@ export default function AsignarNotasGrupales() {
   
   const grupoInfo = location.state?.grupo || {};
   const nombreSeccion = location.state?.nombreSeccion || '';
+
+  const [modalVerEntrega, setModalVerEntrega] = useState({
+    open: false,
+    idTarea: null,
+    nombreTarea: ""
+  });
 
   useEffect(() => {
     cargarDatosGrupo();
@@ -174,6 +181,14 @@ export default function AsignarNotasGrupales() {
     }
   };
 
+  const handleVerEntrega = (tarea) => {
+    setModalVerEntrega({
+      open: true,
+      idTarea: tarea.idTarea,
+      nombreTarea: tarea.titulo
+    });
+  };
+
   const handleVolver = () => {
     navigate(`/secciones/${idSeccion}/tareas`);
   };
@@ -277,7 +292,9 @@ export default function AsignarNotasGrupales() {
                       <div className="tarea-titulo-grupal">{tarea.titulo}</div>
                     </div>
                     <div className="tarea-nota-grupal">
-                      <button>Ver Entrega</button>
+                      <button onClick={() => handleVerEntrega(tarea)}>
+                        Ver Entrega
+                      </button>
                       <span className="nota-label-grupal">Nota:</span>
                       <input
                         type="number"
@@ -306,6 +323,14 @@ export default function AsignarNotasGrupales() {
           </div>
         </div>
       </div>
+      <VerEntregaGrupalModal
+        open={modalVerEntrega.open}
+        onClose={() => setModalVerEntrega({ open: false, idTarea: null, nombreTarea: "" })}
+        idSeccion={idSeccion}
+        idGrupo={idGrupo}
+        idTarea={modalVerEntrega.idTarea}
+        nombreTarea={modalVerEntrega.nombreTarea}
+      />
     </div>
   );
 }

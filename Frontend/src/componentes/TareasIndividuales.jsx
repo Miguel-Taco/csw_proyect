@@ -70,7 +70,44 @@ export default function TareasIndividuales() {
 
       if (response.ok) {
         const data = await response.json();
-        setGrupos(data);
+        
+        // Calcular promedio para cada grupo
+        const gruposConPromedio = await Promise.all(
+          data.map(async (grupo) => {
+            try {
+              const tareasResponse = await fetch(
+                `${BASE_URL}/api/entregas/seccion/${idSeccion}/grupo/${grupo.idGrupo}/tareas-notas`,
+                {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  }
+                }
+              );
+              
+              if (tareasResponse.ok) {
+                const tareas = await tareasResponse.json();
+                
+                // Calcular promedio de las notas
+                if (tareas.length > 0) {
+                  const notasValidas = tareas.filter(t => t.nota !== null && t.nota !== undefined);
+                  if (notasValidas.length > 0) {
+                    const suma = notasValidas.reduce((acc, t) => acc + t.nota, 0);
+                    const promedio = suma / notasValidas.length;
+                    return { ...grupo, promedioFinal: promedio };
+                  }
+                }
+              }
+              
+              return { ...grupo, promedioFinal: null };
+            } catch (err) {
+              console.error(`Error al cargar tareas del grupo ${grupo.idGrupo}:`, err);
+              return { ...grupo, promedioFinal: null };
+            }
+          })
+        );
+        
+        setGrupos(gruposConPromedio);
       } else {
         setError("Error al cargar los grupos");
       }
@@ -100,13 +137,13 @@ export default function TareasIndividuales() {
   };
 
   const handleGrupoClick = (grupo) => {
-  navigate(`/secciones/${idSeccion}/grupo/${grupo.idGrupo}/tareas`, {
-    state: { 
-      grupo: grupo,
-      nombreSeccion: grupo.nombreGrupo // O usa el nombre real de la sección si lo tienes
-    }
-  });
-};
+    navigate(`/secciones/${idSeccion}/grupo/${grupo.idGrupo}/tareas`, {
+      state: { 
+        grupo: grupo,
+        nombreSeccion: `Sección ${idSeccion}`
+      }
+    });
+  };
 
   const formatearNota = (nota) => {
     if (nota === null || nota === undefined) {
