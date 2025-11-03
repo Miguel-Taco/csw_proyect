@@ -2,9 +2,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Modal from "../componentes/Modal";
+import { useAuth } from "../context/AuthContext";
 import "../styles/TareasAlumno.css";
 
 function TareasAlumno() {
+    const { user } = useAuth();
     const { idSeccion } = useParams();
     const navigate = useNavigate();
 
@@ -75,7 +77,7 @@ function TareasAlumno() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     id_seccion: Number.parseInt(idSeccion),
-                    id_persona: 2 // 🔹 aquí puedes reemplazar por el id_persona del usuario logueado
+                    id_persona: user.id
                 }),
             });
 
@@ -140,8 +142,8 @@ function TareasAlumno() {
                 }
                 return (
                     <div className="companeros-lista">
-                        {companeros.map((c) => (
-                            <li key={`${c.id_persona}`} className="companero-card">
+                        {companeros.map((c, index) => (
+                            <li key={c.id_persona ?? index} className="companero-card">
                                 <p>{c.nombres} {c.apellido_p} {c.apellido_m}</p>
                             </li>
                         ))}
