@@ -1,5 +1,6 @@
 package com.unmsm.scorely.services.imp;
 
+import com.unmsm.scorely.exception.EmailServiceException;
 import com.unmsm.scorely.models.Invitacion;
 import com.unmsm.scorely.services.EmailService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,23 +37,30 @@ public class EmailServiceImpl implements EmailService {
             log.info("Invitación enviada a: {}", invitacion.getCorreo());
         } catch (Exception e) {
             log.error("Error al enviar invitación: {}", e.getMessage());
-            throw new RuntimeException("Error al enviar el correo de invitación", e);
+            throw new EmailServiceException("Error al enviar el correo de invitación", e);
         }
     }
 
     private String construirMensaje(Invitacion invitacion) {
         String linkInvitacion = baseUrl + "/login";
-        //String linkInvitacion = baseUrl + "/api/invitaciones/aceptar?token=" + invitacion.getToken();
 
         return String.format(
-                "Hola,\n\n" +
-                        "Has sido invitado a unirte al curso:\n\n" +
-                        "Curso: %s\n" +
-                        "Año: %d\n\n" +
-                        "Para unirte al curso, haz clic en el siguiente enlace:\n\n" +
-                        "%s\n\n" +
-                        "Esta invitación expirará el: %s\n\n" +
-                        "Saludos,\n",
+                """
+                Hola,
+        
+                Has sido invitado a unirte al curso:
+        
+                Curso: %s
+                Año: %d
+        
+                Para unirte al curso, haz clic en el siguiente enlace:
+        
+                %s
+        
+                Esta invitación expirará el: %s
+        
+                Saludos,
+                """,
                 invitacion.getSeccion().getNombreCurso(),
                 invitacion.getSeccion().getAnio(),
                 linkInvitacion,

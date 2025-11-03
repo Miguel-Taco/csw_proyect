@@ -1,255 +1,238 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import PropTypes from 'prop-types';
+import { useAuth } from "../context/AuthContext";
 
-/** Util: ID simple */
-const uid = () => Math.random().toString(36).slice(2, 9);
+// Importa tus páginas
+import LoginPage from "../paginas/Login";
+import RegisterPage from "../paginas/Register";
+import SeccionesPage from "../paginas/SeccionesPage";
+import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
+import CrearTareaPage from "../paginas/CrearTareaPage";
+import AsignacionGruposPage from "../paginas/AsignacionGruposPage";
+import AsignarNotas from "../paginas/AsignarNotas";
+import AlumnoPage from "../paginas/AlumnoPage";
+import TareasAlumno from '../paginas/TareasAlumno';
+import AsignarNotasGrupales from '../paginas/AsignarNotasGrupales';
 
-export default function GestionGrupos({ storageKey = "scorely_grupos_v1" }) {
-    /** Persistencia (ligada a storageKey) */
-    const loadState = () => {
-        try {
-            const raw = localStorage.getItem(storageKey);
-            return raw ? JSON.parse(raw) : null;
-        } catch {
-            return null;
-        }
-    };
-    const saveState = (state) => localStorage.setItem(storageKey, JSON.stringify(state));
+// --- Componentes de Control de Rutas ---
 
-    const persisted = loadState();
+// Rutas protegidas con control de roles
+function ProtectedRoute({ children, allowedRoles = [] }) {
+  const { isAuthenticated, user, loading } = useAuth();
 
-    const [alumnosPool, setAlumnosPool] = useState(persisted?.alumnosPool ?? []);
-    const [grupos, setGrupos] = useState(persisted?.grupos ?? []);
-    const [nuevoGrupo, setNuevoGrupo] = useState("");
-    const [nuevoAlumno, setNuevoAlumno] = useState("");
-
-    /** Guardar cada cambio */
-    useEffect(() => {
-        saveState({ alumnosPool, grupos });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [alumnosPool, grupos, storageKey]);
-
-    /** === Crear grupo === */
-    const crearGrupo = () => {
-        const nombre = nuevoGrupo.trim();
-        if (!nombre) return alert("Escribe un nombre de grupo");
-        setGrupos((prev) => [...prev, { id: uid(), nombre, miembros: [] }]);
-        setNuevoGrupo("");
-    };
-
-    /** === Eliminar grupo === */
-    const eliminarGrupo = (id) => {
-        if (!confirm("¿Eliminar este grupo?")) return;
-        // devolver sus miembros al pool
-        const grupo = grupos.find((g) => g.id === id);
-        if (grupo?.miembros?.length) {
-            setAlumnosPool((p) => [...p, ...grupo.miembros]);
-        }
-        setGrupos((prev) => prev.filter((g) => g.id !== id));
-    };
-
-    /** === Agregar alumno al pool === */
-    const agregarAlumno = () => {
-        const nombre = nuevoAlumno.trim();
-        if (!nombre) return alert("Escribe el nombre del alumno");
-        setAlumnosPool((p) => [...p, { id: uid(), nombre }]);
-        setNuevoAlumno("");
-    };
-
-    /** === Quitar alumno del pool === */
-    const quitarAlumnoPool = (id) => {
-        setAlumnosPool((p) => p.filter((a) => a.id !== id));
-    };
-
-    /** === Asignar alumno desde pool a grupo === */
-    const asignarAlumno = (alumnoId, grupoId) => {
-        const alumno = alumnosPool.find((a) => a.id === alumnoId);
-        if (!alumno) return;
-
-        setGrupos((prev) =>
-            prev.map((g) => (g.id === grupoId ? { ...g, miembros: [...g.miembros, alumno] } : g))
-        );
-        setAlumnosPool((p) => p.filter((a) => a.id !== alumnoId));
-    };
-
-    /** === Quitar alumno de un grupo (regresa al pool) === */
-    const quitarDeGrupo = (grupoId, alumnoId) => {
-        const grupo = grupos.find((g) => g.id === grupoId);
-        const alumno = grupo?.miembros.find((m) => m.id === alumnoId);
-        if (!alumno) return;
-
-        setGrupos((prev) =>
-            prev.map((g) =>
-                g.id === grupoId ? { ...g, miembros: g.miembros.filter((m) => m.id !== alumnoId) } : g
-            )
-        );
-        setAlumnosPool((p) => [...p, alumno]);
-    };
-
-    /** === Auto-distribuir alumnos del pool en grupos (equilibrado) === */
-    const autoDistribuir = () => {
-        if (!grupos.length) return alert("Crea al menos un grupo");
-        if (!alumnosPool.length) return alert("No hay alumnos en el pool");
-
-        // Copias mutables
-        const pool = [...alumnosPool];
-        const next = grupos.map((g) => ({ ...g, miembros: [...g.miembros] }));
-
-        // Asignación balanceada
-        while (pool.length) {
-            next.sort((a, b) => a.miembros.length - b.miembros.length);
-            const alumno = pool.shift();
-            next[0].miembros.push(alumno);
-        }
-
-        setGrupos(next);
-        setAlumnosPool([]);
-    };
-
-    /** === Limpiar todo === */
-    const resetear = () => {
-        if (!confirm("Esto borrará grupos y alumnos guardados. ¿Continuar?")) return;
-        setGrupos([]);
-        setAlumnosPool([]);
-    };
-
-    /** Para selects */
-    const alumnosOptions = useMemo(
-        () => alumnosPool.map((a) => ({ value: a.id, label: a.nombre })),
-        [alumnosPool]
-    );
-
+  if (loading) {
     return (
-        <div style={{ maxWidth: 1100, margin: "24px auto", padding: "16px" }}>
-            <h1 style={{ marginBottom: 8 }}>Gestión de grupos</h1>
-            <p style={{ marginTop: 0, opacity: 0.8 }}>
-                Crea grupos, agrega alumnos y asígnalos manualmente o automáticamente.
-            </p>
-
-            {/* Barra de acciones rápidas */}
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
-                <button onClick={autoDistribuir}>Auto-distribuir</button>
-                <button onClick={resetear} style={{ background: "#fee2e2" }}>
-                    Resetear todo
-                </button>
-            </div>
-
-            {/* Paneles: Pool de alumnos y Creación de grupo */}
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 16,
-                    marginBottom: 24,
-                }}
-            >
-                {/* Pool de alumnos */}
-                <div style={{ padding: 16, border: "1px solid #e2e8f0", borderRadius: 12 }}>
-                    <h2 style={{ marginTop: 0 }}>Alumnos (pool)</h2>
-                    <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-                        <input
-                            style={{ flex: 1, padding: 8 }}
-                            type="text"
-                            placeholder="Nombre del alumno"
-                            value={nuevoAlumno}
-                            onChange={(e) => setNuevoAlumno(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && agregarAlumno()}
-                        />
-                        <button onClick={agregarAlumno}>Añadir</button>
-                    </div>
-
-                    {alumnosPool.length === 0 ? (
-                        <div style={{ opacity: 0.7 }}>Sin alumnos por asignar.</div>
-                    ) : (
-                        <ul style={{ margin: 0, paddingLeft: 18 }}>
-                            {alumnosPool.map((a) => (
-                                <li key={a.id} style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-                                    <span>{a.nombre}</span>
-                                    <button onClick={() => quitarAlumnoPool(a.id)} title="Quitar del pool">
-                                        ✕
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-
-                {/* Crear grupo */}
-                <div style={{ padding: 16, border: "1px solid #e2e8f0", borderRadius: 12 }}>
-                    <h2 style={{ marginTop: 0 }}>Crear grupo</h2>
-                    <div style={{ display: "flex", gap: 8 }}>
-                        <input
-                            style={{ flex: 1, padding: 8 }}
-                            type="text"
-                            placeholder="Nombre del grupo"
-                            value={nuevoGrupo}
-                            onChange={(e) => setNuevoGrupo(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && crearGrupo()}
-                        />
-                        <button onClick={crearGrupo}>Crear</button>
-                    </div>
-                    <p style={{ marginTop: 8, opacity: 0.7 }}>
-                        Tip: crea varios grupos primero y luego usa “Auto-distribuir”.
-                    </p>
-                </div>
-            </div>
-
-            {/* Lista de grupos */}
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-                    gap: 16,
-                }}
-            >
-                {grupos.map((g) => (
-                    <div key={g.id} style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 12 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <h3 style={{ margin: 0 }}>{g.nombre}</h3>
-                            <button onClick={() => eliminarGrupo(g.id)} title="Eliminar grupo">
-                                🗑️
-                            </button>
-                        </div>
-
-                        {/* Asignar desde pool */}
-                        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
-                            <select
-                                style={{ flex: 1, padding: 8 }}
-                                defaultValue=""
-                                onChange={(e) => {
-                                    const alumnoId = e.target.value;
-                                    if (alumnoId) asignarAlumno(alumnoId, g.id);
-                                    e.target.value = "";
-                                }}
-                            >
-                                <option value="" disabled>
-                                    Añadir alumno desde pool…
-                                </option>
-                                {alumnosOptions.map((opt) => (
-                                    <option key={opt.value} value={opt.value}>
-                                        {opt.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Miembros */}
-                        <ul style={{ marginTop: 12, paddingLeft: 18 }}>
-                            {g.miembros.length === 0 ? (
-                                <li style={{ opacity: 0.7 }}>Sin miembros</li>
-                            ) : (
-                                g.miembros.map((m) => (
-                                    <li key={m.id} style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-                                        <span>{m.nombre}</span>
-                                        <button onClick={() => quitarDeGrupo(g.id, m.id)} title="Quitar del grupo">
-                                            ✕
-                                        </button>
-                                    </li>
-                                ))
-                            )}
-                        </ul>
-                    </div>
-                ))}
-            </div>
-        </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '18px'
+      }}>
+        Cargando...
+      </div>
     );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Si se especificaron roles permitidos, verificar
+  if (allowedRoles.length > 0) {
+    const userRole = user?.role?.toLowerCase();
+    const normalizedAllowedRoles = allowedRoles.map(role => role.toLowerCase());
+
+    if (!normalizedAllowedRoles.includes(userRole)) {
+      // Redirigir al dashboard correspondiente según el rol
+      if (userRole === 'estudiante' || userRole === 'alumno') {
+        return <Navigate to="/hola" replace />;
+      } else if (userRole === 'profesor') {
+        return <Navigate to="/seccionesPage" replace />;
+      }
+      return <Navigate to="/login" replace />;
+    }
+  }
+
+  return children;
 }
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+  allowedRoles: PropTypes.arrayOf(PropTypes.string)
+};
+
+ProtectedRoute.defaultProps = {
+  allowedRoles: []
+};
+
+// Rutas públicas (login, register)
+function PublicRoute({ children }) {
+  const { isAuthenticated, user, loading } = useAuth();
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
+  if (isAuthenticated) {
+    // Redirigir según el rol del usuario
+    const userRole = user?.role?.toLowerCase();
+    
+    if (userRole === 'estudiante' || userRole === 'alumno') {
+      return <Navigate to="/hola" replace />;
+    } else if (userRole === 'profesor') {
+      return <Navigate to="/seccionesPage" replace />;
+    }
+    
+    return <Navigate to="/seccionesPage" replace />;
+  }
+
+  return children;
+}
+
+PublicRoute.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
+// --- Enrutador Principal ---
+
+function AppRouter() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Rutas Públicas */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
+
+        {/* Ruta raíz - redirige según autenticación */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <RedirectToDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Página del Alumno/Estudiante */}
+        <Route
+          path="/alumnosPage"
+          element={
+            <ProtectedRoute allowedRoles={['alumno']}>
+              <AlumnoPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Página de Secciones del Profesor */}
+        <Route
+          path="/seccionesPage"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <SeccionesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/asignacion-grupos"
+          element={
+            <ProtectedRoute>
+              <AsignacionGruposPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ver alumnos y tareas de una sección */}
+        {/* Rutas dinámicas de Tareas (accesibles por profesor) */}
+        <Route
+          path="/secciones/:idSeccion/tareas"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <TareasIndividualesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Crear tarea en una sección */}
+        <Route
+          path="/secciones/:idSeccion/crear-tarea"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <CrearTareaPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/alumno/seccion/:idSeccion/tareas"
+          element={
+            <ProtectedRoute allowedRoles={['alumno']}>
+              <TareasAlumno />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ✅ NUEVA RUTA: Ver tareas de un alumno específico en una sección */}
+        <Route
+          path="/secciones/:idSeccion/alumno/:idAlumno/tareas"
+          element={
+            <ProtectedRoute>
+              <AsignarNotas />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route 
+          path="/secciones/:idSeccion/tareas" element={
+          <ProtectedRoute>
+            <TareasIndividualesPage />
+          </ProtectedRoute>
+        } 
+      />
+
+        <Route
+          path="/secciones/:idSeccion/grupo/:idGrupo/tareas"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <AsignarNotasGrupales />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ruta para cualquier otra URL no definida */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+// Componente helper para redirigir al dashboard correcto
+function RedirectToDashboard() {
+  const { user } = useAuth();
+  const userRole = user?.role?.toLowerCase();
+
+  if (userRole === 'estudiante' || userRole === 'alumno') {
+    return <Navigate to="/alumnosPage" replace />;
+  } else if (userRole === 'profesor') {
+    return <Navigate to="/seccionesPage" replace />;
+  }
+
+  return <Navigate to="/seccionesPage" replace />;
+}
+
+export default AppRouter;

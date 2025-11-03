@@ -27,17 +27,19 @@ function Login() {
 
     setLoading(true);
     try {
-      // Usar la función login del contexto
-      const result = await login(
-        { 
-          username: formData.correo, 
-          password: formData.contraseña 
-        },
-        'profesor' // Cambia esto según el rol que necesites: 'profesor', 'alumno', 'admin', etc.
-      );
+      const result = await login({
+        username: formData.correo,
+        password: formData.contraseña
+      });
 
       if (result.success) {
-        navigate("/seccionesPage");
+        // Redireccionar según el rol del usuario
+        const userRole = result.user?.role?.toLowerCase();
+        if (userRole === 'estudiante' || userRole === 'alumno') {
+          navigate("/AlumnoPage");
+        } else if (userRole === 'profesor') {
+          navigate("/seccionesPage");
+        }
       } else {
         setError(result.message || "Credenciales inválidas");
       }
@@ -76,12 +78,15 @@ function Login() {
               disabled={loading}
               autoComplete="off"
             />
-            <i
-              className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+            <button
+              type="button"
               onClick={() => setShowPassword(!showPassword)}
-              style={{ cursor: "pointer" }}
+              className="password-toggle-btn"
               title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-            ></i>
+              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+            </button>
           </div>
 
           {error && <div className="error-message">{error}</div>}

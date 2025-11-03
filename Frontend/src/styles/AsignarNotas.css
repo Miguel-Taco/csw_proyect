@@ -1,21 +1,23 @@
 .asignarNotas-body{
   min-height: 100vh;
   display: flex;
-  justify-content: center;     /* centra horizontal */
+  justify-content: center;
+  padding: 2rem;
 }
 
-/* Hereda el comportamiento de box-sizing para todo */
 .asignarNotas-body *{
   box-sizing: border-box;
 }
 
-/* TITULAR (nombre del alumno) */
+/* ============ HEADER ============ */
 .asignarNotas-header{
   flex-shrink: 0;
-  height: 12%;
+  height: auto;
+  min-height: 12%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
   border: 4px double var(--color-accent);
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
@@ -25,7 +27,42 @@
   letter-spacing: .5px;
 }
 
-/* TARJETA/CONTENEDOR PRINCIPAL */
+.header-info{
+  flex: 1;
+}
+
+.header-info h2{
+  margin: 0 0 0.5rem 0;
+  font-size: 1.8rem;
+  color: #2c2c2c;
+}
+
+.codigo-alumno,
+.nombre-seccion{
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #666;
+}
+
+.btn-volver{
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-secondary, #6c757d);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 300ms;
+  white-space: nowrap;
+}
+
+.btn-volver:hover{
+  background-color: #1f1f14;
+  transform: translateY(-2px);
+}
+
+/* ============ CONTENEDOR PRINCIPAL ============ */
 .main-asignarNotas-container{
   align-self: center;
   max-width: 85%;
@@ -36,79 +73,151 @@
   background: var(--color-neutral);
   box-shadow: 0 0 10px 5px var(--color-shadow);
   border-radius: 24px;
-  overflow: hidden;            /* redondeo limpio con header */
+  overflow: hidden;
 }
 
-/* ZONA SCROLLEABLE QUE CONTIENE LAS TAREAS */
+/* ============ STATS CARD - COMPACTO HORIZONTAL ============ */
+.stats-card{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 3% 1rem;
+  padding: 0;
+}
+
+.stat-item{
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0.75rem 1.25rem; /* Reducido el padding vertical */
+  border-radius: 10px;
+  display: flex; /* 👈 Cambio a flexbox */
+  align-items: center; /* 👈 Centra verticalmente */
+  justify-content: space-between; /* 👈 Espacio entre label y valor */
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.stat-label{
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.85rem; /* Ligeramente más grande */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  margin: 0; /* 👈 Eliminado el margin */
+}
+
+.stat-value{
+  color: white;
+  font-size: 1.5rem; /* Ligeramente reducido */
+  font-weight: bold;
+  margin: 0; /* 👈 Asegurar que no tenga margin */
+}
+
+/* ============ ZONA SCROLLEABLE DE TAREAS ============ */
 .tareas-scroll{
   flex: 1;
-  margin: 2.5% 3%;
+  margin: 1rem 3% 2.5%;
   padding: 2%;
   border: 4px double var(--color-accent);
   border-radius: 12px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 22px;                   /* separación uniforme entre ítems */
+  gap: 15px; /* Reducido de 22px a 15px */
+  scrollbar-width: thin;
+  scrollbar-color: #c9c9c9 #eee;
 }
 
-/* Item de tarea (barra alargada) */
+/* ============ ITEM DE TAREA - LAYOUT HORIZONTAL ============ */
 .tarea-item{
   display: flex;
-  align-items: stretch;
-  justify-content: space-between;
+  flex-direction: row; /* 👈 Cambio a horizontal */
+  align-items: center; /* 👈 Centra verticalmente */
+  justify-content: space-between; /* 👈 Espacio entre contenido */
   border: 2px solid rgba(0,0,0,.15);
   border-radius: 8px;
   background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,.05);
   transition: transform 120ms ease, box-shadow 120ms ease;
+  padding: 14px 18px; /* Reducido el padding vertical */
+  min-height: 70px; /* Altura mínima controlada */
 }
 
-/* micro feedback */
 .tarea-item:hover{
   transform: translateY(-1px);
   box-shadow: 0 3px 10px rgba(0,0,0,.08);
 }
 
-/* Título (lado izquierdo) */
+/* Wrapper del título - ahora ocupa el espacio disponible */
+.tarea-titulo-wrapper{
+  flex: 1; /* 👈 Ocupa el espacio disponible */
+  margin-right: 1rem; /* 👈 Separación con la nota */
+}
+
+/* Número de tarea */
+.tarea-numero{
+  font-size: 0.7rem;
+  color: #667eea;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 0.3rem; /* Reducido */
+}
+
+/* Título de la tarea */
 .tarea-titulo{
-  flex: 1;
+  font-size: 1.05rem; /* Ligeramente reducido */
+  color: #2c2c2c;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* ============ CONTENEDOR DE NOTA - HORIZONTAL ============ */
+.tarea-nota{
   display: flex;
   align-items: center;
-  padding: 16px 18px;
-  color: #2c2c2c;
+  gap: 0.5rem;
+  flex-shrink: 0; /* 👈 No se encoge */
+  border: none; /* 👈 Eliminado el border-top */
+  padding: 0; /* 👈 Eliminado el padding-top */
+}
+
+.nota-label{
+  font-weight: 600;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* Input de nota */
+.tarea-nota input{
+  width: 80px; /* Ligeramente más compacto */
+  padding: 0.5rem 0.65rem;
+  text-align: center;
+  border: 2px solid rgba(0,0,0,.15);
+  border-radius: 8px;
+  outline: none;
+  background: #fafafa;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f1f14;
+  transition: all 0.2s ease;
+}
+
+.tarea-nota input:focus{
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.tarea-nota input:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.nota-max{
+  color: #888;
+  font-size: 0.85rem;
   font-weight: 500;
 }
 
-/* Caja de la nota (lado derecho) — se ve como el recuadro con número */
-.tarea-nota{
-  min-width: 86px;            /* ancho mínimo para 2 dígitos sin romper */
-  padding: 0 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-left: 2px solid rgba(0,0,0,.15);
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f1f14;
-  background: #fafafa;
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-
-/* Si la nota es editable con <input>, usa esta variante */
-.tarea-nota input{
-  width: 100%;
-  text-align: center;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: inherit;
-  font-weight: inherit;
-  color: inherit;
-}
-
-/* BOTÓN ACCIÓN (si necesitas uno, consistente con SeccionesPage) */
+/* ============ BOTÓN GUARDAR ============ */
 .btn-asignarNotas{
   align-self: flex-end;
   margin: 12px 3% 20px;
@@ -123,35 +232,283 @@
   cursor: pointer;
   transition: 300ms;
 }
-.btn-asignarNotas:hover{
+
+.btn-asignarNotas:hover:not(:disabled){
   background-color: #1f1f14;
+  transform: translateY(-2px);
 }
 
-/* SCROLLBAR (opcional, para que luzca más parecido al boceto) */
+.btn-asignarNotas:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============ MENSAJES ============ */
+.message,
+.error-message{
+  margin: 1.5rem 3% 0;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.message-success{
+  background: #d4edda;
+  color: #155724;
+  border: 2px solid #c3e6cb;
+}
+
+.message-error,
+.error-message{
+  background: #f8d7da;
+  color: #721c24;
+  border: 2px solid #f5c6cb;
+}
+
+/* ============ LOADING ============ */
+.loading-message{
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: #667eea;
+  font-weight: 500;
+}
+
+/* ============ VACÍO ============ */
+.vacio{
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 2px dashed rgba(0,0,0,.15);
+  margin: 2rem 3%;
+}
+
+/* ============ SCROLLBAR ============ */
 .tareas-scroll::-webkit-scrollbar{
   width: 10px;
 }
+
 .tareas-scroll::-webkit-scrollbar-track{
   background: #eee;
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
 }
+
 .tareas-scroll::-webkit-scrollbar-thumb{
-    background: #c9c9c9;
-    border-radius: 10px;
-}
-.tareas-scroll{
-  scrollbar-width: thin;           /* Firefox */
-  scrollbar-color: #c9c9c9 #eee;   /* Firefox */
+  background: #c9c9c9;
+  border-radius: 10px;
 }
 
-/* RESPONSIVE mínimo */
+/* ============ RESPONSIVE ============ */
 @media (max-width: 768px){
+  .asignarNotas-body{
+    padding: 1rem;
+  }
+
   .main-asignarNotas-container{
     max-width: 95%;
   }
-  .tarea-nota{
-    min-width: 72px;
-    font-size: 1.1rem;
+  
+  .asignarNotas-header{
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .header-info h2{
+    font-size: 1.4rem;
+  }
+  
+  .stats-card{
+    grid-template-columns: 1fr;
+  }
+  
+  /* En móvil, mantener stat-item compacto */
+  .stat-item{
+    padding: 0.6rem 1rem;
+  }
+  
+  .stat-label{
+    font-size: 0.75rem;
+  }
+  
+  .stat-value{
+    font-size: 1.3rem;
+  }
+  
+  /* Tareas en móvil - considerar stack vertical si es muy estrecho */
+  .tarea-item{
+    flex-wrap: wrap;
+    min-height: auto;
+  }
+  
+  .tarea-titulo-wrapper{
+    flex-basis: 100%;
+    margin-bottom: 0.75rem;
+  }
+  
+  .tarea-nota input{
+    width: 70px;
+  }
+
+  /* ============ MODAL DE ERROR FLOTANTE ============ */
+/* ============ MODAL DE ERROR FLOTANTE ============ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7); /* Más oscuro */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-error {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  max-width: 500px;
+  width: 90%;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+  z-index: 10000;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 2rem;
+  color: #2c2c2c;
+  line-height: 1.6;
+  background: white;
+}
+
+.modal-body p {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #333;
+}
+
+.modal-footer {
+  padding: 1.5rem 2rem;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn-modal-cerrar {
+  padding: 0.75rem 2rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.btn-modal-cerrar:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-modal-cerrar:active {
+  transform: translateY(0);
+}
+
+/* Asegurar que el body del modal esté por encima del asignarNotas-body */
+.asignarNotas-body {
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive para modal */
+@media (max-width: 768px) {
+  .modal-error {
+    width: 95%;
+    max-width: none;
+    margin: 1rem;
+  }
+  
+  .modal-header {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .modal-icon {
+    font-size: 1.5rem;
+  }
+  
+  .modal-header h3 {
+    font-size: 1.25rem;
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .modal-body p {
+    font-size: 1rem;
+  }
+  
+  .modal-footer {
+    padding: 1rem 1.5rem;
+  }
+  
+  .btn-modal-cerrar {
+    width: 100%;
+  }
 }
 }

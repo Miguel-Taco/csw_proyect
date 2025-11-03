@@ -1,40 +1,39 @@
 // TareasAlumno.jsx
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from "../context/AuthContext";
-import SubirTareas from "./SubirTareas";
+import Modal from "../componentes/Modal";
 import "../styles/TareasAlumno.css";
 
 function TareasAlumno() {
     const { idSeccion } = useParams();
     const navigate = useNavigate();
-    const { user } = useAuth();
 
+    const [openModal, setOpenModal] = useState(false);
+    const [companeros, setCompaneros] = useState([]);
+    const [loadingCompaneros, setLoadingCompaneros] = useState(false);
+    const [errorCompaneros, setErrorCompaneros] = useState("");
+    
     const [tareas, setTareas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const [miGrupo, setMiGrupo] = useState(null);
-    const [mostrarSubir, setMostrarSubir] = useState(false);
-
+    
     const BASE_URL = 'http://localhost:8080';
 
     useEffect(() => {
         cargarTareas();
-        cargarMiGrupo();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idSeccion]);
 
     // Función para formatear fechas
     const formatearFechaCorta = (fechaISO) => {
         if (!fechaISO) return 'N/A';
-
+        
         const fecha = new Date(fechaISO);
         const dia = String(fecha.getDate()).padStart(2, '0');
         const mes = String(fecha.getMonth() + 1).padStart(2, '0');
         const anio = fecha.getFullYear();
         const horas = String(fecha.getHours()).padStart(2, '0');
         const minutos = String(fecha.getMinutes()).padStart(2, '0');
-
+        
         return `${dia}/${mes}/${anio} ${horas}:${minutos}`;
     };
 
@@ -53,7 +52,7 @@ function TareasAlumno() {
             );
 
             const data = await response.json();
-
+            
             if (data.success) {
                 setTareas(data.tareas);
             } else {
@@ -67,66 +66,37 @@ function TareasAlumno() {
         }
     };
 
-    const cargarMiGrupo = async () => {
+    const obtenerCompaneros = async () => {
+        setLoadingCompaneros(true);
+        setErrorCompaneros("");
         try {
-            // Opción 1: Endpoint específico para obtener el grupo del alumno
-            const res = await fetch(`${BASE_URL}/api/grupos/seccion/${idSeccion}/mi-grupo`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Si necesitas enviar el ID del alumno en el header o parámetro
-                    'User-ID': user?.id
-                },
-                credentials: 'include'
+            const response = await fetch(`${BASE_URL}/api/grupos/companeros`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id_seccion: Number.parseInt(idSeccion),
+                    id_persona: 2 // 🔹 aquí puedes reemplazar por el id_persona del usuario logueado
+                }),
             });
 
-            if (res.ok) {
-                const data = await res.json();
-                setMiGrupo(data || null);
-            } else {
-                // Si el endpoint específico falla, intentar con el endpoint general
-                await cargarMiGrupoAlternativo();
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor");
             }
-        } catch (error) {
-            console.error("Error al cargar grupo:", error);
-            await cargarMiGrupoAlternativo();
+
+            const data = await response.json();
+            setCompaneros(data);
+        } catch (err) {
+            console.error("Error al obtener compañeros:", err);
+            setErrorCompaneros("No se pudieron cargar los compañeros del grupo");
+        } finally {
+            setLoadingCompaneros(false);
         }
     };
 
-    const cargarMiGrupoAlternativo = async () => {
-        try {
-            // Opción 2: Cargar todos los grupos y buscar el del alumno
-            const res = await fetch(`${BASE_URL}/api/grupos/seccion/${idSeccion}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-
-            if (res.ok) {
-                const grupos = await res.json();
-                // Buscar el grupo que contiene al alumno actual
-                const grupoDelAlumno = grupos.find(grupo =>
-                    grupo.alumnos && grupo.alumnos.some(alumno => alumno.idAlumno === user?.id)
-                );
-                setMiGrupo(grupoDelAlumno || null);
-            } else {
-                setMiGrupo(null);
-            }
-        } catch {
-            setMiGrupo(null);
-        }
-    };
-
-    const handleVerGrupoTrabajo = () => {
-        if (miGrupo) {
-            setMostrarSubir(true);
-        } else {
-            alert("Aún no tienes grupo asignado en esta sección");
-        }
-    };
 
     // Determinar qué contenido mostrar
     let tareasContent;
-
+    
     if (loading) {
         tareasContent = <p>Cargando tareas...</p>;
     } else if (tareas.length === 0) {
@@ -152,6 +122,35 @@ function TareasAlumno() {
         );
     }
 
+    const modalContent = (
+        <Modal
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            title="Mi Grupo de Trabajo"
+        >
+            {(() => {
+                if (loadingCompaneros) {
+                    return <p>Cargando compañeros...</p>;
+                }
+                if (errorCompaneros) {
+                    return <p style={{ color: "red" }}>{errorCompaneros}</p>;
+                }
+                if (companeros.length === 0) {
+                    return <p>No se encontraron compañeros en tu grupo.</p>;
+                }
+                return (
+                    <div className="companeros-lista">
+                        {companeros.map((c) => (
+                            <li key={`${c.id_persona}`} className="companero-card">
+                                <p>{c.nombres} {c.apellido_p} {c.apellido_m}</p>
+                            </li>
+                        ))}
+                    </div>
+                );
+            })()}
+        </Modal>
+    );
+
     return (
         <div className="tareas-page">
             <div className='main-container'>
@@ -162,7 +161,10 @@ function TareasAlumno() {
                     <h1>Tareas de la Sección</h1>
                     <button
                         className="btn-primary"
-                        onClick={handleVerGrupoTrabajo}
+                        onClick={() => {
+                            setOpenModal(true);
+                            obtenerCompaneros();
+                        }}
                     >
                         Ver Grupo de Trabajo
                     </button>
@@ -175,14 +177,8 @@ function TareasAlumno() {
                 )}
 
                 {tareasContent}
+                {modalContent}
 
-                {/* Modal para subir tareas grupales */}
-                {mostrarSubir && miGrupo && (
-                    <SubirTareas
-                        grupo={miGrupo}
-                        onClose={() => setMostrarSubir(false)}
-                    />
-                )}
             </div>
         </div>
     );

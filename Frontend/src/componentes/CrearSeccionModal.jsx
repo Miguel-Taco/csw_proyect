@@ -8,13 +8,6 @@ export default function CrearSeccionModal({ open, onClose, onCrear, anioActual }
   const [nombreSeccion, setNombreSeccion] = useState("");
   const [error, setError] = useState("");
 
-  CrearSeccionModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onCrear: PropTypes.func.isRequired,
-    anioActual: PropTypes.number.isRequired,
-  };
-
   useEffect(() => {
     const dialog = dialogRef.current;
 
@@ -112,3 +105,10 @@ export default function CrearSeccionModal({ open, onClose, onCrear, anioActual }
     document.body
   );
 }
+
+CrearSeccionModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onCrear: PropTypes.func.isRequired,
+  anioActual: PropTypes.number.isRequired,
+};

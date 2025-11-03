@@ -9,7 +9,7 @@ import EditarSeccionModal from "../componentes/EditarSeccionModal";
 function SeccionesPage(){
     const { user, logout } = useAuth();
     const navigate = useNavigate();
-
+    
     const [secciones, setSecciones] = useState([]);
     const [anioSeleccionado, setAnioSeleccionado] = useState(2025);
     const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ function SeccionesPage(){
     const [modalCrearOpen, setModalCrearOpen] = useState(false);
     const [modalEditarOpen, setModalEditarOpen] = useState(false);
     const [seccionAEditar, setSeccionAEditar] = useState(null);
-
+    
     const BASE_URL = 'http://localhost:8080';
 
     useEffect(() => {
@@ -89,8 +89,6 @@ function SeccionesPage(){
         setModalCrearOpen(true);
     };
 
-<<<<<<< Updated upstream
-=======
     const handleAsignarGrupos = async (seccion) => {
         // Cargar alumnos de la sección y navegar pasando la lista en navigation state
         try {
@@ -120,16 +118,10 @@ function SeccionesPage(){
         }
     };
 
-    // ✅ NUEVO HANDLER PARA GESTIÓN DE GRUPOS
-    const handleGestionarGrupos = (seccion) => {
-        navigate(`/secciones/${seccion.idSeccion}/grupos`);
-    };
-
->>>>>>> Stashed changes
     const handleCrearSeccion = async (nombreSeccion) => {
         setLoading(true);
         setModalCrearOpen(false);
-
+        
         try {
             const payload = {
                 id_profesor: idProfesor,
@@ -137,7 +129,7 @@ function SeccionesPage(){
                 anio: anioSeleccionado,
                 codigo: Math.floor(Math.random() * 10000)
             };
-
+            
             const response = await fetch(`${BASE_URL}/api/secciones`, {
                 method: 'POST',
                 headers: {
@@ -177,19 +169,19 @@ function SeccionesPage(){
         console.log("   Nombre:", nombreCurso);
         console.log("   Año:", anio);
         console.log("   ID Profesor:", idProfesor);
-
+        
         setLoading(true);
         setModalEditarOpen(false);
-
+        
         try {
             // ✅ Payload correcto - solo nombreCurso y anio
             const payload = {
                 nombreCurso: nombreCurso,
                 anio: anio
             };
-
+            
             console.log("🟢 Payload a enviar:", JSON.stringify(payload, null, 2));
-
+            
             const response = await fetch(
                 `${BASE_URL}/api/secciones/${idSeccion}/profesor/${idProfesor}`,
                 {
@@ -248,15 +240,13 @@ function SeccionesPage(){
     };
 
     const handleLogout = async () => {
-        const confirmar = window.confirm("¿Está seguro que desea cerrar sesión?");
+        const confirmar = globalThis.confirm("¿Está seguro que desea cerrar sesión?");
         if (confirmar) {
             await logout();
             navigate("/login");
         }
     };
 
-<<<<<<< Updated upstream
-=======
     let contenidoSecciones;
 
     if (loading && secciones.length === 0) {
@@ -268,19 +258,16 @@ function SeccionesPage(){
     } else {
         // Estado: Carga completa, y hay secciones para mostrar
         contenidoSecciones = secciones.map((sec) => (
-            <SeccionCard
-                key={sec.idSeccion}
+            <SeccionCard 
+                key={sec.idSeccion} 
                 seccion={sec}
                 onEliminar={handleEliminarSeccion}
                 onEditar={handleAbrirEditar}
                 onIrATareas={handleIrATareas}
-                onAsignarGrupos={handleAsignarGrupos}
-                onGestionarGrupos={handleGestionarGrupos} // ✅ NUEVA PROP AÑADIDA
             />
         ));
     }
 
->>>>>>> Stashed changes
     return(
         <div className="seccionesPage-body">
             <div className="main-seccionesPage-container row">
@@ -290,8 +277,8 @@ function SeccionesPage(){
                 </div>
                 <div className="secciones-crud-container col">
                     <div className="secciones-header-container row">
-                        <select
-                            value={anioSeleccionado}
+                        <select 
+                            value={anioSeleccionado} 
                             onChange={(e) => setAnioSeleccionado(Number(e.target.value))}
                             disabled={loading}
                         >
@@ -300,22 +287,17 @@ function SeccionesPage(){
                             <option value="2026">2026</option>
                             <option value="2027">2027</option>
                         </select>
-                        <button
-                            onClick={handleLogout}
-                            className="logout-button"
+                        <button 
+                            onClick={handleLogout} 
+                            className="logout-button" 
                             title="Cerrar sesión"
                             disabled={loading}
-                        >
+                        > 
                             Cerrar Sesión
                         </button>
-<<<<<<< Updated upstream
+                        {/* botón global de asignación removido: ahora cada sección muestra su propio botón 'Asignar grupos' */}
                         <button 
                             className="button-seccionesPage" 
-=======
-                        {/* botón global de asignación removido: ahora cada sección muestra su propio botón 'Asignar grupos' */}
-                        <button
-                            className="button-seccionesPage"
->>>>>>> Stashed changes
                             onClick={handleAgregarSeccion}
                             disabled={loading || !idProfesor}
                         >
@@ -330,27 +312,7 @@ function SeccionesPage(){
                     )}
 
                     <div className="secciones-container row">
-                        {loading && secciones.length === 0 ? (
-                            <p>Cargando secciones...</p>
-                        ) : secciones.length === 0 ? (
-                            <p>No hay secciones para este año</p>
-                        ) : (
-                            secciones.map((sec) => (
-                                <SeccionCard
-                                    key={sec.idSeccion}
-                                    seccion={sec}
-                                    onEliminar={handleEliminarSeccion}
-                                    onEditar={handleAbrirEditar}
-                                    onIrATareas={handleIrATareas}
-<<<<<<< Updated upstream
-                                    />
-=======
-                                    onAsignarGrupos={handleAsignarGrupos}
-                                    onGestionarGrupos={handleGestionarGrupos} // ✅ NUEVA PROP AÑADIDA
-                                />
->>>>>>> Stashed changes
-                            ))
-                        )}
+                        {contenidoSecciones}
                     </div>
                 </div>
             </div>

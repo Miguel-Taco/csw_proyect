@@ -13,10 +13,12 @@
     "sonar": "npm run test:coverage && npx sonar-scanner"
   },
   "dependencies": {
+    "lucide-react": "^0.546.0",
     "prop-types": "^15.8.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.3"
+    "react-router-dom": "^7.9.3",
+    "validator": "^13.15.20"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",

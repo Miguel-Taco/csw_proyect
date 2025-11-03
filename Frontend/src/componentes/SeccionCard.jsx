@@ -1,14 +1,13 @@
 import PropTypes from "prop-types";
 import "../styles/SeccionCard.css";
 
-function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
+function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas, onAsignarGrupos }) {
   const handleEliminar = async (e) => {
     e.stopPropagation();
-    if (
-      window.confirm(
-        `¿Está seguro de eliminar la sección "${seccion.nombreCurso}"?\n\nEsto eliminará también todos los grupos, tareas y calificaciones asociadas.`
-      )
-    ) {
+    
+    if (globalThis.confirm(`¿Está seguro de eliminar la sección "${seccion.nombreCurso}"?
+
+  Esto eliminará también todos los grupos, tareas y calificaciones asociadas.`)) {
       await onEliminar(seccion.idSeccion);
     }
   };
@@ -25,7 +24,7 @@ function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
   };
 
   return (
-    <div className="seccion-card" onClick={handleIrATareas}>
+    <button className="seccion-card" onClick={handleIrATareas}>
       {/* Botones flotantes */}
       <div className="seccion-actions actions-top-right">
         <button
@@ -34,6 +33,13 @@ function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
           title="Editar sección"
         >
           ✏️
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); if (onAsignarGrupos) onAsignarGrupos(seccion); }}
+          className="btn-asignar"
+          title="Asignar grupos"
+        >
+          👥
         </button>
         <button
           onClick={handleEliminar}
@@ -46,8 +52,7 @@ function SeccionCard({ seccion, onEliminar, onEditar, onIrATareas }) {
 
       {/* Texto centrado */}
       <p className="seccion-nombre">{seccion.nombreCurso}</p>
-      <p className="seccion-anio">{seccion.anio}</p>
-    </div>
+    </button>
   );
 }
 
@@ -60,6 +65,7 @@ SeccionCard.propTypes = {
   onEliminar: PropTypes.func.isRequired,
   onEditar: PropTypes.func.isRequired,
   onIrATareas: PropTypes.func, // 🔹 Nueva prop opcional
+  onAsignarGrupos: PropTypes.func,
 };
 
 export default SeccionCard;

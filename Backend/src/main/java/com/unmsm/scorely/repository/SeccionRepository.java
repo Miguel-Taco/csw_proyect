@@ -19,5 +19,9 @@ public interface SeccionRepository extends JpaRepository<Seccion, Integer> {
     // Verificar si una sección pertenece a un profesor (para seguridad)
     @Query("SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END FROM Seccion s WHERE s.idSeccion = ?1 AND s.profesor.idProfesor = ?2")
     boolean existsByIdSeccionAndProfesor_IdProfesor(Integer idSeccion, Integer idProfesor);
+
+    @Query("SELECT s FROM Seccion s JOIN AlumnoSeccion as_ ON s.idSeccion = as_.seccion.idSeccion " +
+            "WHERE as_.alumno.idAlumno = ?1 AND s.anio = ?2")
+    List<Seccion> findByAlumnoAndAnio(Integer idAlumno, Integer anio);
 }
 

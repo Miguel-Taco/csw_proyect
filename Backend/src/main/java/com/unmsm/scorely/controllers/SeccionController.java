@@ -1,5 +1,7 @@
 package com.unmsm.scorely.controllers;
 
+import com.unmsm.scorely.constants.ErrorConstants;
+
 import com.unmsm.scorely.dto.CrearSeccionRequest;
 import com.unmsm.scorely.dto.EditarSeccionRequest;
 import com.unmsm.scorely.dto.SeccionDTO;
@@ -16,7 +18,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/secciones")
-@CrossOrigin(origins = "*")
 public class SeccionController {
 
     private final SeccionService seccionService;
@@ -26,23 +27,25 @@ public class SeccionController {
         this.seccionService = seccionService;
         this.profesorRepository = profesorRepository;
     }
-        
+
     // NUEVO: Obtener id_profesor desde id_persona
     @GetMapping("/profesor-id/{idPersona}")
     public ResponseEntity<Map<String, Object>> obtenerIdProfesor(@PathVariable Integer idPersona) {
         Map<String, Object> response = new HashMap<>();
-        
+
         return profesorRepository.findIdProfesorByIdPersona(idPersona)
-            .map(idProfesor -> {
-                response.put("success", true);
-                response.put("idProfesor", idProfesor);
-                return ResponseEntity.ok(response);
-            })
-            .orElseGet(() -> {
-                response.put("success", false);
-                response.put("message", "No se encontró profesor con ese id_persona");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-            });
+                .map(idProfesor -> {
+                    // USA CONSTANTES
+                    response.put(ErrorConstants.SUCCESS_KEY, true);
+                    response.put(ErrorConstants.ID_PROFESOR_KEY, idProfesor);
+                    return ResponseEntity.ok(response);
+                })
+                .orElseGet(() -> {
+                    // USA CONSTANTES
+                    response.put(ErrorConstants.SUCCESS_KEY, false);
+                    response.put(ErrorConstants.MESSAGE_KEY, "No se encontró profesor con ese id_persona");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+                });
     }
     // GET: Obtener secciones de un profesor
     @GetMapping("/profesor/{idProfesor}")
@@ -57,7 +60,7 @@ public class SeccionController {
             @PathVariable Integer idProfesor,
             @PathVariable Integer anio) {
         List<SeccionDTO> secciones = seccionService.obtenerSeccionesPorProfesorYAnio(idProfesor, anio);
-        return ResponseEntity.ok(secciones);
+        return ResponseEntity.ok(secciones  );
     }
 
     // POST: Crear nueva sección
@@ -66,18 +69,25 @@ public class SeccionController {
         Map<String, Object> response = new HashMap<>();
         try {
             Seccion nuevaSeccion = seccionService.crearSeccion(req);
-            response.put("success", true);
-            response.put("message", "Sección creada exitosamente");
-            response.put("seccion", nuevaSeccion);
+            // USA CONSTANTES
+            response.put(ErrorConstants.SUCCESS_KEY, true);
+            response.put(ErrorConstants.MESSAGE_KEY, "Sección creada exitosamente");
+            response.put(ErrorConstants.SECCION_KEY, nuevaSeccion);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Error al crear la sección: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            // USA CONSTANTES
+            response.put(ErrorConstants.SUCCESS_KEY, false);
+            response.put(ErrorConstants.MESSAGE_KEY, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (RuntimeException e) {
+            // USA CONSTANTES
+            response.put(ErrorConstants.SUCCESS_KEY, false);
+            response.put(ErrorConstants.MESSAGE_KEY, "Error al crear la sección: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
-    // ✅ MÉTODO ACTUALIZADO - Editar sección
+    // POST: Editar sección
     @PutMapping("/{idSeccion}/profesor/{idProfesor}")
     public ResponseEntity<Map<String, Object>> editarSeccion(
             @PathVariable Integer idSeccion,
@@ -88,50 +98,51 @@ public class SeccionController {
 
         try {
             if (request.getNombreCurso() == null || request.getNombreCurso().trim().isEmpty()) {
-                response.put("success", false);
-                response.put("message", "El nombre del curso es obligatorio");
+                // USA CONSTANTES
+                response.put(ErrorConstants.SUCCESS_KEY, false);
+                response.put(ErrorConstants.MESSAGE_KEY, "El nombre del curso es obligatorio");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
             if (request.getAnio() == null) {
-                response.put("success", false);
-                response.put("message", "El año es obligatorio");
+                // USA CONSTANTES
+                response.put(ErrorConstants.SUCCESS_KEY, false);
+                response.put(ErrorConstants.MESSAGE_KEY, "El año es obligatorio");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
 
-            // 🔵 ahora el service devuelve DTO
             SeccionDTO dto = seccionService.editarSeccion(idSeccion, idProfesor, request);
 
-            response.put("success", true);
-            response.put("message", "Sección actualizada exitosamente");
-            response.put("seccion", dto); // ✅ DTO, no entidad JPA
+            // USA CONSTANTES
+            response.put(ErrorConstants.SUCCESS_KEY, true);
+            response.put(ErrorConstants.MESSAGE_KEY, "Sección actualizada exitosamente");
+            response.put(ErrorConstants.SECCION_KEY, dto);
             return ResponseEntity.ok(response);
 
         } catch (RuntimeException e) {
-            response.put("success", false);
-            response.put("message", e.getMessage());
+            // USA CONSTANTES
+            response.put(ErrorConstants.SUCCESS_KEY, false);
+            response.put(ErrorConstants.MESSAGE_KEY, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Error al editar la sección: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-    
+
     @DeleteMapping("/{idSeccion}/profesor/{idProfesor}")
     public ResponseEntity<Map<String, Object>> eliminarSeccion(
             @PathVariable Integer idSeccion,
             @PathVariable Integer idProfesor) {
         Map<String, Object> response = new HashMap<>();
-        
+
         boolean eliminado = seccionService.eliminarSeccion(idSeccion, idProfesor);
-        
+
         if (eliminado) {
-            response.put("success", true);
-            response.put("message", "Sección eliminada exitosamente");
+            // USA CONSTANTES
+            response.put(ErrorConstants.SUCCESS_KEY, true);
+            response.put(ErrorConstants.MESSAGE_KEY, "Sección eliminada exitosamente");
             return ResponseEntity.ok(response);
         } else {
-            response.put("success", false);
-            response.put("message", "No se pudo eliminar la sección. Verifique los permisos.");
+            // USA CONSTANTES
+            response.put(ErrorConstants.SUCCESS_KEY, false);
+            response.put(ErrorConstants.MESSAGE_KEY, "No se pudo eliminar la sección. Verifique los permisos.");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
     }

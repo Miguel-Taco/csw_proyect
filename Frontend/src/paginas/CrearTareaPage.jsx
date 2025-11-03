@@ -1,19 +1,24 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FormularioTarea from "../componentes/FormularioTarea";
+import "../styles/CrearTareaPage.css";
 
 export default function CrearTareaPage() {
   const navigate = useNavigate();
+  const { idSeccion } = useParams();
 
-  const handleSuccess = () => {
-    navigate("/tareasIndividuales");
+  const handleVolver = () => {
+    navigate(`/secciones/${idSeccion}/tareas`);
   };
 
   return (
     <div className="crear-tarea-page">
-      <h2>Crear Tarea</h2>
-      <div style={{ padding: "20px", border: "1px solid #ccc", borderRadius: "8px", maxWidth: "600px", margin: "0 auto" }} />
-      <FormularioTarea onSuccess={handleSuccess} />
+      <div className="crear-tarea-header">
+        <button className="btn-volver" onClick={handleVolver}>
+          ← Volver
+        </button>
+      </div>
+      <FormularioTarea />
     </div>
   );
 }
