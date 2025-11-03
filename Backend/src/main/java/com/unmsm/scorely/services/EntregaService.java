@@ -122,6 +122,6 @@ public class EntregaService {
                             ? ultimaEntrega.getNota().doubleValue()
                             : null
             );
-        }).collect(java.util.stream.Collectors.toList());
+        }).toList();
     }
 }

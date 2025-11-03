@@ -86,7 +86,7 @@ public class EntregaGrupalService {
                             ? ultimaEntrega.getNota().doubleValue()
                             : null
             );
-        }).collect(java.util.stream.Collectors.toList());
+        }).toList();
     }
 
     @Transactional
@@ -118,6 +118,6 @@ public class EntregaGrupalService {
                             persona.getApellidoM();
                     return new IntegranteGrupoDTO(nombreCompleto);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 }
