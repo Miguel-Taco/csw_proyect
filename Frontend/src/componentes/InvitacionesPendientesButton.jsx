@@ -71,7 +71,14 @@ export default function InvitacionesPendientesButton() {
             setMensaje(result.message || "Error al aceptar invitación");
         }
         } else {
-        // Podrías agregar aquí tu endpoint de rechazo si lo implementas luego
+          await fetch(`${API_URL}/api/invitaciones/rechazar`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              token: token,
+              idAlumno: user.id,
+            }),
+        });
         setMensaje("Invitación rechazada ❌");
         }
     } catch (error) {
