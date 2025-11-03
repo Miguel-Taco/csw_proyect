@@ -1,0 +1,158 @@
+/* ModalVerEntrega.css */
+
+.modal-entrega-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.modal-entrega-loading p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.modal-entrega-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 3rem;
+}
+
+.modal-entrega-error p {
+  color: #dc3545;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.modal-entrega-empty {
+  padding: 2rem;
+  text-align: center;
+  color: #999;
+}
+
+.modal-entrega-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.entrega-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-value {
+  color: #212529;
+  font-size: 0.95rem;
+  padding-left: 1.75rem;
+  line-height: 1.5;
+}
+
+.no-enlace {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.enlace-entrega {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  padding-left: 1.75rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  background: white;
+  border: 1px solid #007bff;
+  width: fit-content;
+}
+
+.enlace-entrega:hover {
+  background: #007bff;
+  color: white;
+  transform: translateX(4px);
+}
+
+.modal-entrega-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.btn-cerrar-entrega {
+  padding: 0.625rem 1.5rem;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-cerrar-entrega:hover {
+  background: #5a6268;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .entrega-info-card {
+    padding: 1rem;
+  }
+  
+  .info-value {
+    padding-left: 0;
+  }
+  
+  .enlace-entrega {
+    padding-left: 1rem;
+    font-size: 0.9rem;
+  }
+}

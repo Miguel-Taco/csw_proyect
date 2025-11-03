@@ -139,6 +139,7 @@
   transition: transform 120ms ease, box-shadow 120ms ease;
   padding: 14px 18px; /* Reducido el padding vertical */
   min-height: 70px; /* Altura mínima controlada */
+  gap: 2rem;
 }
 
 .tarea-item:hover{

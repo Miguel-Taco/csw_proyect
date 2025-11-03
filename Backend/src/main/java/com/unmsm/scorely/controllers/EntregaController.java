@@ -1,10 +1,7 @@
 package com.unmsm.scorely.controllers;
 
 import com.unmsm.scorely.constants.ErrorConstants;
-import com.unmsm.scorely.dto.IntegranteGrupoDTO;
-import com.unmsm.scorely.dto.RegistrarEntregasRequest;
-import com.unmsm.scorely.dto.ActualizarNotaRequest;
-import com.unmsm.scorely.dto.NotasDeTareas;
+import com.unmsm.scorely.dto.*;
 import com.unmsm.scorely.models.Entrega;
 import com.unmsm.scorely.services.EntregaGrupalService;
 import com.unmsm.scorely.services.EntregaService;
@@ -149,6 +146,29 @@ public class EntregaController {
             return ResponseEntity.ok(integrantes);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    /**
+     * Obtiene la entrega de un alumno para una tarea específica en una sección
+     * Maneja tanto entregas individuales como grupales
+     *
+     * GET /api/entregas/seccion/{idSeccion}/alumno/{idAlumno}/tarea/{idTarea}
+     */
+    @GetMapping("/seccion/{idSeccion}/alumno/{idAlumno}/tarea/{idTarea}")
+    public ResponseEntity<Object> obtenerEntregaAlumno(
+            @PathVariable Integer idSeccion,
+            @PathVariable Integer idAlumno,
+            @PathVariable Integer idTarea) {
+        try {
+            ObtenerEntregaResponse entrega = entregaService.obtenerEntregaAlumno(idSeccion, idAlumno, idTarea);
+            return ResponseEntity.ok(entrega);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of(ErrorConstants.ERROR_KEY, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(ErrorConstants.ERROR_KEY, "Error al obtener la entrega: " + e.getMessage()));
         }
     }
 }
