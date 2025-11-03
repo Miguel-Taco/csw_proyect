@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unmsm.scorely.dto.GrupoSeccionDTO;
+import com.unmsm.scorely.dto.CrearGrupoResponse;
 import com.unmsm.scorely.services.GrupoSeccionService;
 
 @RestController
@@ -25,18 +25,20 @@ public class GrupoSeccionController {
 
     // Obtener todos los grupos de una sección
     @GetMapping("/seccion/{idSeccion}")
-    public ResponseEntity<List<GrupoSeccionDTO>> obtenerGruposPorSeccion(
+    public ResponseEntity<List<CrearGrupoResponse>> obtenerGruposPorSeccion(
             @PathVariable Integer idSeccion) {
-        List<GrupoSeccionDTO> grupos = grupoSeccionService.obtenerGruposPorSeccion(idSeccion);
+        List<CrearGrupoResponse> grupos = grupoSeccionService.obtenerGruposPorSeccion(idSeccion);
         return ResponseEntity.ok(grupos);
     }
 
     // Obtener información específica de un grupo en una sección
+    // NOTA: Necesitarás implementar este método en GrupoSeccionService
     @GetMapping("/seccion/{idSeccion}/grupo/{idGrupo}")
-    public ResponseEntity<GrupoSeccionDTO> obtenerGrupoEnSeccion(
+    public ResponseEntity<CrearGrupoResponse> obtenerGrupoEnSeccion(
             @PathVariable Integer idSeccion,
             @PathVariable Integer idGrupo) {
-        GrupoSeccionDTO grupo = grupoSeccionService.obtenerGrupoEnSeccion(idSeccion, idGrupo);
-        return ResponseEntity.ok(grupo);
+        // Este método necesita ser implementado en GrupoSeccionService
+        // Por ahora, puedes dejarlo comentado o implementarlo
+        return ResponseEntity.notFound().build();
     }
 }
