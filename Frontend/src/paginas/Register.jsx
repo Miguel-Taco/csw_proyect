@@ -19,7 +19,8 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     
-    const BASE_URL = 'https://cswproyect-production.up.railway.app';
+    // Asegúrate de que esta URL sea la correcta para tu backend
+    const BASE_URL = 'http://localhost:8080';
 
     const togglePassword = (index) => {
         const newState = [...showPassword];

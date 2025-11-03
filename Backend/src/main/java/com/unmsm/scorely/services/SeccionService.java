@@ -66,64 +66,42 @@ public class SeccionService {
     // Crear nueva sección
     @Transactional
     public Seccion crearSeccion(CrearSeccionRequest request) {
-        // PASO 1: Busca la entidad del Profesor usando el ID que viene en el DTO.
-        // Si no lo encuentra, lanza una excepción clara.
-        Profesor profesorAsociado = profesorRepository.findById(request.getId_profesor())
-                .orElseThrow(() -> new RuntimeException("Error: No se encontró un profesor con el ID: " + request.getId_profesor()));
+        validarNombreCurso(request.getNombreCurso());
+        validarAnio(request.getAnio());
+        
+        Profesor profesorAsociado = buscarProfesor(request.getId_profesor());
+        
+        validarSeccionDuplicada(profesorAsociado.getIdProfesor(), request.getNombreCurso(), request.getAnio());
 
-        // PASO 2: Crea la nueva instancia de la entidad Seccion
-        Seccion nuevaSeccion = new Seccion();
-
-        // PASO 3: Asigna el objeto Profesor COMPLETO a la nueva sección.
-        // ¡ESTA ES LA LÍNEA CLAVE QUE FALTABA!
-        nuevaSeccion.setProfesor(profesorAsociado);
-
-        // PASO 4: Mapea el resto de los datos del DTO a la entidad
-        nuevaSeccion.setNombreCurso(request.getNombreCurso());
-        nuevaSeccion.setAnio(request.getAnio());
-        nuevaSeccion.setCodigo(request.getCodigo());
-
-        // PASO 5: Guarda la entidad Seccion ya completa y correctamente asociada
+        Seccion nuevaSeccion = construirSeccion(request, profesorAsociado);
         return seccionRepository.save(nuevaSeccion);
     }
     
     // Método para editar sección
-@Transactional
-public SeccionDTO editarSeccion(Integer idSeccion, Integer idProfesor, EditarSeccionRequest request) {
-    // Verificar que la sección existe y pertenece al profesor
-    Seccion seccion = seccionRepository.findById(idSeccion)
-            .orElseThrow(() -> new RuntimeException("Sección no encontrada"));
+    @Transactional
+    public SeccionDTO editarSeccion(Integer idSeccion, Integer idProfesor, EditarSeccionRequest request) {
+        validarNombreCurso(request.getNombreCurso());
+        validarAnio(request.getAnio());
+        
+        Seccion seccion = obtenerSeccionConPermisos(idSeccion, idProfesor);
+        
+        validarSeccionDuplicadaParaEdicion(idProfesor, request.getNombreCurso(), request.getAnio(), idSeccion);
 
-    if (!seccion.getProfesor().getIdProfesor().equals(idProfesor)) {
-        throw new RuntimeException("No tiene permisos para editar esta sección");
+        // Actualizar
+        seccion.setNombreCurso(request.getNombreCurso());
+        seccion.setAnio(request.getAnio());
+
+        Seccion actualizada = seccionRepository.save(seccion);
+
+        SeccionDTO dto = new SeccionDTO();
+        dto.setIdSeccion(actualizada.getIdSeccion());
+        dto.setNombreCurso(actualizada.getNombreCurso());
+        dto.setAnio(actualizada.getAnio());
+        dto.setCodigo(actualizada.getCodigo());
+        dto.setId_profesor(actualizada.getProfesor().getIdProfesor());
+
+        return dto;
     }
-
-    // Validar duplicados
-    List<Seccion> seccionesExistentes = seccionRepository
-            .findByProfesor_IdProfesorAndAnio(idProfesor, request.getAnio());
-
-    for (Seccion s : seccionesExistentes) {
-        if (s.getNombreCurso().equalsIgnoreCase(request.getNombreCurso()) 
-            && !s.getIdSeccion().equals(idSeccion)) {
-            throw new RuntimeException("Ya existe una sección con ese nombre en el año " + request.getAnio());
-        }
-    }
-
-    // Actualizar
-    seccion.setNombreCurso(request.getNombreCurso());
-    seccion.setAnio(request.getAnio());
-
-    Seccion actualizada = seccionRepository.save(seccion);
-
-    SeccionDTO dto = new SeccionDTO();
-    dto.setIdSeccion(actualizada.getIdSeccion());
-    dto.setNombreCurso(actualizada.getNombreCurso());
-    dto.setAnio(actualizada.getAnio());
-    dto.setCodigo(actualizada.getCodigo());
-    dto.setId_profesor(actualizada.getProfesor().getIdProfesor());
-
-    return dto;
-}
     
     // Eliminar sección (solo si pertenece al profesor)
     @Transactional
@@ -176,5 +154,71 @@ public SeccionDTO editarSeccion(Integer idSeccion, Integer idProfesor, EditarSec
         dto.setNombreProfesor(nombreCompleto);
 
         return dto;
+    }
+    
+    // ==================== MÉTODOS PRIVADOS DE AYUDA ====================
+    
+    private void validarNombreCurso(String nombreCurso) {
+        if (nombreCurso == null || nombreCurso.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del curso es obligatorio");
+        }
+    }
+    
+    private void validarAnio(Integer anio) {
+        if (anio == null) {
+            throw new IllegalArgumentException("El año es obligatorio");
+        }
+        if (anio < 2000) {
+            throw new IllegalArgumentException("El año debe ser mayor o igual a 2000");
+        }
+    }
+    
+    private Profesor buscarProfesor(Integer idProfesor) {
+        return profesorRepository.findById(idProfesor)
+                .orElseThrow(() -> new RuntimeException("No se encontró un profesor con el ID: " + idProfesor));
+    }
+    
+    private void validarSeccionDuplicada(Integer idProfesor, String nombreCurso, Integer anio) {
+        List<Seccion> seccionesExistentes = seccionRepository.findByProfesor_IdProfesorAndAnio(idProfesor, anio);
+        
+        boolean existe = seccionesExistentes.stream()
+                .anyMatch(s -> s.getNombreCurso().equalsIgnoreCase(nombreCurso));
+        
+        if (existe) {
+            throw new RuntimeException("Ya existe una sección con ese nombre en el año " + anio);
+        }
+    }
+    
+    private void validarSeccionDuplicadaParaEdicion(Integer idProfesor, String nombreCurso, 
+                                                     Integer anio, Integer idSeccionActual) {
+        List<Seccion> seccionesExistentes = seccionRepository.findByProfesor_IdProfesorAndAnio(idProfesor, anio);
+        
+        boolean existe = seccionesExistentes.stream()
+                .anyMatch(s -> s.getNombreCurso().equalsIgnoreCase(nombreCurso) 
+                        && !s.getIdSeccion().equals(idSeccionActual));
+        
+        if (existe) {
+            throw new RuntimeException("Ya existe una sección con ese nombre en el año " + anio);
+        }
+    }
+    
+    private Seccion obtenerSeccionConPermisos(Integer idSeccion, Integer idProfesor) {
+        Seccion seccion = seccionRepository.findById(idSeccion)
+                .orElseThrow(() -> new RuntimeException("Sección no encontrada"));
+
+        if (!seccion.getProfesor().getIdProfesor().equals(idProfesor)) {
+            throw new RuntimeException("No tiene permisos para editar esta sección");
+        }
+
+        return seccion;
+    }
+    
+    private Seccion construirSeccion(CrearSeccionRequest request, Profesor profesor) {
+        Seccion seccion = new Seccion();
+        seccion.setProfesor(profesor);
+        seccion.setNombreCurso(request.getNombreCurso());
+        seccion.setAnio(request.getAnio());
+        seccion.setCodigo(request.getCodigo());
+        return seccion;
     }
 }
