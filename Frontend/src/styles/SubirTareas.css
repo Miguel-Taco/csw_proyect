@@ -83,11 +83,12 @@
 .subirTareas-link {
 	padding: 16px 20px;
 	border: 2px solid #202020;
+	align-self: center;
 	border-radius: 8px;
 	background: #ffffff;
 	font-size: 14px;
 	color: #333;
-	width: 100%;
+	width: 80%;
 }
 
 .subirTareas-link::placeholder {
