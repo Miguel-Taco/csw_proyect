@@ -2,13 +2,18 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Modal from "../componentes/Modal";
+import { useAuth } from "../context/AuthContext";
 import "../styles/TareasAlumno.css";
+import SubirTareas from './SubirTareas';
 
 function TareasAlumno() {
+    const { user } = useAuth();
     const { idSeccion } = useParams();
     const navigate = useNavigate();
 
     const [openModal, setOpenModal] = useState(false);
+    const [openSubirModal, setOpenSubirModal] = useState(false);
+    const [tareaSeleccionada, setTareaSeleccionada] = useState(null);
     const [companeros, setCompaneros] = useState([]);
     const [loadingCompaneros, setLoadingCompaneros] = useState(false);
     const [errorCompaneros, setErrorCompaneros] = useState("");
@@ -75,7 +80,7 @@ function TareasAlumno() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     id_seccion: Number.parseInt(idSeccion),
-                    id_persona: 2 // 🔹 aquí puedes reemplazar por el id_persona del usuario logueado
+                    id_persona: user.id
                 }),
             });
 
@@ -93,6 +98,10 @@ function TareasAlumno() {
         }
     };
 
+    const handleAbrirSubirTarea = (tarea) => {
+        setTareaSeleccionada(tarea);
+        setOpenSubirModal(true);
+    };
 
     // Determinar qué contenido mostrar
     let tareasContent;
@@ -108,7 +117,12 @@ function TareasAlumno() {
                     <div key={tarea.idTarea} className="tarea-card">
                         <div className='tarea-entrega'>
                             <h3>{tarea.nombre}</h3>
-                            <button className="btn-primary" onClick={() => console.log(tarea.idTarea)}>Subir Entrega</button>
+                            <button 
+                                className="btn-primary" 
+                                onClick={() => handleAbrirSubirTarea(tarea)}
+                            >
+                                Subir Entrega
+                            </button>
                         </div>
                         <p>Descripción: {tarea.descripcion}</p>
                         <p>Tipo de Tarea: {tarea.tipo}</p>
@@ -140,8 +154,8 @@ function TareasAlumno() {
                 }
                 return (
                     <div className="companeros-lista">
-                        {companeros.map((c) => (
-                            <li key={`${c.id_persona}`} className="companero-card">
+                        {companeros.map((c, index) => (
+                            <li key={c.id_persona ?? index} className="companero-card">
                                 <p>{c.nombres} {c.apellido_p} {c.apellido_m}</p>
                             </li>
                         ))}
@@ -178,6 +192,13 @@ function TareasAlumno() {
 
                 {tareasContent}
                 {modalContent}
+                
+                {/* Modal de Subir Tareas */}
+                <SubirTareas
+                    open={openSubirModal}
+                    onClose={() => setOpenSubirModal(false)}
+                    tarea={tareaSeleccionada}
+                />
 
             </div>
         </div>

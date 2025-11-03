@@ -277,6 +277,7 @@ export default function AsignarNotasGrupales() {
                       <div className="tarea-titulo-grupal">{tarea.titulo}</div>
                     </div>
                     <div className="tarea-nota-grupal">
+                      <button>Ver Entrega</button>
                       <span className="nota-label-grupal">Nota:</span>
                       <input
                         type="number"
