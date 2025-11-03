@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/TareasIndividuales.css";
 import InvitacionButton from "./InvitacionButton";
+import CrearGrupoButton from "./CrearGrupoButton";
 
 export default function TareasIndividuales() {
   const navigate = useNavigate();
@@ -124,6 +125,8 @@ export default function TareasIndividuales() {
         >
           ← Volver a Secciones
         </button>
+        <InvitacionButton />
+        <CrearGrupoButton />
         <button className="btn btn-primary" onClick={handleCrearTarea}>
           Crear Tarea
         </button>

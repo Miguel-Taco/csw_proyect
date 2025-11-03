@@ -1,7 +1,6 @@
 package com.unmsm.scorely.controllers;
 
 import com.unmsm.scorely.dto.SeccionAlumnoDTO;
-import com.unmsm.scorely.dto.SeccionDTO;
 import com.unmsm.scorely.repository.AlumnoRepository;
 import com.unmsm.scorely.services.SeccionService;
 import org.springframework.http.HttpStatus;

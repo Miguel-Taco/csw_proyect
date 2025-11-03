@@ -1,13 +1,14 @@
 package com.unmsm.scorely.dto;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class AlumnoDTO {
     private Integer idAlumno;
     private String nombreCompleto;
     private String codigoAlumno;
     private Integer idGrupo;
     private String nombreGrupo;
-
-    public AlumnoDTO() {}
 
     public Integer getIdAlumno() { return idAlumno; }
     public void setIdAlumno(Integer idAlumno) { this.idAlumno = idAlumno; }

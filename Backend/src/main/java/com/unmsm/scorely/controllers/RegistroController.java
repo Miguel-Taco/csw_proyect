@@ -19,7 +19,7 @@ public class RegistroController {
     private final RegistroService registroService;
 
     @PostMapping
-    public ResponseEntity<?> registrar(@RequestBody RegistroRequest request) {
+    public ResponseEntity<Object> registrar(@RequestBody RegistroRequest request) {
         try {
             Persona persona = registroService.registrar(request);
 

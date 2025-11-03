@@ -43,8 +43,9 @@ class TareaServiceImpTest {
     private Seccion seccion;
     private Tarea tarea;
 
-    @BeforeEach
-    void setUp() {
+    @SuppressWarnings("unused")
+        @BeforeEach
+        void setUp() {
         MockitoAnnotations.openMocks(this);
 
         // Configurar datos de prueba
