@@ -9,6 +9,7 @@ import SeccionesPage from "../paginas/SeccionesPage";
 import TareasIndividualesPage from "../paginas/TareasIndividualesPage";
 import CrearTareaPage from "../paginas/CrearTareaPage";
 import AsignacionGruposPage from "../paginas/AsignacionGruposPage";
+import VerGrupoAlumno from "../paginas/VerGrupoAlumno"; 
 import AsignarNotas from "../paginas/AsignarNotas";
 import AlumnoPage from "../paginas/AlumnoPage";
 import TareasAlumno from '../paginas/TareasAlumno';
@@ -46,7 +47,7 @@ function ProtectedRoute({ children, allowedRoles = [] }) {
     if (!normalizedAllowedRoles.includes(userRole)) {
       // Redirigir al dashboard correspondiente según el rol
       if (userRole === 'estudiante' || userRole === 'alumno') {
-        return <Navigate to="/hola" replace />;
+        return <Navigate to="/alumnosPage" replace />;
       } else if (userRole === 'profesor') {
         return <Navigate to="/seccionesPage" replace />;
       }
@@ -79,7 +80,7 @@ function PublicRoute({ children }) {
     const userRole = user?.role?.toLowerCase();
     
     if (userRole === 'estudiante' || userRole === 'alumno') {
-      return <Navigate to="/hola" replace />;
+      return <Navigate to="/alumnosPage" replace />;
     } else if (userRole === 'profesor') {
       return <Navigate to="/seccionesPage" replace />;
     }
@@ -128,7 +129,9 @@ function AppRouter() {
           }
         />
 
-        {/* Página del Alumno/Estudiante */}
+        {/* ===== RUTAS DEL ALUMNO ===== */}
+        
+        {/* Página principal del alumno */}
         <Route
           path="/alumnosPage"
           element={
@@ -138,46 +141,7 @@ function AppRouter() {
           }
         />
 
-        {/* Página de Secciones del Profesor */}
-        <Route
-          path="/seccionesPage"
-          element={
-            <ProtectedRoute allowedRoles={['profesor']}>
-              <SeccionesPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/asignacion-grupos"
-          element={
-            <ProtectedRoute>
-              <AsignacionGruposPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Ver alumnos y tareas de una sección */}
-        {/* Rutas dinámicas de Tareas (accesibles por profesor) */}
-        <Route
-          path="/secciones/:idSeccion/tareas"
-          element={
-            <ProtectedRoute allowedRoles={['profesor']}>
-              <TareasIndividualesPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Crear tarea en una sección */}
-        <Route
-          path="/secciones/:idSeccion/crear-tarea"
-          element={
-            <ProtectedRoute allowedRoles={['profesor']}>
-              <CrearTareaPage />
-            </ProtectedRoute>
-          }
-        />
-
+        {/* Ver tareas de una sección (alumno) */}
         <Route
           path="/alumno/seccion/:idSeccion/tareas"
           element={
@@ -187,24 +151,79 @@ function AppRouter() {
           }
         />
 
-        {/* ✅ NUEVA RUTA: Ver tareas de un alumno específico en una sección */}
+         {/* Ver información del grupo (alumno) */}
+        <Route
+          path="/alumno/seccion/:idSeccion/ver-grupo"
+          element={
+            <ProtectedRoute allowedRoles={['alumno']}>
+              <VerGrupoAlumno />
+            </ProtectedRoute>
+          }
+        /> 
+
+        {/* ===== RUTAS DEL PROFESOR ===== */}
+        
+        {/* Página de secciones del profesor */}
+        <Route
+          path="/seccionesPage"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <SeccionesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Ver tareas y alumnos de una sección (profesor) */}
+        <Route
+          path="/secciones/:idSeccion/tareas"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <TareasIndividualesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Crear tarea en una sección (profesor) */}
+        <Route
+          path="/secciones/:idSeccion/crear-tarea"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <CrearTareaPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Asignar grupos en una sección (profesor) */}
+        <Route
+          path="/asignacion-grupos"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <AsignacionGruposPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ✅ CORREGIDO: Ruta usando el componente correcto */}
+        <Route
+          path="/secciones/:idSeccion/ver-grupos"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <VerGrupoAlumno />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Asignar notas a un alumno específico (profesor) */}
         <Route
           path="/secciones/:idSeccion/alumno/:idAlumno/tareas"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['profesor']}>
               <AsignarNotas />
             </ProtectedRoute>
           }
         />
 
-        <Route 
-          path="/secciones/:idSeccion/tareas" element={
-          <ProtectedRoute>
-            <TareasIndividualesPage />
-          </ProtectedRoute>
-        } 
-      />
-
+        {/* Asignar notas grupales (profesor) */}
         <Route
           path="/secciones/:idSeccion/grupo/:idGrupo/tareas"
           element={

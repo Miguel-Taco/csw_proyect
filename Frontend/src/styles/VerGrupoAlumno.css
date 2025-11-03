@@ -1,0 +1,407 @@
+/* VerGrupoAlumno.css */
+
+.verGrupoAlumno-body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.main-verGrupoAlumno-container {
+  width: 100%;
+  max-width: 1200px;
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+}
+
+/* Header */
+.verGrupoAlumno-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.header-info-alumno h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.nombre-seccion-header {
+  font-size: 14px;
+  color: #667eea;
+  margin: 0;
+  font-weight: 600;
+}
+
+.btn-volver-alumno {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-volver-alumno:hover {
+  background: #5a6268;
+  transform: translateX(-3px);
+}
+
+/* Badge solo lectura */
+.badge-solo-lectura {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+  color: #2d3436;
+  padding: 12px 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 10px rgba(253, 203, 110, 0.3);
+}
+
+/* Contenido principal */
+.contenido-grupo-alumno {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 25px;
+}
+
+/* Panel de integrantes */
+.integrantes-panel-alumno {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  height: fit-content;
+}
+
+.integrantes-header-alumno {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.integrantes-header-alumno h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.badge-cantidad {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.integrantes-lista-alumno {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.integrante-item-alumno {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.integrante-item-alumno:hover {
+  transform: translateX(5px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.integrante-item-alumno.es-tu {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-color: #667eea;
+}
+
+.integrante-numero-alumno {
+  background: #667eea;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.integrante-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.integrante-nombre-alumno {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.badge-tu {
+  background: #667eea;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+.integrante-codigo {
+  font-size: 13px;
+  color: #666;
+  font-family: 'Courier New', monospace;
+}
+
+/* Panel de tareas */
+.tareas-panel-alumno {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stats-card-alumno {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.stat-item-alumno {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.stat-label-alumno {
+  font-size: 13px;
+  color: #666;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value-alumno {
+  font-size: 32px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+/* Lista de tareas */
+.tareas-scroll-alumno {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.tarea-item-alumno {
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.tarea-item-alumno:hover {
+  border-color: #667eea;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+}
+
+.tarea-titulo-wrapper-alumno {
+  margin-bottom: 15px;
+}
+
+.tarea-numero-alumno {
+  font-size: 11px;
+  color: #667eea;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.tarea-titulo-alumno {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.tarea-fecha {
+  font-size: 13px;
+  color: #666;
+  margin-top: 6px;
+}
+
+.tarea-nota-alumno {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+}
+
+.nota-label-alumno {
+  font-size: 14px;
+  color: #666;
+  font-weight: 600;
+}
+
+.nota-display {
+  font-size: 24px;
+  font-weight: 700;
+  color: #28a745;
+  min-width: 60px;
+  text-align: center;
+  padding: 8px 16px;
+  background: #e8f5e9;
+  border-radius: 8px;
+}
+
+.nota-display.sin-nota {
+  color: #999;
+  background: #f0f0f0;
+  font-size: 14px;
+}
+
+.nota-max-alumno {
+  font-size: 16px;
+  color: #999;
+  font-weight: 600;
+}
+
+/* Estados vacíos y errores */
+.vacio-alumno {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-style: italic;
+}
+
+.loading-message-alumno {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  color: white;
+  font-weight: 600;
+}
+
+.error-message-alumno {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #f5c6cb;
+}
+
+.error-container-alumno {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Sin grupo */
+.sin-grupo-container {
+  background: white;
+  border-radius: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+}
+
+.sin-grupo-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  opacity: 0.3;
+}
+
+.sin-grupo-container h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.sin-grupo-container p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .contenido-grupo-alumno {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-card-alumno {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-verGrupoAlumno-container {
+    padding: 20px;
+  }
+
+  .verGrupoAlumno-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .header-info-alumno h2 {
+    font-size: 22px;
+  }
+
+  .btn-volver-alumno {
+    width: 100%;
+  }
+
+  .stats-card-alumno {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-value-alumno {
+    font-size: 28px;
+  }
+}
