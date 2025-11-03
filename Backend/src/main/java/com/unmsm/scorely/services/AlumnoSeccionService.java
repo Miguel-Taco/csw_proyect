@@ -3,8 +3,9 @@ package com.unmsm.scorely.services;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,8 @@ import com.unmsm.scorely.repository.EntregaRepository;
 
 @Service
 public class AlumnoSeccionService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AlumnoSeccionService.class);
 
     private final AlumnoSeccionRepository alumnoSeccionRepository;
     private final EntregaRepository entregaRepository;
@@ -36,7 +39,7 @@ public class AlumnoSeccionService {
 
         return alumnosSecciones.stream()
                 .map(alumnoSeccion -> convertirADTO(alumnoSeccion, idSeccion))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -50,13 +53,12 @@ public class AlumnoSeccionService {
 
     private AlumnoSeccionDTO convertirADTO(AlumnoSeccion alumnoSeccion, Integer idSeccion) {
         Persona persona = alumnoSeccion.getAlumno().getPersona();
-        
+
         String nombreCompleto = String.format("%s %s %s",
                 persona.getNombres(),
                 persona.getApellidoP(),
                 persona.getApellidoM()).trim();
 
-        // Calcular promedio real
         BigDecimal promedio = calcularPromedio(alumnoSeccion.getAlumno().getIdAlumno(), idSeccion);
 
         return AlumnoSeccionDTO.builder()
@@ -80,18 +82,15 @@ public class AlumnoSeccionService {
      */
     private BigDecimal calcularPromedio(Integer idAlumno, Integer idSeccion) {
         try {
-            // Obtener todas las tareas de la sección
-            List<Integer> tareasIds = entregaRepository
-                    .findTareasIdsBySeccion(idSeccion);
+            List<Integer> tareasIds = entregaRepository.findTareasIdsBySeccion(idSeccion);
 
             if (tareasIds.isEmpty()) {
-                return null; // No hay tareas
+                return null;
             }
 
             BigDecimal sumaNotas = BigDecimal.ZERO;
             int cantidadNotasValidas = 0;
 
-            // Para cada tarea, obtener la última entrega del alumno
             for (Integer idTarea : tareasIds) {
                 List<Entrega> entregas = entregaRepository
                         .findByTareaAndAlumnoOrderByFechaDesc(idTarea, idAlumno);
@@ -105,17 +104,14 @@ public class AlumnoSeccionService {
                 }
             }
 
-            // Si no hay notas válidas, retornar null
             if (cantidadNotasValidas == 0) {
                 return null;
             }
 
-            // Calcular promedio y redondear a 2 decimales
-            return sumaNotas
-                    .divide(BigDecimal.valueOf(cantidadNotasValidas), 2, RoundingMode.HALF_UP);
+            return sumaNotas.divide(BigDecimal.valueOf(cantidadNotasValidas), 2, RoundingMode.HALF_UP);
 
         } catch (Exception e) {
-            System.err.println("Error al calcular promedio: " + e.getMessage());
+            LOGGER.error("Error al calcular promedio: {}", e.getMessage(), e);
             return null;
         }
     }

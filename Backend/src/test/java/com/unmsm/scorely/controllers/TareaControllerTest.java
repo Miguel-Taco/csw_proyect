@@ -43,9 +43,9 @@ class TareaControllerTest {
     private Seccion seccion;
     private Profesor profesor;
 
-    @BeforeEach
-    void setUp() {
-        // ✅ Configurar ObjectMapper para manejar LocalDateTime
+    @SuppressWarnings("unused")
+        @BeforeEach
+        void setUp() {
         objectMapper.registerModule(new JavaTimeModule());
         
         // Configurar Profesor
@@ -81,7 +81,7 @@ class TareaControllerTest {
 
     @Test
     @DisplayName("POST /api/tareas - Crear tarea exitosamente")
-    void testCrearTarea_Exitoso() throws Exception {
+    void testCrearTareaExitoso() throws Exception {
         // Arrange
         when(tareaService.crearTarea(any(CrearTareaRequest.class))).thenReturn(tarea);
 
