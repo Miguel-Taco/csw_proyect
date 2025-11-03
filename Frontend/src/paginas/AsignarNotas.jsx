@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import ModalVerEntrega from "../componentes/VerEntregaModal";
 import "../styles/AsignarNotas.css";
 
 export default function AsignarNotas() {
   const navigate = useNavigate();
   const { idSeccion, idAlumno } = useParams();
   const location = useLocation();
-  
+
+  const [modalEntrega, setModalEntrega] = useState(false);
+  const [tareaSeleccionada, setTareaSeleccionada] = useState(null);
   const [tareas, setTareas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -17,6 +20,16 @@ export default function AsignarNotas() {
   
   const alumnoInfo = location.state?.alumno || {};
   const nombreSeccion = location.state?.nombreSeccion || '';
+
+  const handleVerEntrega = (tarea) => {
+    setTareaSeleccionada(tarea);
+    setModalEntrega(true);
+  };
+
+  const cerrarModalEntrega = () => {
+    setModalEntrega(false);
+    setTareaSeleccionada(null);
+  };
 
   useEffect(() => {
     cargarTareasNotas();
@@ -145,7 +158,6 @@ export default function AsignarNotas() {
   };
 
   const procesarTarea = async (tarea) => {
-    // Solo procesar si tiene nota
     if (tarea.nota === "" || tarea.nota === null) {
       return;
     }
@@ -170,7 +182,6 @@ export default function AsignarNotas() {
     }
 
     try {
-      // Filtrar solo tareas con nota
       const tareasConNota = tareas.filter(t => t.nota !== "" && t.nota !== null);
       
       if (tareasConNota.length === 0) {
@@ -179,7 +190,6 @@ export default function AsignarNotas() {
         return;
       }
 
-      // Procesar solo las tareas con nota
       for (const tarea of tareasConNota) {
         await procesarTarea(tarea);
       }
@@ -253,8 +263,15 @@ export default function AsignarNotas() {
             <div className="tarea-item" key={tarea.idTarea}>
               <div className="tarea-titulo-wrapper">
                 <div className="tarea-numero">TAREA {index + 1}</div>
-                <div className="tarea-titulo">{tarea.titulo}</div>
+                <div className="tarea-titulo">{tarea.titulo}</div> 
               </div>
+              <button   
+                className="btn-ver-entrega"
+                onClick={() => handleVerEntrega(tarea)}
+                title="Ver entrega del alumno"
+              >
+                Ver Entrega
+              </button>
               <div className="tarea-nota">
                 <span className="nota-label">Nota:</span>
                 <input
@@ -317,7 +334,6 @@ export default function AsignarNotas() {
         {contenidoPrincipal}
       </div>
 
-      {/* Modal de Error Flotante */}
       {error && (
         <div className="modal-overlay" onClick={cerrarError}>
           <div className="modal-error" onClick={(e) => e.stopPropagation()}>
@@ -336,6 +352,14 @@ export default function AsignarNotas() {
           </div>
         </div>
       )}
+
+      <ModalVerEntrega
+        open={modalEntrega}
+        onClose={cerrarModalEntrega}
+        idSeccion={idSeccion}
+        idAlumno={idAlumno}
+        tarea={tareaSeleccionada}
+      />
     </div>
   );
 }

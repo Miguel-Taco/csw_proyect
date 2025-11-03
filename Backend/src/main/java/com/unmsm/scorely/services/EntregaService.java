@@ -1,6 +1,7 @@
 package com.unmsm.scorely.services;
 
 import com.unmsm.scorely.dto.NotasDeTareas;
+import com.unmsm.scorely.dto.ObtenerEntregaResponse;
 import com.unmsm.scorely.dto.RegistrarEntregasRequest;
 import com.unmsm.scorely.models.*;
 import com.unmsm.scorely.repository.*;
@@ -11,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EntregaService {
@@ -123,5 +125,36 @@ public class EntregaService {
                             : null
             );
         }).toList();
+    }
+
+    /**
+     * Obtiene la entrega de un alumno para una tarea específica
+     * utilizando el stored procedure sp_ObtenerEntregaAlumno
+     *
+     * @param idSeccion ID de la sección
+     * @param idAlumno ID del alumno
+     * @param idTarea ID de la tarea
+     * @return EntregaResponse con fecha de entrega y enlace
+     * @throws EntityNotFoundException si no se encuentra la entrega
+     */
+    @Transactional(readOnly = true)
+    public ObtenerEntregaResponse obtenerEntregaAlumno(Integer idSeccion, Integer idAlumno, Integer idTarea) {
+        List<Map<String, Object>> resultado = entregaRepository.obtenerEntregaAlumno(idSeccion, idAlumno, idTarea);
+
+        if (resultado == null || resultado.isEmpty()) {
+            throw new EntityNotFoundException(
+                    String.format("No se encontró entrega para la tarea %d del alumno %d en la sección %d",
+                            idTarea, idAlumno, idSeccion)
+            );
+        }
+
+        Map<String, Object> row = resultado.get(0);
+
+        return ObtenerEntregaResponse.builder()
+                .fechaEntrega(row.get("fecha_entrega") != null
+                        ? ((java.sql.Timestamp) row.get("fecha_entrega")).toLocalDateTime()
+                        : null)
+                .enlace((String) row.get("enlace"))
+                .build();
     }
 }

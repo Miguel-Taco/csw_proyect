@@ -2,6 +2,8 @@ package com.unmsm.scorely.repository;
 
 import com.unmsm.scorely.models.Entrega;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -45,4 +47,11 @@ public interface EntregaRepository extends JpaRepository<Entrega, Integer> {
         WHERE t.seccion.idSeccion = :idSeccion
     """)
     List<Integer> findTareasIdsBySeccion(@Param("idSeccion") Integer idSeccion);
+
+    @Query(value = "CALL sp_ObtenerEntregaAlumno(:idSeccion, :idAlumno, :idTarea)",
+            nativeQuery = true)
+    List<Map<String, Object>> obtenerEntregaAlumno(
+            @Param("idSeccion") Integer idSeccion,
+            @Param("idAlumno") Integer idAlumno,
+            @Param("idTarea") Integer idTarea);
 }
