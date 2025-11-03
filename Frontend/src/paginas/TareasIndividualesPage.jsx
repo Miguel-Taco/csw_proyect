@@ -7,7 +7,6 @@ export default function TareasIndividualesPage() {
   return (
     <div>
       <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <CrearGrupoButton />
       </div>
       <h2>Tareas Individuales</h2>
       <TareasIndividuales />

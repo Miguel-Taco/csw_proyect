@@ -10,7 +10,6 @@ export default function FormularioTarea() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   
-  // ✅ Obtener idSeccion desde la URL
   const { idSeccion } = useParams();
 
   const manejarEnvio = async (e) => {
@@ -36,7 +35,7 @@ export default function FormularioTarea() {
     };
 
     try {
-      const respuesta = await fetch("https://cswproyect-production.up.railway.app/api/tareas", {
+      const respuesta = await fetch("http://localhost:8080/api/tareas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
