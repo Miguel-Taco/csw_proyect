@@ -144,27 +144,6 @@ describe("InvitacionButton", () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
-  /*test("muestra error si el email es inválido", async () => {
-    render(<InvitacionButton />);
-
-    // 1. Abrir el modal
-    fireEvent.click(screen.getByRole("button", { name: /invitar alumno/i }));
-    // 2. Definir la variable 'input'
-    const input = screen.getByPlaceholderText("alumno@correo.com");
-
-    fireEvent.change(input, { target: { value: "correo-invalido" } }); // Email inválido
-
-    // CORRECCIÓN: Usar fireEvent.submit en el formulario
-    fireEvent.submit(screen.getByTestId("modal").querySelector("form"));
-
-    // CORRECCIÓN: Debemos esperar a que el estado 'mensaje' actualice la UI.
-    // Y el string en el componente TIENE UN ESPACIO AL FINAL.
-    await waitFor(() => {
-      expect(screen.getByText("Por favor ingrese un correo válido. ")).toBeInTheDocument();
-    });
-    expect(global.fetch).not.toHaveBeenCalled();
-  });*/
-
   test("muestra error si falta idSeccion", async () => {
     // Sobreescribimos el mock de useParams
     vi.mocked(useParams).mockReturnValue({ idSeccion: null });
@@ -182,10 +161,8 @@ describe("InvitacionButton", () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
-  // --- Tests de API (Camino Feliz y Errores) ---
 
   test("envía la invitación exitosamente (Camino Feliz)", async () => {
-    // vi.useFakeTimers(); // <--- ELIMINADO
 
     render(<InvitacionButton />);
     fireEvent.click(screen.getByRole("button", { name: /invitar alumno/i }));

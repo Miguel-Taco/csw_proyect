@@ -1,7 +1,6 @@
 package com.unmsm.scorely.controllers;
 
 import com.unmsm.scorely.dto.SeccionAlumnoDTO;
-import com.unmsm.scorely.dto.SeccionDTO;
 import com.unmsm.scorely.repository.AlumnoRepository;
 import com.unmsm.scorely.services.SeccionService;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/alumno")
-@CrossOrigin(origins = "*")
 public class AlumnoController {
 
     private final AlumnoRepository alumnoRepository;
@@ -29,7 +27,7 @@ public class AlumnoController {
     @GetMapping("/alumno-id/{idPersona}")
     public ResponseEntity<Map<String, Object>> obtenerIdProfesor(@PathVariable Integer idPersona) {
         Map<String, Object> response = new HashMap<>();
-
+    
         return alumnoRepository.findIdAlumnoByIdPersona(idPersona)
                 .map(idAlumno -> {
                     response.put("success", true);

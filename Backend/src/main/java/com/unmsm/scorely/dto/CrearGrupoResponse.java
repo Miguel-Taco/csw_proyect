@@ -1,8 +1,11 @@
 // java
 package com.unmsm.scorely.dto;
 
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+@NoArgsConstructor
 public class CrearGrupoResponse {
     private Integer idGrupo;
     private String nombreGrupo;
@@ -11,7 +14,6 @@ public class CrearGrupoResponse {
     private Integer cantidadAlumnos;
     private List<AlumnoDTO> alumnos;
 
-    public CrearGrupoResponse() {}
 
     public Integer getIdGrupo() { return idGrupo; }
     public void setIdGrupo(Integer idGrupo) { this.idGrupo = idGrupo; }

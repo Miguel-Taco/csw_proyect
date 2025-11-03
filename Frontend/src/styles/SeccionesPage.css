@@ -89,9 +89,8 @@
     flex-wrap: wrap;
 }
 
-.secciones-container div{
-    margin: 0 8%;
-    margin-bottom: 3%;
+.secciones-container{
+    justify-content: space-around;
 }
 
 .button-seccionesPage{

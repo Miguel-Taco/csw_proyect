@@ -1,6 +1,10 @@
 package com.unmsm.scorely.services.imp;
 
 import com.unmsm.scorely.dto.RegistroRequest;
+import com.unmsm.scorely.exception.RegistroCodigoEstudiante;
+import com.unmsm.scorely.exception.RegistroCodigoExistente;
+import com.unmsm.scorely.exception.RegistroCorreoExistente;
+import com.unmsm.scorely.exception.RegistroUsuarioInvalido;
 import com.unmsm.scorely.models.Alumno;
 import com.unmsm.scorely.models.Persona;
 import com.unmsm.scorely.models.Profesor;
@@ -26,16 +30,16 @@ public class RegistroServiceImpl implements RegistroService {
 
         // Validar correo duplicado
         if (personaRepository.findByCorreo(request.getCorreo()).isPresent()) {
-            throw new RuntimeException("El correo ya está registrado");
+            throw new RegistroCorreoExistente();
         }
 
         // Validar código de estudiante si el tipo de usuario es "Estudiante"
         if ("Estudiante".equalsIgnoreCase(request.getTipoUsuario())) {
             if (request.getCodigoEstudiante() == null || request.getCodigoEstudiante().trim().isEmpty()) {
-                throw new RuntimeException("El código de Estudiante es obligatorio");
+                throw new RegistroCodigoEstudiante();
             }
             if (alumnoRepository.findByCodigoAlumno(request.getCodigoEstudiante()).isPresent()) {
-                throw new RuntimeException("El código de Estudiante ya está registrado");
+                throw new RegistroCodigoExistente();
             }
         }
 
@@ -63,7 +67,7 @@ public class RegistroServiceImpl implements RegistroService {
             profesorRepository.save(profesor);
         } else {
             // Manejar un caso inesperado para evitar errores silenciosos
-            throw new RuntimeException("Tipo de usuario no válido: " + request.getTipoUsuario());
+            throw new RegistroUsuarioInvalido("Tipo de usuario no válido: " + request.getTipoUsuario());
         }
 
         return personaGuardada;

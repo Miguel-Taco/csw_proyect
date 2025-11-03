@@ -1,8 +1,6 @@
 package com.unmsm.scorely.controllers;
 
-import com.unmsm.scorely.dto.AlumnoDTO;
-import com.unmsm.scorely.dto.CrearGrupoRequest;
-import com.unmsm.scorely.dto.CrearGrupoResponse;
+import com.unmsm.scorely.dto.*;
 import com.unmsm.scorely.services.GrupoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/grupos")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class GrupoController {
 
     private final GrupoService grupoService;
@@ -55,7 +52,7 @@ public class GrupoController {
      * Crea un nuevo grupo con los alumnos seleccionados
      */
     @PostMapping
-    public ResponseEntity<?> crearGrupo(@Valid @RequestBody CrearGrupoRequest request) {
+    public ResponseEntity<Object> crearGrupo(@Valid @RequestBody CrearGrupoRequest request) {
         try {
             CrearGrupoResponse response = grupoService.crearGrupo(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -67,5 +64,17 @@ public class GrupoController {
         }
     }
 
-  
+    /**
+     * GET /api/grupos/seccion/{idSeccion}/idPersona/{idPersona}
+     * Obtiene el grupo al que pertenece un estudiante en una seccion
+     */
+    @PostMapping("/companeros")
+    public ResponseEntity<List<ObtenerCompanerosResponse>> obtenerCompaneros(
+            @RequestBody ObtenerCompanerosRequest request) {
+        List<ObtenerCompanerosResponse> companeros =
+                grupoService.obtenerCompaneros(request.getId_seccion(), request.getId_persona());
+        return ResponseEntity.ok(companeros);
+    }
+
+
 }

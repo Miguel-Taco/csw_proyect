@@ -10,5 +10,6 @@ import lombok.*;
 public class RegistrarEntregasRequest {
     private Integer idTarea;
     private Integer idAlumno;
+    private Integer idGrupo;
     private Double nota;
 }

@@ -12,6 +12,7 @@ import AsignacionGruposPage from "../paginas/AsignacionGruposPage";
 import AsignarNotas from "../paginas/AsignarNotas";
 import AlumnoPage from "../paginas/AlumnoPage";
 import TareasAlumno from '../paginas/TareasAlumno';
+import AsignarNotasGrupales from '../paginas/AsignarNotasGrupales';
 
 // --- Componentes de Control de Rutas ---
 
@@ -192,6 +193,23 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <AsignarNotas />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route 
+          path="/secciones/:idSeccion/tareas" element={
+          <ProtectedRoute>
+            <TareasIndividualesPage />
+          </ProtectedRoute>
+        } 
+      />
+
+        <Route
+          path="/secciones/:idSeccion/grupo/:idGrupo/tareas"
+          element={
+            <ProtectedRoute allowedRoles={['profesor']}>
+              <AsignarNotasGrupales />
             </ProtectedRoute>
           }
         />

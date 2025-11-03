@@ -4,7 +4,6 @@ import com.unmsm.scorely.dto.*;
 import com.unmsm.scorely.services.InvitacionService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +14,6 @@ import java.util.List;
 @RequestMapping("/api/invitaciones")
 @Slf4j
 public class InvitacionController {
-
-    @Value("${frontend.url}")
-    private String frontendUrlEnv;
 
     private final InvitacionService invitacionService;
 
